@@ -14,7 +14,7 @@ namespace XCom
 
 		public const string Palettes              = "Palettes";
 
-		public const string CursorFilePrefix      = @"UFOGRAPH\CURSOR"; // the cursor is determined in XCMainWindow.cTor
+		public const string CursorFilePrefix      = @"UFOGRAPH/CURSOR"; // the cursor is determined in XCMainWindow.cTor
 		#endregion
 
 
