@@ -405,32 +405,6 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <StartAction>Project</StartAction>
-    <DebugType>None</DebugType>
-    <Optimize>True</Optimize>
-    <DefineConstants>TRACE</DefineConstants>
-    <PostBuildEvent>copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Release\MapView.exe C:\0xC_kL\editors\MapView_kL\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Release\DSShared.dll C:\0xC_kL\editors\MapView_kL\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Release\XCom.dll C:\0xC_kL\editors\MapView_kL\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Release\YamlDotNet.dll C:\0xC_kL\editors\MapView_kL\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Release\PckView.exe C:\0xC_kL\editors\MapView_kL\
-</PostBuildEvent>
-    <OutputPath>bin\Release\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugType>Full</DebugType>
-    <Optimize>False</Optimize>
-    <StartAction>Project</StartAction>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <PostBuildEvent>copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Debug\MapView.exe C:\MapView_test\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Debug\DSShared.dll C:\MapView_test\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Debug\XCom.dll C:\MapView_test\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Debug\YamlDotNet.dll C:\MapView_test\
-copy /y C:\GIT\OpenXCOM.Tools\MapView\bin\Debug\PckView.exe C:\MapView_test\
-</PostBuildEvent>
-    <OutputPath>bin\Debug\</OutputPath>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <BaseAddress>285212672</BaseAddress>
     <PlatformTarget>AnyCPU</PlatformTarget>
