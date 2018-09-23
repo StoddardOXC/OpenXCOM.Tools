@@ -216,3 +216,5 @@ pip-log.txt
 
 #CHW files are some sort of helper for multiple (cross-linked) CHM-help files.
 *.chw
+
+YamlDotNet/Properties/AssemblyInfo.Generated.cs
