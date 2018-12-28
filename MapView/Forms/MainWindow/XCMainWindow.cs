@@ -232,7 +232,7 @@ namespace MapView
 //			_warningHandler  = new ConsoleWarningHandler(consoleShare);
 
 
-			_viewersManager     = new ViewersManager(_optionsManager/*, shareConsole*/);
+			_viewersManager = new ViewersManager(_optionsManager/*, shareConsole*/);
 			LogFile.WriteLine("Viewer managers instantiated.");
 
 			_mainMenusManager = new MainMenusManager(menuViewers, menuHelp);
@@ -1152,7 +1152,7 @@ namespace MapView
 							MaptreeChanged = false;
 						}
 
-						OnConfiguratorClick(null, EventArgs.Empty);
+						OnConfiguratorClick(null, EventArgs.Empty); // recurse.
 						break;
 
 					case DialogResult.Ignore:
@@ -1160,7 +1160,7 @@ namespace MapView
 						_mainViewUnderlay.MapBase.ClearRoutesChanged();
 						MaptreeChanged = false;
 
-						OnConfiguratorClick(null, EventArgs.Empty);
+						OnConfiguratorClick(null, EventArgs.Empty); // recurse.
 						break;
 				}
 			}
@@ -1743,14 +1743,14 @@ namespace MapView
 								if (_mainViewUnderlay.MapBase.RoutesChanged)
 									_mainViewUnderlay.MapBase.SaveRoutes();
 
-								OnMapTreeMouseDown(null, e);
+								OnMapTreeMouseDown(null, e); // recurse.
 								break;
 
 							case DialogResult.Ignore:
 								_mainViewUnderlay.MapBase.ClearMapChanged();
 								_mainViewUnderlay.MapBase.ClearRoutesChanged();
 
-								OnMapTreeMouseDown(null, e);
+								OnMapTreeMouseDown(null, e); // recurse.
 								break;
 						}
 					}

@@ -559,7 +559,7 @@ namespace MapView
 		private Point _dragEnd   = new Point(-1, -1);
 
 		/// <summary>
-		/// Gets/Sets the drag-start point. See also 'GetCanonicalDragStart()'.
+		/// Gets/Sets the drag-start point.
 		/// </summary>
 		internal Point DragStart
 		{
@@ -577,7 +577,7 @@ namespace MapView
 		}
 
 		/// <summary>
-		/// Gets/Sets the drag-end point. See also 'GetCanonicalDragEnd()'.
+		/// Gets/Sets the drag-end point.
 		/// </summary>
 		internal Point DragEnd
 		{
