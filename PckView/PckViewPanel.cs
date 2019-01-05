@@ -22,7 +22,7 @@ namespace PckView
 
 
 		#region Fields (static)
-		private const int SpriteMargin = 2;
+		internal const int SpriteMargin = 2;
 
 		private const string Total = "Total ";
 		private const string None  = "n/a";
@@ -30,7 +30,8 @@ namespace PckView
 		// NOTE: if sprite-size is ever allowed to change these need to be replaced
 		// w/ 'Spriteset.ImageFile.ImageSize.Width/Height' here and elsewhere.
 		private const int _tileWidth  = XCImage.SpriteWidth  + SpriteMargin * 2 + 1;
-		private const int _tileHeight = XCImage.SpriteHeight + SpriteMargin * 2 + 1;
+//		private const int _tileHeight = XCImage.SpriteHeight + SpriteMargin * 2 + 1;
+		internal static int TileHeight;
 
 		private const int TableOffsetHori = 3;
 		private const int TableOffsetVert = 2;
@@ -80,7 +81,7 @@ namespace PckView
 				_spriteset.Pal = PckViewForm.Pal;
 
 				_largeChange           =
-				_scrollBar.LargeChange = _tileHeight;
+				_scrollBar.LargeChange = TileHeight;
 
 				UpdateScrollbar(true);
 
@@ -117,7 +118,7 @@ namespace PckView
 
 				int height = 0;
 				if (Spriteset != null)
-					height = (Spriteset.Count / _tilesX + 2) * _tileHeight;
+					height = (Spriteset.Count / _tilesX + 2) * TileHeight;
 
 				return height;
 			}
@@ -341,15 +342,15 @@ namespace PckView
 					if (id == SelectedId)
 						graphics.FillRectangle(
 											_brushCrimson,
-											TableOffsetHori + _tileWidth  * tileX,
-											TableOffsetVert + _tileHeight * tileY + _startY,
-											TableOffsetHori + _tileWidth  - SpriteMargin * 2,
-											TableOffsetVert + _tileHeight - SpriteMargin - 1);
+											TableOffsetHori + _tileWidth * tileX,
+											TableOffsetVert + TileHeight * tileY + _startY,
+											TableOffsetHori + _tileWidth - SpriteMargin * 2,
+											TableOffsetVert + TileHeight - SpriteMargin - 1);
 
 					graphics.DrawImage(
 									Spriteset[id].Image,
-									TableOffsetHori + tileX * _tileWidth  + SpriteMargin,
-									TableOffsetVert + tileY * _tileHeight + SpriteMargin + _startY);
+									TableOffsetHori + tileX * _tileWidth + SpriteMargin,
+									TableOffsetVert + tileY * TileHeight + SpriteMargin + _startY);
 				}
 
 
@@ -378,10 +379,10 @@ namespace PckView
 									_penBlack,
 									new Point(
 											TableOffsetHori,
-											TableOffsetVert + _tileHeight * tileY + _startY),
+											TableOffsetVert + TileHeight * tileY + _startY),
 									new Point(
 											TableOffsetHori + _tileWidth  * _tilesX,
-											TableOffsetVert + _tileHeight * tileY + _startY));
+											TableOffsetVert + TileHeight * tileY + _startY));
 			}
 		}
 		#endregion
@@ -417,7 +418,7 @@ namespace PckView
 			if (e.X < _tilesX * _tileWidth + TableOffsetHori - 1) // not out of bounds to right
 			{
 				int tileX = (e.X - TableOffsetHori + 1)           / _tileWidth;
-				int tileY = (e.Y - TableOffsetHori + 1 - _startY) / _tileHeight;
+				int tileY = (e.Y - TableOffsetHori + 1 - _startY) / TileHeight;
 
 				int terrainId = tileY * _tilesX + tileX;
 				if (terrainId < Spriteset.Count) // not out of bounds below
@@ -437,14 +438,14 @@ namespace PckView
 			{
 				int tileY = terrainId / _tilesX;
 
-				int cutoff = tileY * _tileHeight;
+				int cutoff = tileY * TileHeight;
 				if (cutoff < -_startY)		// <- check cutoff high
 				{
 					_scrollBar.Value = cutoff;
 				}
 				else						// <- check cutoff low
 				{
-					cutoff = (tileY + 1) * _tileHeight - Height + _statusBar.Height + TableOffsetVert + 1;
+					cutoff = (tileY + 1) * TileHeight - Height + _statusBar.Height + TableOffsetVert + 1;
 					if (cutoff > -_startY)
 					{
 						_scrollBar.Value = cutoff;

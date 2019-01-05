@@ -7,9 +7,10 @@ namespace XCom.Interfaces
 	public class XCImage
 	{
 		#region Fields (static)
-		public const int SpriteWidth  = 32;
-		public const int SpriteHeight = 40;
-		#endregion
+		public const  int SpriteWidth    = 32;
+		public const  int SpriteHeight40 = 40;	// for MapView, so I don't have to recode a bunch of crap there.
+		public static int SpriteHeight   = 40;	// terrain & units 40px / bigobs 48px
+		#endregion								// NOTE: Bigobs shall be supported only by PckView.
 
 
 		#region Properties

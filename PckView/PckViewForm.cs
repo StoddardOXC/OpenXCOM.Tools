@@ -38,7 +38,7 @@ namespace PckView
 
 		private ConsoleForm _fconsole;
 
-		private TabControl _tcTabs;
+//		private TabControl _tcTabs; // for OnCompareClick()
 
 		private MenuItem _miEdit;
 		private MenuItem _miAdd;
@@ -81,6 +81,13 @@ namespace PckView
 		/// it's *not* a "do you want to save" alert.
 		/// </summary>
 		public bool SpritesChanged
+		{ get; private set; }
+
+
+		/// <summary>
+		/// True if a Bigobs PCK+TAB set is opened.
+		/// </summary>
+		internal static bool IsBigobs
 		{ get; private set; }
 		#endregion
 
@@ -357,7 +364,6 @@ namespace PckView
 			pals.Add(Palette.TftdGraph);
 			pals.Add(Palette.TftdResearch);
 
-//			foreach (var pal in pals)
 			for (int i = 0; i != pals.Count; ++i)
 			{
 				var pal = pals[i];
@@ -788,7 +794,31 @@ namespace PckView
 				ofd.Filter = "PCK files (*.PCK)|*.PCK|All files (*.*)|*.*";
 
 				if (ofd.ShowDialog() == DialogResult.OK)
+				{
+					IsBigobs = false;
 					LoadSpriteset(ofd.FileName);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Opens a PCK sprite collection.
+		/// Called when the mainmenu's file-menu Click event is raised.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnOpenBigobsClick(object sender, EventArgs e)
+		{
+			using (var ofd = new OpenFileDialog())
+			{
+				ofd.Title  = "Select a PCK (bigobs) file";
+				ofd.Filter = "PCK files (*.PCK)|*.PCK|All files (*.*)|*.*";
+
+				if (ofd.ShowDialog() == DialogResult.OK)
+				{
+					IsBigobs = true;
+					LoadSpriteset(ofd.FileName);
+				}
 			}
 		}
 
@@ -1225,7 +1255,7 @@ namespace PckView
 
 		private void OnCompareClick(object sender, EventArgs e) // disabled in designer w/ Visible=FALSE
 		{
-			var original = _pnlView.Spriteset; // store original spriteset
+/*			var original = _pnlView.Spriteset; // store original spriteset
 
 			OnOpenClick(null, EventArgs.Empty); // load a second spriteset
 			var spriteset = _pnlView.Spriteset;
@@ -1259,7 +1289,7 @@ namespace PckView
 				// would have to be tested and tracked, or disabled to ensure
 				// that things still work correctly when some monkey goes, "Oh
 				// cool... watch this!" **sproing***
-			}
+			} */
 		}
 		#endregion
 
@@ -1299,6 +1329,14 @@ namespace PckView
 			string pfeTab = pfePck.Substring(0, pfePck.Length - 4) + SpriteCollection.TabExt;
 			if (File.Exists(pfeTab))
 			{
+				if (IsBigobs) // Bigobs support for XCImage/PckImage ->
+					XCImage.SpriteHeight = 48;
+				else
+					XCImage.SpriteHeight = 40;
+
+				PckViewPanel.TileHeight = XCImage.SpriteHeight + PckViewPanel.SpriteMargin * 2 + 1;
+
+
 				SpriteCollection spriteset = null;
 
 				using (var fsPck = File.OpenRead(pfePck)) // try 2-byte sprite-offsets in .TAB file

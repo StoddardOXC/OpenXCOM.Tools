@@ -43,13 +43,13 @@ namespace XCom
 		/// </summary>
 		/// <param name="terrain"></param>
 		/// <param name="dirTerrain"></param>
-		/// <param name="tabOffset"></param>
+		/// <param name="offsetLength"></param>
 		/// <param name="pal"></param>
 		/// <returns></returns>
 		public static SpriteCollection LoadSpriteset(
 				string terrain,
 				string dirTerrain,
-				int tabOffset,
+				int offsetLength,
 				Palette pal)
 		{
 			//LogFile.WriteLine("");
@@ -91,7 +91,7 @@ namespace XCom
 							spritesets.Add(pfSpriteset, new SpriteCollection(
 																		fsPck,
 																		fsTab,
-																		tabOffset,
+																		offsetLength,
 																		pal));
 						}
 					}

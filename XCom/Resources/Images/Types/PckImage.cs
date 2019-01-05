@@ -83,26 +83,26 @@ namespace XCom
 			Pal = pal;
 
 			for (int id = 0; id != Bindata.Length; ++id)
-				Bindata[id] = Palette.TransparentId; // I *think* byte arrays get initialized w/ "0" by default (c#)
+				Bindata[id] = Palette.TransparentId; // byte arrays get initialized w/ "0" by default
 
-			int posSrc = 0;
-			int posDst = 0;
+			int src = 0;
+			int dst = 0;
 
 			if (bindata[0] != SpriteTransparencyByte)
-				posDst = bindata[posSrc++] * XCImage.SpriteWidth;
+				dst = bindata[src++] * XCImage.SpriteWidth;
 
-			for (int id = posSrc; id != bindata.Length; ++id)
+			for (int id = src; id != bindata.Length; ++id)
 			{
 				switch (bindata[id])
 				{
 					default:
-						//LogFile.WriteLine(". Bindata.Length= " + Bindata.Length + " / posDst= " + posDst);
-						//LogFile.WriteLine(". bindata.Length= " + bindata.Length + " / id= " + id);
-						Bindata[posDst++] = bindata[id];
+						//LogFile.WriteLine(". Bindata.Length= " + Bindata.Length + " posDst= " + dst);
+						//LogFile.WriteLine(". bindata.Length= " + bindata.Length + " id= " + id);
+						Bindata[dst++] = bindata[id];
 						break;
 
 					case SpriteTransparencyByte: // skip quantity of pixels
-						posDst += bindata[++id];
+						dst += bindata[++id];
 						break;
 
 					case SpriteStopByte: // end of image
