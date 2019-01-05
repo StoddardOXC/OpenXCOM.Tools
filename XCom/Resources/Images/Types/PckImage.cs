@@ -96,8 +96,8 @@ namespace XCom
 				switch (bindata[id])
 				{
 					default:
-						//LogFile.WriteLine(". Bindata.Length= " + Bindata.Length + " posDst= " + dst);
-						//LogFile.WriteLine(". bindata.Length= " + bindata.Length + " id= " + id);
+						//LogFile.WriteLine(". Bindata.Length= " + Bindata.Length + " dst= " + dst);
+						//LogFile.WriteLine(". bindata.Length= " + bindata.Length + " id= "  + id);
 						Bindata[dst++] = bindata[id];
 						break;
 

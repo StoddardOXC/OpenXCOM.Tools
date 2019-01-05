@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("the grays")]
 [assembly: AssemblyProduct ("PckView")]
-[assembly: AssemblyCopyright ("2017-2018")]
+[assembly: AssemblyCopyright ("2017-2019")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 // Setting ComVisible to false makes the types in this assembly not visible to
@@ -27,8 +27,8 @@ using System.Runtime.InteropServices;
 //	Build Number
 //	Revision
 //
-[assembly: AssemblyVersion ("2.2.3.0")]
-[assembly: AssemblyFileVersion ("2.2.3.0")]
+[assembly: AssemblyVersion ("2.3.0.0")]
+[assembly: AssemblyFileVersion ("2.3.0.0")]
 // satisfy FxCop:
 //[assembly: System.CLSCompliant(true)]
 // satisfy FxCop:
