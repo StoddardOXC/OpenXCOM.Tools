@@ -9,12 +9,17 @@ using XCom.Interfaces.Base;
 namespace XCom
 {
 	/// <summary>
-	/// Loads a tileset. Called by XCMainWindow.LoadSelectedMap()
-	/// @note Check that 'descriptor' not null before call.
+	/// Instantiates a Map with its Routes and Terrains.
 	/// </summary>
 	public static class MapFileService
 	{
 		#region Methods
+		/// <summary>
+		/// Loads a tileset. Called by XCMainWindow.LoadSelectedMap()
+		/// @note Check that 'descriptor' is not null before call.
+		/// </summary>
+		/// <param name="descriptor"></param>
+		/// <returns></returns>
 		public static MapFileBase LoadTileset(Descriptor descriptor)
 		{
 			//LogFile.WriteLine("");
