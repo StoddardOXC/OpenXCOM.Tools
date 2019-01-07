@@ -18,6 +18,11 @@ tilesets:
 
 #----- ufoShips ---------------------------------------------------------------#
 #----- UFO --------------------------------------------------------------------#
+  - type: UFO1A
+    terrains:
+      - UFO1
+    category: UFO
+    group: ufoShips
   - type: UFO_110
     terrains:
       - U_EXT02
