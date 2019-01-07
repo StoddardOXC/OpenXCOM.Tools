@@ -13,7 +13,8 @@ namespace XCom
 	/// A descriptor is accessed *only* through a Group and Category, and is
 	/// identified by its tileset-label. This allows multiple tilesets (ie. with
 	/// the same label) to be configured differently according to Category and
-	/// Group.
+	/// Group. (not really. Because they'll usually be in the same directory on
+	/// the hardrive and the OS won't allow duplicate filenames in one directory.)
 	/// </summary>
 	public sealed class Descriptor // *snap*
 	{
@@ -67,7 +68,6 @@ namespace XCom
 			_dirTerrain = (Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
 													 : SharedSpace.ResourceDirectoryTftd;
 			_dirTerrain = Path.Combine(SharedSpace.Instance.GetShare(_dirTerrain), PathTerrain);
-
 		}
 		#endregion
 
@@ -96,8 +96,10 @@ namespace XCom
 		{
 			//LogFile.WriteLine("Descriptor.GetTerrainSpriteset");
 
-			return ResourceInfo.LoadSpriteset(terrain, _dirTerrain, 2, Pal);	// TODO: Should the '2' be '4' for TFTD ...
-		}																		// no, Ufopaedia.org "Image Formats" says TFTD terrains have 2-byte Tab-offsets.
+			// NOTE: both UFO and TFTD use 2-byte Tab-offsetLengths for 32x40 terrain pcks
+			// (TFTD unitsprites use 4-byte Tab-offsetLengths although Bigobs 32x48 uses 2-byte)
+			return ResourceInfo.LoadSpriteset(terrain, _dirTerrain, 2, Pal);
+		}
 		#endregion
 
 

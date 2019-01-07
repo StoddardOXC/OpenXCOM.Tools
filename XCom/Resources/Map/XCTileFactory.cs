@@ -10,7 +10,7 @@ namespace XCom.Resources.Map
 		#region Fields (static)
 		private const string McdExt = ".MCD";
 
-		private const int Total = 62; // there are 62 bytes in each MCD record.
+		private const int Length = 62; // there are 62 bytes in each MCD record.
 		#endregion
 
 
@@ -47,12 +47,12 @@ namespace XCom.Resources.Map
 				{
 					using (var bs = new BufferedStream(File.OpenRead(pfeMcd)))
 					{
-						var parts = new Tilepart[(int)bs.Length / Total]; // TODO: Error if this don't work out right.
+						var parts = new Tilepart[(int)bs.Length / Length]; // TODO: Error if this don't work out right.
 
 						for (int id = 0; id != parts.Length; ++id)
 						{
-							var bindata = new byte[Total];
-							bs.Read(bindata, 0, Total);
+							var bindata = new byte[Length];
+							bs.Read(bindata, 0, Length);
 							var record = McdRecordFactory.CreateRecord(bindata);
 
 							var part = new Tilepart(id, spriteset, record);

@@ -2332,25 +2332,25 @@ namespace MapView
 				miSaveAs     .Enabled =
 				miSaveImage  .Enabled =
 				miResize     .Enabled =
-				miInfo       .Enabled =
-				miRegenOccult.Enabled = true;
+				miInfo       .Enabled = true;
 
-//				miExport.Enabled = true; // disabled in designer w/ Visible=FALSE.
+//				miRegenOccult.Enabled = true; // disabled in designer w/ Visible=FALSE.
+//				miExport     .Enabled = true; // disabled in designer w/ Visible=FALSE.
 
 				_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-				var mapBase = MapFileService.LoadTileset(descriptor);
-				_mainViewUnderlay.MapBase = mapBase;
+				var @base = MapFileService.LoadTileset(descriptor);
+				_mainViewUnderlay.MapBase = @base;
 
 				ViewerFormsManager.ToolFactory.EnableToolStrip(true);
 
-				RouteCheckService.CheckNodeBounds(mapBase as MapFileChild);
+				RouteCheckService.CheckNodeBounds(@base as MapFileChild);
 
 				Text = "Map Editor - " + descriptor.BasePath;
 
 				tsslMapLabel.Text = descriptor.Label;
-				tsslDimensions.Text = (mapBase != null) ? mapBase.MapSize.ToString()
-														: "size: n/a";
+				tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
+													  : "size: n/a";
 				tsslPosition.Text = String.Empty;
 
 				ViewerFormsManager.RouteView   .Control     .ClearSelectedInfo();
@@ -2363,12 +2363,11 @@ namespace MapView
 				miDoors.Checked = false;
 				ToggleDoorSprites(false);
 
-				if (!menuViewers.Enabled) // open/close the forms that appear in the Views menu.
+				if (!menuViewers.Enabled) // open/close the forms that appear in the Viewers menu.
 					_mainMenusManager.StartViewers();
 
-				ViewerFormsManager.SetObservers(mapBase); // reset all observer events
+				ViewerFormsManager.SetObservers(@base); // reset all observer events
 			}
-//			else miExport.Enabled = false;
 		}
 
 		/// <summary>
