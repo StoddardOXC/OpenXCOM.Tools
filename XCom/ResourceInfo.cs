@@ -41,8 +41,8 @@ namespace XCom
 		/// except the XCOM cursor-sprites load w/out a descriptor. So do the
 		/// 'ExtraSprites'.
 		/// </summary>
-		/// <param name="terrain"></param>
-		/// <param name="dirTerrain"></param>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="dirTerrain">path to the directory of the terrain file</param>
 		/// <param name="offsetLength"></param>
 		/// <param name="pal"></param>
 		/// <returns></returns>
@@ -57,11 +57,11 @@ namespace XCom
 
 			if (!String.IsNullOrEmpty(dirTerrain))
 			{
-				//LogFile.WriteLine(". path= " + path);
-				//LogFile.WriteLine(". file= " + file);
+				//LogFile.WriteLine(". dirTerrain= " + dirTerrain);
+				//LogFile.WriteLine(". terrain= " + terrain);
 
 				var pfSpriteset = Path.Combine(dirTerrain, terrain);
-				//LogFile.WriteLine(". pf= " + pf);
+				//LogFile.WriteLine(". pfSpriteset= " + pfSpriteset);
 
 				string pfePck = pfSpriteset + SpriteCollection.PckExt;
 				string pfeTab = pfSpriteset + SpriteCollection.TabExt;
@@ -110,6 +110,23 @@ namespace XCom
 							0);
 			}
 			return null;
+		}
+
+		/// <summary>
+		/// Gets the count of sprites in a sprite-collection.
+		/// @note Used only by MapInfoOutputBox.Analyze()
+		/// </summary>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="dirTerrain">path to the directory of the terrain file</param>
+		/// <param name="pal"></param>
+		/// <returns>count of sprites</returns>
+		internal static int GetSpritesetCount(
+				string terrain,
+				string dirTerrain,
+				Palette pal)
+		{
+			var pfSpriteset = Path.Combine(dirTerrain, terrain);
+			return _palSpritesets[pal][pfSpriteset].Count;
 		}
 		#endregion
 	}

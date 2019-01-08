@@ -18,10 +18,10 @@ namespace XCom.Resources.Map
 		/// <summary>
 		/// Creates an array of tileparts from a given terrain and spriteset.
 		/// </summary>
-		/// <param name="terrain"></param>
-		/// <param name="dirTerrain"></param>
-		/// <param name="spriteset"></param>
-		/// <returns></returns>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="dirTerrain">path to the directory of the terrain file</param>
+		/// <param name="spriteset">a SpriteCollection containing the needed sprites</param>
+		/// <returns>an array of Tileparts</returns>
 		internal static Tilepart[] CreateTileparts(
 				string terrain,
 				string dirTerrain,
@@ -34,7 +34,7 @@ namespace XCom.Resources.Map
 				if (!File.Exists(pfeMcd))
 				{
 					MessageBox.Show(
-								"Can't find file for terrain data"
+								"Can't find file for terrain data."
 									+ Environment.NewLine + Environment.NewLine
 									+ pfeMcd,
 								"Error",
@@ -71,6 +71,42 @@ namespace XCom.Resources.Map
 				}
 			}
 			return new Tilepart[0];
+		}
+
+		/// <summary>
+		/// Gets the count of MCD-records in an MCD-file.
+		/// @note It's funky to read from disk just to get the count of records
+		/// but at present an McdRecordCollection is retained only by a
+		/// currently loaded Tileset .... That's to say there is no general
+		/// cache of all available terrains; even a Map's Descriptor retains
+		/// only the allocated terrains as strings in a list-object.
+		/// See ResourceInfo - where the sprites of a terrain *are* cached.
+		/// </summary>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="dirTerrain">path to the directory of the terrain file</param>
+		/// <returns>count of MCD-records or 0 on fail</returns>
+		internal static int GetRecordCount(
+				string terrain,
+				string dirTerrain)
+		{
+			string pfeMcd = Path.Combine(dirTerrain, terrain + McdExt);
+
+			if (File.Exists(pfeMcd))
+			{
+				using (var bs = new BufferedStream(File.OpenRead(pfeMcd)))
+					return (int)bs.Length / Length; // TODO: Error if this don't work out right.
+			}
+
+			MessageBox.Show(
+						"Can't find file for terrain data."
+							+ Environment.NewLine + Environment.NewLine
+							+ pfeMcd,
+						"Error",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Error,
+						MessageBoxDefaultButton.Button1,
+						0);
+			return 0;
 		}
 
 		/// <summary>

@@ -65,8 +65,8 @@ namespace XCom
 							while (tabs++ < tabsTotal)
 								stabs += "\t";
 
-							var MCD = descriptor.GetTerrainRecords(terrain);
-							info += Environment.NewLine + terrain + stabs + "- " + MCD.Count;
+							int records = descriptor.GetRecordCount(terrain);
+							info += Environment.NewLine + terrain + stabs + "- " + records;
 						}
 						info += Environment.NewLine + Environment.NewLine + "total - " + parts.Count;
 

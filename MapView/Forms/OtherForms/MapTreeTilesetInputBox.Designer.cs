@@ -57,8 +57,8 @@
 			this.lblPathCurrent = new System.Windows.Forms.Label();
 			this.lblTilesetPath = new System.Windows.Forms.Label();
 			this.gbHeader = new System.Windows.Forms.GroupBox();
+			this.lblMcdRecords = new System.Windows.Forms.Label();
 			this.lblTilesetCurrent = new System.Windows.Forms.Label();
-			this.lblHeaderTileset = new System.Windows.Forms.Label();
 			this.lblGroupCurrent = new System.Windows.Forms.Label();
 			this.lblHeaderCategory = new System.Windows.Forms.Label();
 			this.lblCategoryCurrent = new System.Windows.Forms.Label();
@@ -381,8 +381,8 @@
 			// 
 			// gbHeader
 			// 
+			this.gbHeader.Controls.Add(this.lblMcdRecords);
 			this.gbHeader.Controls.Add(this.lblTilesetCurrent);
-			this.gbHeader.Controls.Add(this.lblHeaderTileset);
 			this.gbHeader.Controls.Add(this.lblGroupCurrent);
 			this.gbHeader.Controls.Add(this.lblHeaderGroup);
 			this.gbHeader.Controls.Add(this.lblHeaderCategory);
@@ -395,27 +395,29 @@
 			this.gbHeader.TabStop = false;
 			this.gbHeader.Text = "Maptree";
 			// 
+			// lblMcdRecords
+			// 
+			this.lblMcdRecords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.lblMcdRecords.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.lblMcdRecords.ForeColor = System.Drawing.SystemColors.Highlight;
+			this.lblMcdRecords.Location = new System.Drawing.Point(435, 30);
+			this.lblMcdRecords.Name = "lblMcdRecords";
+			this.lblMcdRecords.Size = new System.Drawing.Size(170, 15);
+			this.lblMcdRecords.TabIndex = 6;
+			this.lblMcdRecords.Text = "lblMcdRecords";
+			this.lblMcdRecords.TextAlign = System.Drawing.ContentAlignment.TopRight;
+			// 
 			// lblTilesetCurrent
 			// 
 			this.lblTilesetCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTilesetCurrent.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblTilesetCurrent.ForeColor = System.Drawing.SystemColors.Highlight;
-			this.lblTilesetCurrent.Location = new System.Drawing.Point(435, 30);
+			this.lblTilesetCurrent.Location = new System.Drawing.Point(435, 15);
 			this.lblTilesetCurrent.Name = "lblTilesetCurrent";
 			this.lblTilesetCurrent.Size = new System.Drawing.Size(170, 15);
 			this.lblTilesetCurrent.TabIndex = 5;
 			this.lblTilesetCurrent.Text = "lblTilesetCurrent";
 			this.lblTilesetCurrent.TextAlign = System.Drawing.ContentAlignment.TopRight;
-			// 
-			// lblHeaderTileset
-			// 
-			this.lblHeaderTileset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.lblHeaderTileset.Location = new System.Drawing.Point(555, 15);
-			this.lblHeaderTileset.Name = "lblHeaderTileset";
-			this.lblHeaderTileset.Size = new System.Drawing.Size(50, 15);
-			this.lblHeaderTileset.TabIndex = 4;
-			this.lblHeaderTileset.Text = "TILESET";
-			this.lblHeaderTileset.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
 			// lblGroupCurrent
 			// 
@@ -510,10 +512,10 @@
 		private System.Windows.Forms.Label lblAllocated;
 		private System.Windows.Forms.Panel pnlTerrainsHeader;
 		private System.Windows.Forms.Label lblTilesetCurrent;
-		private System.Windows.Forms.Label lblHeaderTileset;
 		private System.Windows.Forms.Label lblAddType;
 		private System.Windows.Forms.Label lblTerrainChanges;
 		private System.Windows.Forms.Button btnTerrainCopy;
 		private System.Windows.Forms.Button btnTerrainPaste;
+		private System.Windows.Forms.Label lblMcdRecords;
 	}
 }

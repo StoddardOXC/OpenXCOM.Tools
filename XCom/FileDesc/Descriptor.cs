@@ -76,7 +76,8 @@ namespace XCom
 		/// <summary>
 		/// Gets the MCD-records for a given terrain in this Descriptor.
 		/// </summary>
-		/// <returns></returns>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <returns>an McdRecordCollection containing all the parts for the Terrain</returns>
 		public McdRecordCollection GetTerrainRecords(string terrain)
 		{
 			//LogFile.WriteLine("Descriptor.GetTerrainRecords");
@@ -89,9 +90,20 @@ namespace XCom
 		}
 
 		/// <summary>
+		/// Gets the count of MCD-records in an MCD-file.
+		/// </summary>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <returns>count of MCD-records or 0 on fail</returns>
+		public int GetRecordCount(string terrain)
+		{
+			return XCTileFactory.GetRecordCount(terrain, _dirTerrain);
+		}
+
+		/// <summary>
 		/// Gets the spriteset for a given terrain in this Descriptor.
 		/// </summary>
-		/// <returns></returns>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <returns>a SpriteCollection containing all the sprites for the Terrain</returns>
 		public SpriteCollection GetTerrainSpriteset(string terrain)
 		{
 			//LogFile.WriteLine("Descriptor.GetTerrainSpriteset");
@@ -99,6 +111,17 @@ namespace XCom
 			// NOTE: both UFO and TFTD use 2-byte Tab-offsetLengths for 32x40 terrain pcks
 			// (TFTD unitsprites use 4-byte Tab-offsetLengths although Bigobs 32x48 uses 2-byte)
 			return ResourceInfo.LoadSpriteset(terrain, _dirTerrain, 2, Pal);
+		}
+
+		/// <summary>
+		/// Gets the count of sprites in a given Terrain.
+		/// @note Used only by MapInfoOutputBox.Analyze()
+		/// </summary>
+		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <returns>count of sprites</returns>
+		public int GetSpriteCount(string terrain)
+		{
+			return ResourceInfo.GetSpritesetCount(terrain, _dirTerrain, Pal);
 		}
 		#endregion
 

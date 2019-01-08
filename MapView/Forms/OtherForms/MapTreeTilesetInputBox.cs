@@ -195,9 +195,16 @@ namespace MapView
 
 					var tileset = TileGroup.Categories[Category][Tileset];
 
+					int records = 0;
+
 					TerrainsOriginal = new List<string>();
 					foreach (string terrain in tileset.Terrains)
+					{
 						TerrainsOriginal.Add(String.Copy(terrain));
+						records += tileset.GetRecordCount(terrain);
+					}
+
+					lblMcdRecords.Text = records + " MCD Records";
 
 					BasePath = tileset.BasePath;
 					break;
@@ -208,8 +215,8 @@ namespace MapView
 					lblAddType.Text = "Descriptor invalid";
 
 					lblTerrainChanges.Visible =
-					lblHeaderTileset .Visible =
-					lblTilesetCurrent.Visible = false;
+					lblTilesetCurrent.Visible =
+					lblMcdRecords    .Visible = false;
 
 					btnCreateMap   .Enabled =
 					btnTerrainCopy .Enabled =
@@ -249,7 +256,7 @@ namespace MapView
 
 			pnlSpacer.Left = gbTerrains.Width / 2 - pnlSpacer.Width / 2 - SystemInformation.VerticalScrollBarWidth / 2;
 		}
-		#endregion (override)
+		#endregion Eventcalls (override)
 
 
 		#region Eventcalls
@@ -410,11 +417,17 @@ namespace MapView
 			}
 			//LogFile.WriteLine(". Descriptor= " + ((Descriptor != null) ? Descriptor.Label : "NULL"));
 
+			int records = 0;
+
 			if (Descriptor != null)
 			{
 				foreach (string terrain in Descriptor.Terrains)
+				{
 					lbTerrainsAllocated.Items.Add(terrain);
+					records += Descriptor.GetRecordCount(terrain);
+				}
 			}
+			lblMcdRecords.Text = records + " MCD Records";
 
 			btnTerrainCopy .Enabled =
 			btnTerrainPaste.Enabled = (Descriptor != null);
