@@ -60,16 +60,13 @@ namespace XCom
 
 						foreach (string terrain in descriptor.Terrains) // do it again ...
 						{
-							string tabs = "\t";
-							int length = (terrain.Length - 1) / 8;
-							while (length < tabsTotal)
-							{
-								tabs += "\t";
-								++length;
-							}
+							string stabs = "\t";
+							int tabs = (terrain.Length - 1) / 8;
+							while (tabs++ < tabsTotal)
+								stabs += "\t";
 
 							var MCD = descriptor.GetTerrainRecords(terrain);
-							info += Environment.NewLine + terrain + tabs + "- " + MCD.Count;
+							info += Environment.NewLine + terrain + stabs + "- " + MCD.Count;
 						}
 						info += Environment.NewLine + Environment.NewLine + "total - " + parts.Count;
 

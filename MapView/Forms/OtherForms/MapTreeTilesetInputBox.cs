@@ -39,13 +39,13 @@ namespace MapView
 			MapExists,
 			MapCreate
 		}
-		#endregion
+		#endregion Enumerators
 
 
 		#region Fields (static)
 		private const string AddTileset  = "Add Tileset";
 		private const string EditTileset = "Edit Tileset";
-		#endregion
+		#endregion Fields (static)
 
 
 		#region Properties
@@ -97,11 +97,11 @@ namespace MapView
 		private List<string> TerrainsOriginal
 		{ get; set; }
 
+		private string _basepath;
 		/// <summary>
 		/// Gets/Sets the basepath. Calls ListTerrains() which also sets the
 		/// Descriptor.
 		/// </summary>
-		private string _basepath;
 		private string BasePath
 		{
 			get { return _basepath; }
@@ -125,12 +125,12 @@ namespace MapView
 
 		private char[] Invalid
 		{ get; set; }
-		#endregion
+		#endregion Properties
 
 
 		#region cTor
 		/// <summary>
-		/// Creates the tileset editor.
+		/// Creates the Tileset Editor.
 		/// </summary>
 		/// <param name="boxType"></param>
 		/// <param name="labelGroup"></param>
@@ -232,10 +232,10 @@ namespace MapView
 
 			tbTileset.Select();
 		}
-		#endregion
+		#endregion cTor
 
 
-		#region Eventcalls
+		#region Eventcalls (override)
 		protected override void OnResize(EventArgs e)
 		{
 			base.OnResize(e);
@@ -249,7 +249,10 @@ namespace MapView
 
 			pnlSpacer.Left = gbTerrains.Width / 2 - pnlSpacer.Width / 2 - SystemInformation.VerticalScrollBarWidth / 2;
 		}
+		#endregion (override)
 
+
+		#region Eventcalls
 		/// <summary>
 		/// Opens a find directory dialog.
 		/// </summary>
@@ -819,7 +822,7 @@ namespace MapView
 			btnMoveLeft.Enabled = (lbTerrainsAvailable.SelectedIndex != -1)
 							   && (Descriptor != null);
 		}
-		#endregion
+		#endregion Eventcalls
 
 
 		#region Methods
@@ -936,7 +939,7 @@ namespace MapView
 						MessageBoxDefaultButton.Button1,
 						0);
 		}
-		#endregion
+		#endregion Methods
 
 
 //		/// <summary>
