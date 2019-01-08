@@ -495,6 +495,13 @@ namespace MapView
 
 				btnCreateMap.Enabled = false;
 				ListTerrains();
+
+
+				lblTilesetCurrent.Text = Tileset;
+
+				lblTerrainChanges.Visible =
+				lblTilesetCurrent.Visible =
+				lblMcdRecords    .Visible = true;
 			}
 			else
 				ShowErrorDialog("The label is already assigned to a different tileset.");
