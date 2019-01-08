@@ -1,10 +1,10 @@
 //#define hq2xWorks
 
 using System;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
+//using System.IO;
 
 using XCom.Interfaces;
 
@@ -19,101 +19,139 @@ using XCom.Interfaces;
 
 namespace XCom
 {
-//	public delegate void LoadingEventHandler(int progress, int total);
-
-
 	/// <summary>
-	/// Static methods for dealing with Windows bitmaps.
+	/// Static methods for dealing with Bitmaps and sprites.
 	/// </summary>
 	public static class BitmapService
 	{
-		// used for an image-loading progressbar.
-//		public static event LoadingEventHandler LoadingEvent;
-
 		#region Fields (static)
-		public const string BmpExt = ".BMP";
+		public const string PngExt = ".PNG";
 		#endregion
 
 
 		/// <summary>
-		/// Saves a sprite to a given path w/ format: MS Windows 3 Bitmap, uncompressed.
+		/// Called by PckViewForm.OnImportSpritesheetClick()
 		/// </summary>
-		/// <param name="fullpath"></param>
-		/// <param name="bitmap"></param>
-		public static void ExportSprite(string fullpath, Bitmap bitmap)
+		/// <param name="bitmap">bitmap containing sprites</param>
+		/// <param name="pal"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <param name="pad"></param>
+		/// <returns></returns>
+		public static SpriteCollectionBase CreateSpriteset(
+				Bitmap bitmap,
+				Palette pal,
+				int width,
+				int height,
+				int pad = 0)
 		{
-			using (var bw = new BinaryWriter(new FileStream(fullpath, FileMode.Create)))
+			var spriteset = new SpriteCollectionBase();
+
+			int cols = (bitmap.Width  + pad) / (width  + pad);
+			int rows = (bitmap.Height + pad) / (height + pad);
+
+			int terrainId = -1;
+
+			for (int i = 0; i != cols * rows; ++i)
 			{
-				int pad = 0;
-				while ((bitmap.Width + pad) % 4 != 0)
-					++pad;
-
-				int len = (bitmap.Width + pad) * bitmap.Height;
-
-				bw.Write('B');
-				bw.Write('M');
-				bw.Write(1078 + len); // 14 + 40 + (4 * 256)
-				bw.Write((int)0);
-				bw.Write((int)1078);
-
-				bw.Write((int)40);
-				bw.Write((int)bitmap.Width);
-				bw.Write((int)bitmap.Height);
-				bw.Write((short)1);
-				bw.Write((short)8);
-				bw.Write((int)0);
-				bw.Write((int)0);
-				bw.Write((int)0);
-				bw.Write((int)0);
-				bw.Write((int)0);
-				bw.Write((int)0);
-				bw.Write((int)0);
-
-//				byte[] bArr = new byte[256 * 4];
-				var entries = bitmap.Palette.Entries;
-
-				for (int colorId = 1; colorId != 256; ++colorId)
-				{
-//				for (int i = 0; i < bArr.Length; i += 4)
-//				{
-//					bArr[i]     = entries[i / 4].B;
-//					bArr[i + 1] = entries[i / 4].G;
-//					bArr[i + 2] = entries[i / 4].R;
-//					bArr[i + 3] = 0;
-
-					bw.Write(entries[colorId].B);
-					bw.Write(entries[colorId].G);
-					bw.Write(entries[colorId].R);
-					bw.Write((byte)0);
-
-//					bw.Write((byte)image.Palette.Entries[i].B);
-//					bw.Write((byte)image.Palette.Entries[i].G);
-//					bw.Write((byte)image.Palette.Entries[i].R);
-//					bw.Write((byte)0);
-				}
-//				bw.Write(bArr);
-
-				var colorTable = new Dictionary<Color, byte>();
-
-				int id = 0;
-				foreach(var colorId in bitmap.Palette.Entries)
-					colorTable[colorId] = (byte)id++;
-
-				colorTable[Color.FromArgb(0, 0, 0, 0)] = (byte)255;
-
-				for (int i = bitmap.Height - 1; i != -1; --i)
-				{
-					for (int j = 0; j != bitmap.Width; ++j)
-						bw.Write(colorTable[bitmap.GetPixel(j, i)]);
-
-					for (int j = 0; j != pad; ++j)
-						bw.Write((byte)0x00);
-				}
+				int x = (i % cols) * (width  + pad);
+				int y = (i / cols) * (height + pad);
+				spriteset.Add(CreateSprite(
+										bitmap,
+										++terrainId,
+										pal,
+										x, y,
+										width, height));
 			}
+
+			spriteset.Pal = pal;
+
+			return spriteset;
 		}
 
 		/// <summary>
-		/// Saves a spriteset as a BMP spritesheet.
+		/// Helper for CreateSpriteset().
+		/// Also called by PckViewForm.OnAddSpritesClick() and .InsertSprites()
+		/// and .OnReplaceSpriteClick()
+		/// </summary>
+		/// <param name="bitmap"></param>
+		/// <param name="terrainId"></param>
+		/// <param name="pal"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="width"></param>
+		/// <param name="height"></param>
+		/// <returns></returns>
+		public static XCImage CreateSprite(
+				Bitmap bitmap,
+				int terrainId,
+				Palette pal,
+				int x,
+				int y,
+				int width,
+				int height)
+		{
+			//LogFile.WriteLine("BitmapService.CreateSprite");
+			var bindata = new byte[width * height]; // image data in 8-bpp form
+
+			var rect   = new Rectangle(
+									x, y,
+									width, height);
+			var locked = bitmap.LockBits(
+									rect,
+									ImageLockMode.ReadOnly,
+									PixelFormat.Format8bppIndexed);
+
+			var pixels = locked.Scan0;
+
+			unsafe
+			{
+				byte* bits;
+				if (locked.Stride > 0)
+					bits = (byte*)pixels.ToPointer();
+				else
+					bits = (byte*)pixels.ToPointer() + locked.Stride * (bitmap.Height - 1);
+				
+				uint stride = (uint)Math.Abs(locked.Stride);
+
+				int i = 0;
+				for (uint row = 0; row != height; ++row)
+				for (uint col = 0; col != width;  ++col)
+				{
+//					bindata[i++] = *(bits + row * stride + col); // bork.
+
+					byte palId = *(bits + row * stride + col);
+					switch (palId)
+					{
+						case PckImage.SpriteStopByte:			// convert #255 transparency to #0.
+							palId = 0;
+							break;
+
+						case PckImage.SpriteTransparencyByte:	// drop #254 transparency-marker down to #253.
+							palId = 253;
+							break;
+					}
+
+					bindata[i++] = palId;
+					//LogFile.WriteLine(". " + (i-1) + ":" + palId);
+				}
+			}
+
+			bitmap.UnlockBits(locked);
+
+			return new XCImage(bindata, width, height, pal, terrainId);
+		}
+
+
+		public static void ExportSprite(string fullpath, Bitmap bitmap)
+		{
+			//XCom.LogFile.WriteLine("PixelFormat= " + bitmap.PixelFormat); // Format8bppIndexed
+
+			bitmap.Save(fullpath, ImageFormat.Png);
+		}
+
+		/// <summary>
+		/// Saves a spriteset as a PNG spritesheet.
 		/// </summary>
 		/// <param name="fullpath">fullpath of the output file</param>
 		/// <param name="spriteset">spriteset</param>
@@ -490,132 +528,86 @@ namespace XCom
 
 			return dst;
 		}
-
-		/// <summary>
-		/// Called by PckViewForm.OnImportSpritesheetClick()
-		/// </summary>
-		/// <param name="bitmap">bitmap containing sprites</param>
-		/// <param name="pal"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <param name="pad"></param>
-		/// <returns></returns>
-		public static SpriteCollectionBase CreateSpriteset(
-				Bitmap bitmap,
-				Palette pal,
-				int width,
-				int height,
-				int pad = 0)
-		{
-			var spriteset = new SpriteCollectionBase();
-
-			int cols = (bitmap.Width  + pad) / (width  + pad);
-			int rows = (bitmap.Height + pad) / (height + pad);
-
-			int terrainId = 0;
-
-			for (int i = 0; i != cols * rows; ++i)
-			{
-				int x = (i % cols) * (width  + pad);
-				int y = (i / cols) * (height + pad);
-				spriteset.Add(CreateSprite(
-										bitmap,
-										terrainId++,
-										pal,
-										x, y,
-										width, height));
-//				UpdateProgressBar(aniSprite, rows * cols);
-			}
-
-			spriteset.Pal = pal;
-
-			return spriteset;
-		}
-
-		/// <summary>
-		/// Helper for LoadSpriteset()
-		/// also called by PckViewForm.OnAddSpriteClick() and .OnReplaceSpriteClick()
-		/// </summary>
-		/// <param name="bitmap"></param>
-		/// <param name="terrainId"></param>
-		/// <param name="pal"></param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
-		/// <param name="width"></param>
-		/// <param name="height"></param>
-		/// <returns></returns>
-		public static XCImage CreateSprite(
-				Bitmap bitmap,
-				int terrainId,
-				Palette pal,
-				int x,
-				int y,
-				int width,
-				int height)
-		{
-			//LogFile.WriteLine("BitmapService.CreateSprite");
-			var bindata = new byte[width * height]; // image data in 8-bpp form
-
-			var rect   = new Rectangle(
-									x, y,
-									width, height);
-			var locked = bitmap.LockBits(
-									rect,
-									ImageLockMode.ReadOnly,
-									PixelFormat.Format8bppIndexed);
-
-			var pixels = locked.Scan0;
-
-			unsafe
-			{
-				byte* bits;
-				if (locked.Stride > 0)
-					bits = (byte*)pixels.ToPointer();
-				else
-					bits = (byte*)pixels.ToPointer() + locked.Stride * (bitmap.Height - 1);
-				
-				uint stride = (uint)Math.Abs(locked.Stride);
-
-				int i = 0;
-				for (uint row = 0; row != height; ++row)
-				for (uint col = 0; col != width;  ++col)
-				{
-//					bindata[i++] = *(bits + row * stride + col); // bork.
-
-					byte palId = *(bits + row * stride + col);
-					switch (palId)
-					{
-						case PckImage.SpriteStopByte:			// convert #255 transparency to #0.
-							palId = 0;
-							break;
-
-						case PckImage.SpriteTransparencyByte:	// drop #254 transparency-marker down to #253.
-							palId = 253;
-							break;
-					}
-
-					bindata[i++] = palId;
-					//LogFile.WriteLine(". " + (i-1) + ":" + palId);
-				}
-			}
-
-			bitmap.UnlockBits(locked);
-
-			return new XCImage(bindata, width, height, pal, terrainId);
-		}
 	}
 }
 
-//		/// <summary>
-//		/// Used by MapFileBase.SaveGif()
-//		/// </summary>
-//		/// <param name="value"></param>
-//		/// <param name="total"></param>
-//		internal static void UpdateProgressBar(int value, int total)
-//		{
-//			if (LoadingEvent != null)
-//				LoadingEvent(value, total);
-//		}
+/*		/// <summary>
+		/// Saves a sprite to a given path w/ format: MS Windows 3 Bitmap, uncompressed.
+		/// </summary>
+		/// <param name="fullpath"></param>
+		/// <param name="bitmap"></param>
+		public static void ExportSprite(string fullpath, Bitmap bitmap)
+		{
+			using (var bw = new BinaryWriter(new FileStream(fullpath, FileMode.Create)))
+			{
+				int pad = 0;
+				while ((bitmap.Width + pad) % 4 != 0)
+					++pad;
+
+				int len = (bitmap.Width + pad) * bitmap.Height;
+
+				bw.Write('B');
+				bw.Write('M');
+				bw.Write(1078 + len); // 14 + 40 + (4 * 256)
+				bw.Write((int)0);
+				bw.Write((int)1078);
+
+				bw.Write((int)40);
+				bw.Write((int)bitmap.Width);
+				bw.Write((int)bitmap.Height);
+				bw.Write((short)1);
+				bw.Write((short)8);
+				bw.Write((int)0);
+				bw.Write((int)0);
+				bw.Write((int)0);
+				bw.Write((int)0);
+				bw.Write((int)0);
+				bw.Write((int)0);
+				bw.Write((int)0);
+
+//				byte[] bArr = new byte[256 * 4];
+				var entries = bitmap.Palette.Entries;
+
+				for (int colorId = 1; colorId != 256; ++colorId)
+				{
+//				for (int i = 0; i < bArr.Length; i += 4)
+//				{
+//					bArr[i]     = entries[i / 4].B;
+//					bArr[i + 1] = entries[i / 4].G;
+//					bArr[i + 2] = entries[i / 4].R;
+//					bArr[i + 3] = 0;
+
+					bw.Write(entries[colorId].B);
+					bw.Write(entries[colorId].G);
+					bw.Write(entries[colorId].R);
+					bw.Write((byte)0);
+
+//					bw.Write((byte)image.Palette.Entries[i].B);
+//					bw.Write((byte)image.Palette.Entries[i].G);
+//					bw.Write((byte)image.Palette.Entries[i].R);
+//					bw.Write((byte)0);
+				}
+//				bw.Write(bArr);
+
+				var colorTable = new Dictionary<Color, byte>();
+
+				int id = 0;
+				foreach(var colorId in bitmap.Palette.Entries)
+					colorTable[colorId] = (byte)id++;
+
+				colorTable[Color.FromArgb(0, 0, 0, 0)] = (byte)255;
+
+				for (int i = bitmap.Height - 1; i != -1; --i)
+				{
+					for (int j = 0; j != bitmap.Width; ++j)
+						bw.Write(colorTable[bitmap.GetPixel(j, i)]);
+
+					for (int j = 0; j != pad; ++j)
+						bw.Write((byte)0x00);
+				}
+			}
+		} */
+
 
 //		public static void Save24(string path, Bitmap image)
 //		{

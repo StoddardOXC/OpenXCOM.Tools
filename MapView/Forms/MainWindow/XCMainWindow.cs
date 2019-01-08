@@ -349,11 +349,6 @@ namespace MapView
 				LogFile.WriteLine("User options NOT loaded - no options file to load.");
 
 
-
-//			_loadingProgress = new LoadingForm();
-//			XCBitmap.LoadingEvent += _loadingProgress.UpdateProgress; // TODO: fix or remove that.
-
-
 			// I should rewrite the hq2x wrapper for .NET sometime -- not the code it's pretty insane
 //			if (!File.Exists("hq2xa.dll")) miHq.Visible = false;
 

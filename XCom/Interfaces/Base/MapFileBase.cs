@@ -260,8 +260,6 @@ namespace XCom.Interfaces.Base
 												x,
 												y - tilepart.Record.TileOffset);
 							}
-
-//							XCBitmap.UpdateProgressBar(i, (MapSize.Levs - Level) * MapSize.Rows * MapSize.Cols);
 						}
 					}
 				}

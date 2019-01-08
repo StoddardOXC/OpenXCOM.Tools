@@ -745,7 +745,7 @@ namespace PckView
 		}
 
 		/// <summary>
-		/// Exports the selected sprite in the collection to a BMP file.
+		/// Exports the selected sprite in the collection to a PNG file.
 		/// Called when the contextmenu's Click event is raised.
 		/// </summary>
 		/// <param name="sender"></param>
@@ -758,9 +758,8 @@ namespace PckView
 			do
 			{
 				digits += "0";
-				count /= 10;
 			}
-			while (count != 0);
+			while ((count /= 10) != 0);
 
 			var sprite = _pnlView.Spriteset[_pnlView.SelectedId];
 			string suffix = String.Format(
@@ -770,9 +769,9 @@ namespace PckView
 
 			using (var sfd = new SaveFileDialog())
 			{
-				sfd.Title      = "Export sprite to 32x40 8-bpp BMP file";
-				sfd.Filter     = "BMP files (*.BMP)|*.BMP|All files (*.*)|*.*";
-				sfd.DefaultExt = "BMP";
+				sfd.Title      = "Export sprite to 8-bpp PNG file";
+				sfd.Filter     = "PNG files (*.PNG)|*.PNG|All files (*.*)|*.*";
+				sfd.DefaultExt = "PNG";
 				sfd.FileName   = _pnlView.Spriteset.Label + suffix;
 
 				if (sfd.ShowDialog() == DialogResult.OK)
@@ -961,7 +960,7 @@ namespace PckView
 		}
 
 		/// <summary>
-		/// Exports all sprites in the currently loaded spriteset to BMP files.
+		/// Exports all sprites in the currently loaded spriteset to PNG files.
 		/// Called when the mainmenu's file-menu Click event is raised.
 		/// </summary>
 		/// <param name="sender"></param>
@@ -976,7 +975,7 @@ namespace PckView
 
 					fbd.Description = String.Format(
 												System.Globalization.CultureInfo.CurrentCulture,
-												"Export spriteset to 32x40 8-bpp BMP files"
+												"Export spriteset to 8-bpp PNG files"
 													+ Environment.NewLine + Environment.NewLine
 													+ "\t" + file);
 
@@ -993,32 +992,22 @@ namespace PckView
 						}
 						while (count != 0);
 
-//						var progress     = new ProgressWindow(this);
-//						progress.Width   = 300;
-//						progress.Height  = 50;
-//						progress.Minimum = 0;
-//						progress.Maximum = _pnlView.Spriteset.Count;
-//
-//						progress.Show();
 						foreach (XCImage sprite in _pnlView.Spriteset)
 						{
 							string suffix = String.Format(
 														System.Globalization.CultureInfo.InvariantCulture,
 														"{0:" + digits + "}",
 														sprite.TerrainId);
-							string fullpath = Path.Combine(path, file + suffix + BitmapService.BmpExt);
+							string fullpath = Path.Combine(path, file + suffix + BitmapService.PngExt);
 							BitmapService.ExportSprite(fullpath, sprite.Image);
-
-//							progress.Value = sprite.FileId;
 						}
-//						progress.Hide(); // TODO: I suspect this is essentially the same as a memory leak.
 					}
 				}
 			}
 		}
 
 		/// <summary>
-		/// Exports all sprites in the currently loaded spriteset to a BMP
+		/// Exports all sprites in the currently loaded spriteset to a PNG
 		/// spritesheet file.
 		/// Called when the mainmenu's file-menu Click event is raised.
 		/// </summary>
@@ -1034,13 +1023,13 @@ namespace PckView
 
 					fbd.Description = String.Format(
 												System.Globalization.CultureInfo.CurrentCulture,
-												"Export spriteset to an 8-bpp BMP spritesheet file"
+												"Export spriteset to an 8-bpp PNG spritesheet file"
 													+ Environment.NewLine + Environment.NewLine
 													+ "\t" + file);
 
 					if (fbd.ShowDialog() == DialogResult.OK)
 					{
-						string fullpath = Path.Combine(fbd.SelectedPath, file + BitmapService.BmpExt);
+						string fullpath = Path.Combine(fbd.SelectedPath, file + BitmapService.PngExt);
 						if (!File.Exists(fullpath))
 						{
 							BitmapService.ExportSpritesheet(fullpath, (SpriteCollection)_pnlView.Spriteset, Pal, 8);
@@ -1048,7 +1037,7 @@ namespace PckView
 						else
 							MessageBox.Show(
 										this,
-										file + BitmapService.BmpExt + " already exists.",
+										file + BitmapService.PngExt + " already exists.",
 										"Error",
 										MessageBoxButtons.OK,
 										MessageBoxIcon.Error,
