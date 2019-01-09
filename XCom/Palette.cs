@@ -15,7 +15,7 @@ namespace XCom
 	public sealed class Palette
 	{
 		#region Fields (static)
-		internal const byte TransparentId = 0x0;
+		internal const byte TransparentId = 0x00;
 
 		private static readonly Hashtable _palettes = new Hashtable();
 
@@ -203,7 +203,7 @@ namespace XCom
 
 		#region cTors
 		/// <summary>
-		/// Instantiates a palette given a filestream of data.
+		/// cTor[1]. Instantiates a palette given a filestream of data.
 		/// </summary>
 		/// <param name="fs"></param>
 		private Palette(Stream fs)
@@ -236,8 +236,9 @@ namespace XCom
 			}
 //			checkPalette();
 		}
+
 		/// <summary>
-		/// Instantiates a grayscale-palette with a given label.
+		/// cTor[2]. Instantiates a grayscale-palette with a given label.
 		/// </summary>
 		/// <param name="label"></param>
 		private Palette(string label)

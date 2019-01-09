@@ -9,7 +9,7 @@ using XCom.Interfaces;
 
 namespace PckView
 {
-	internal delegate void SpritePackChangedEventHandler(bool valid);
+	internal delegate void SpritesetChangedEventHandler(bool valid);
 
 
 	internal sealed class PckViewPanel
@@ -17,7 +17,7 @@ namespace PckView
 			Panel
 	{
 		#region Events
-		internal event SpritePackChangedEventHandler SpritesetChangedEvent;
+		internal event SpritesetChangedEventHandler SpritesetChangedEvent;
 		#endregion
 
 
@@ -31,7 +31,7 @@ namespace PckView
 		// w/ 'Spriteset.ImageFile.ImageSize.Width/Height' here and elsewhere.
 		private const int _tileWidth  = XCImage.SpriteWidth  + SpriteMargin * 2 + 1;
 //		private const int _tileHeight = XCImage.SpriteHeight + SpriteMargin * 2 + 1;
-		internal static int TileHeight;
+		internal static int TileHeight = 40; // default to 40px (terrain/unit height)
 
 		private const int TableOffsetHori = 3;
 		private const int TableOffsetVert = 2;

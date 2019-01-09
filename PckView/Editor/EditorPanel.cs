@@ -185,7 +185,7 @@ namespace PckView
 //									var color = PckViewForm.Pal[palId];
 
 									Sprite.Bindata[bindataId] = (byte)palId;
-									Sprite.Image = BitmapService.MakeBitmapTrue(
+									Sprite.Image = BitmapService.CreateColorized(
 																			XCImage.SpriteWidth,
 																			XCImage.SpriteHeight,
 																			Sprite.Bindata,

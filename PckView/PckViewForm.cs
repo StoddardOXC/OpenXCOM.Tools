@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 using DSShared;
@@ -503,20 +504,35 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title       = "Add 32x40 8-bpp BMP file(s)";
-				ofd.Filter      = "BMP files (*.BMP)|*.BMP|All files (*.*)|*.*";
+//				if (IsBigobs)
+//					ofd.Title = "Add 32x48 8-bpp PNG file(s)";
+//				else
+				ofd.Title = "Add 32x40 8-bpp Image file(s)";
+
+				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
+						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
+						   + "All files (*.*)|*.*";
 				ofd.Multiselect = true;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
-					int terrainId = _pnlView.Spriteset.Count;
+					int id = _pnlView.Spriteset.Count - 1;
 
 					foreach (string file in ofd.FileNames)
 					{
-						var bitmap = new Bitmap(file);
+						byte[] data = File.ReadAllBytes(file);
+						Bitmap bitmap = BitmapHandler.LoadBitmap(data);
+
+//						var bitmap = new Bitmap(file);	// <- bork. Creates a 32-bpp Argb image if source is 8-bpp
+														// PNG w/tranparency; BMP however retains 8-bpp indices.
+
+						LogFile.WriteLine("Width= " + bitmap.Width);
+						LogFile.WriteLine("Height= " + bitmap.Height);
+						LogFile.WriteLine("PixelFormat= " + bitmap.PixelFormat); // Format8bppIndexed
+
 						var sprite = BitmapService.CreateSprite(
 															bitmap,
-															terrainId++,
+															++id,
 															Pal,
 															0, 0,
 															XCImage.SpriteWidth,
@@ -789,7 +805,7 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title  = "Select a PCK file";
+				ofd.Title  = "Select a PCK (terrain or unit) file";
 				ofd.Filter = "PCK files (*.PCK)|*.PCK|All files (*.*)|*.*";
 
 				if (ofd.ShowDialog() == DialogResult.OK)
@@ -860,6 +876,7 @@ namespace PckView
 					OnPaletteClick(_paletteItems[pal], EventArgs.Empty);
 
 					_pnlView.Spriteset = spriteset;
+					OnSpriteClick(null, EventArgs.Empty);
 
 					Text = "PckView - " + pfePck;
 				}

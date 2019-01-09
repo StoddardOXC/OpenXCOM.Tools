@@ -83,7 +83,7 @@ namespace XCom
 			Pal = pal;
 
 			for (int id = 0; id != Bindata.Length; ++id)
-				Bindata[id] = Palette.TransparentId; // byte arrays get initialized w/ "0" by default
+				Bindata[id] = Palette.TransparentId; // Safety: byte arrays get initialized w/ "0" by default
 
 			int src = 0;
 			int dst = 0;
@@ -110,12 +110,12 @@ namespace XCom
 				}
 			}
 
-			Image = BitmapService.MakeBitmapTrue(
+			Image = BitmapService.CreateColorized(
 												XCImage.SpriteWidth,
 												XCImage.SpriteHeight,
 												Bindata,
 												Pal.ColorTable);
-			SpriteGray = BitmapService.MakeBitmapTrue(
+			SpriteGray = BitmapService.CreateColorized(
 												XCImage.SpriteWidth,
 												XCImage.SpriteHeight,
 												Bindata,

@@ -52,26 +52,26 @@ namespace XCom.Interfaces
 		/// <param name="pal">pass in null to *bypass* creating the 'Image'; ie,
 		/// the PckImage..cTor has already unravelled the compressed image-data
 		/// instead</param>
-		/// <param name="terrainId"></param>
+		/// <param name="id"></param>
 		internal XCImage(
 				byte[] bindata,
 				int width,
 				int height,
 				Palette pal,
-				int terrainId)
+				int id)
 		{
-			TerrainId = terrainId;
+			TerrainId = id; // NOTE: Is not necessarily Terrain. Could be Bigobs or Units ...
 
 			Bindata = bindata;
 			Pal     = pal;
 
-			if (Pal != null)										// NOTE: this is to check for a call by BitmapService.LoadSprite()
-				Image = BitmapService.MakeBitmapTrue(				// which is called by
-												width,				// BitmapService.LoadSpriteset() and
-												height,				// PckViewForm.OnSpriteAddClick()
-												Bindata,			// BUT: the call by PckImage..cTor initializer needs to decode
-												Pal.ColorTable);	// the file-data first, then it creates its own 'Image'.
-		}															// that's why i prefer pizza.
+			if (Pal != null)											// NOTE: this is to check for a call by BitmapService.CreateSprite()
+				Image = BitmapService.CreateColorized(					// which is called by
+													width,				// BitmapService.CreateSpriteset() and
+													height,				// several PckViewForm contextmenu events
+													Bindata,			// BUT: the call by PckImage..cTor initializer needs to decode
+													Pal.ColorTable);	// the file-data first, then it creates its own 'Image'.
+		}																// that's why i prefer pizza.
 		#endregion
 	}
 }

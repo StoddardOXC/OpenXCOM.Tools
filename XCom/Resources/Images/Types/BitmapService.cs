@@ -50,7 +50,7 @@ namespace XCom
 			int cols = (bitmap.Width  + pad) / (width  + pad);
 			int rows = (bitmap.Height + pad) / (height + pad);
 
-			int terrainId = -1;
+			int id = -1;
 
 			for (int i = 0; i != cols * rows; ++i)
 			{
@@ -58,7 +58,7 @@ namespace XCom
 				int y = (i / cols) * (height + pad);
 				spriteset.Add(CreateSprite(
 										bitmap,
-										++terrainId,
+										++id,
 										pal,
 										x, y,
 										width, height));
@@ -75,7 +75,7 @@ namespace XCom
 		/// and .OnReplaceSpriteClick()
 		/// </summary>
 		/// <param name="bitmap"></param>
-		/// <param name="terrainId"></param>
+		/// <param name="id"></param>
 		/// <param name="pal"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
@@ -84,7 +84,7 @@ namespace XCom
 		/// <returns></returns>
 		public static XCImage CreateSprite(
 				Bitmap bitmap,
-				int terrainId,
+				int id,
 				Palette pal,
 				int x,
 				int y,
@@ -102,44 +102,44 @@ namespace XCom
 									ImageLockMode.ReadOnly,
 									PixelFormat.Format8bppIndexed);
 
-			var pixels = locked.Scan0;
+			var pixel = locked.Scan0;
 
-			unsafe
+			unsafe // change any palette-indices 0xFF or 0xFE to 0xFD #253 ->
 			{
 				byte* bits;
 				if (locked.Stride > 0)
-					bits = (byte*)pixels.ToPointer();
+					bits = (byte*)pixel.ToPointer();
 				else
-					bits = (byte*)pixels.ToPointer() + locked.Stride * (bitmap.Height - 1);
+					bits = (byte*)pixel.ToPointer() + locked.Stride * (bitmap.Height - 1);
 				
 				uint stride = (uint)Math.Abs(locked.Stride);
 
-				int i = 0;
+				int i = -1;
 				for (uint row = 0; row != height; ++row)
 				for (uint col = 0; col != width;  ++col)
 				{
 //					bindata[i++] = *(bits + row * stride + col); // bork.
 
-					byte palId = *(bits + row * stride + col);
-					switch (palId)
+					byte colorId = *(bits + row * stride + col);
+					switch (colorId)
 					{
-						case PckImage.SpriteStopByte:			// convert #255 transparency to #0.
-							palId = 0;
-							break;
+						case PckImage.SpriteStopByte:			// convert #255 transparency to #0. uh no
+//							colorId = 0;
+//							break;
 
 						case PckImage.SpriteTransparencyByte:	// drop #254 transparency-marker down to #253.
-							palId = 253;
+							colorId = 253;
 							break;
 					}
 
-					bindata[i++] = palId;
-					//LogFile.WriteLine(". " + (i-1) + ":" + palId);
+					bindata[++i] = colorId;
+					//LogFile.WriteLine(". " + (i-1) + ":" + palid);
 				}
 			}
 
 			bitmap.UnlockBits(locked);
 
-			return new XCImage(bindata, width, height, pal, terrainId);
+			return new XCImage(bindata, width, height, pal, id); // note: XCImage..cTor calls MakeBitmapTrue() below.
 		}
 
 
@@ -170,10 +170,10 @@ namespace XCom
 
 			int extra = (spriteset.Count % width == 0) ? 0 : 1;
 
-			var bitmap = MakeBitmap(
-								width * (XCImage.SpriteWidth + pad) - pad,
-								(spriteset.Count / width + extra) * (XCImage.SpriteHeight + pad) - pad,
-								pal.ColorTable);
+			var bitmap = CreateTransparent(
+									width * (XCImage.SpriteWidth + pad) - pad,
+									(spriteset.Count / width + extra) * (XCImage.SpriteHeight + pad) - pad,
+									pal.ColorTable);
 
 			for (int i = 0; i != spriteset.Count; ++i)
 			{
@@ -187,14 +187,14 @@ namespace XCom
 
 
 		/// <summary>
-		/// Creates a TRUE 8-bit indexed bitmap from the specified byte-array.
+		/// Creates an 8-bit indexed bitmap from the specified byte-array.
 		/// </summary>
 		/// <param name="width">width of final bitmap</param>
 		/// <param name="height">height of final bitmap</param>
 		/// <param name="bindata">image data</param>
 		/// <param name="pal">palette to color the image with</param>
 		/// <returns></returns>
-		public static Bitmap MakeBitmapTrue(
+		public static Bitmap CreateColorized(
 				int width,
 				int height,
 				byte[] bindata,
@@ -212,7 +212,7 @@ namespace XCom
 									ImageLockMode.WriteOnly,
 									PixelFormat.Format8bppIndexed);
 
-			// Write to the temporary buffer that is provided by LockBits.
+			// Write to the temporary buffer that is provided by LockBits().
 			// Copy the pixels from the source image in this loop.
 			// Because you want an index, convert RGB to the appropriate
 			// palette index here.
@@ -220,8 +220,6 @@ namespace XCom
 
 			unsafe
 			{
-				// Get the pointer to the image bits.
-				// This is the unsafe operation.
 				byte* bits;
 				if (locked.Stride > 0)
 				{
@@ -229,7 +227,7 @@ namespace XCom
 				}
 				else
 				{
-					// If the Stide is negative, Scan0 points to the last
+					// If the Stride is negative, Scan0 points to the last
 					// scanline in the buffer. To normalize the loop, obtain
 					// a pointer to the front of the buffer that is located
 					// (Height-1) scanlines previous.
@@ -242,9 +240,8 @@ namespace XCom
 				for (uint col = 0; col != width && pos != bindata.Length; ++col)
 				{
 					// The destination pixel.
-					// The pointer to the color index byte of the
-					// destination; this real pointer causes this
-					// code to be considered unsafe.
+					// The pointer to the color index byte of the destination;
+					// this real pointer causes this code to be considered unsafe.
 					byte* pixel = bits + row * stride + col;
 					*pixel = bindata[pos++];
 				}
@@ -256,6 +253,7 @@ namespace XCom
 			return bitmap;
 		}
 
+
 		/// <summary>
 		/// Used by MapFileBase.SaveGif()
 		/// </summary>
@@ -263,7 +261,7 @@ namespace XCom
 		/// <param name="height"></param>
 		/// <param name="pal"></param>
 		/// <returns>pointer to Bitmap</returns>
-		internal static Bitmap MakeBitmap(
+		internal static Bitmap CreateTransparent(
 				int width,
 				int height,
 				ColorPalette pal)
@@ -280,7 +278,7 @@ namespace XCom
 									ImageLockMode.WriteOnly,
 									PixelFormat.Format8bppIndexed);
 
-			// Write to the temporary buffer that is provided by LockBits.
+			// Write to the temporary buffer that is provided by LockBits().
 			// Copy the pixels from the source image in this loop.
 			// Because you want an index, convert RGB to the appropriate
 			// palette index here.
@@ -288,8 +286,6 @@ namespace XCom
 
 			unsafe
 			{
-				// Get the pointer to the image bits.
-				// This is the unsafe operation.
 				byte* bits;
 				if (locked.Stride > 0)
 				{
@@ -297,7 +293,7 @@ namespace XCom
 				}
 				else
 				{
-					// If the Stide is negative, Scan0 points to the last
+					// If the Stride is negative, Scan0 points to the last
 					// scanline in the buffer. To normalize the loop, obtain
 					// a pointer to the front of the buffer that is located
 					// (Height-1) scanlines previous.
@@ -309,9 +305,8 @@ namespace XCom
 				for (uint col = 0; col != width;  ++col)
 				{
 					// The destination pixel.
-					// The pointer to the color index byte of the
-					// destination; this real pointer causes this
-					// code to be considered unsafe.
+					// The pointer to the color index byte of the destination;
+					// this real pointer causes this code to be considered unsafe.
 					byte* pixel = bits + row * stride + col;
 					*pixel = Palette.TransparentId;
 				}
@@ -474,7 +469,7 @@ namespace XCom
 		{
 			//Console.WriteLine("Old size: {0},{1} New Size: {2},{3}", src.Width, src.Height, bounds.Width, bounds.Height);
 
-			var dst = MakeBitmap(rect.Width, rect.Height, src.Palette);
+			var dst = CreateTransparent(rect.Width, rect.Height, src.Palette);
 
 			var dstRect   = new Rectangle(
 									0, 0,

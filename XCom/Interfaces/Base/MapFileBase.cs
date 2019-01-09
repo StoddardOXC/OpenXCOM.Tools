@@ -217,10 +217,10 @@ namespace XCom.Interfaces.Base
 			// what's wrong and save the technical details for the debugger.
 
 			var rowcols = MapSize.Rows + MapSize.Cols;
-			var bitmap = BitmapService.MakeBitmap(
-												rowcols * (XCImage.SpriteWidth / 2),
-												(MapSize.Levs - Level) * 24 + rowcols * 8,
-												palette.ColorTable);
+			var bitmap = BitmapService.CreateTransparent(
+													rowcols * (XCImage.SpriteWidth / 2),
+													(MapSize.Levs - Level) * 24 + rowcols * 8,
+													palette.ColorTable);
 
 			var start = new Point(
 								(MapSize.Rows - 1) * (XCImage.SpriteWidth / 2),
