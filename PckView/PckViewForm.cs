@@ -520,18 +520,17 @@ namespace PckView
 
 					foreach (string file in ofd.FileNames)
 					{
-						byte[] data = File.ReadAllBytes(file);
-						Bitmap bitmap = BitmapHandler.LoadBitmap(data);
+						byte[] bindata = File.ReadAllBytes(file);
+						Bitmap b = BitmapHandler.LoadBitmap(bindata);
 
 //						var bitmap = new Bitmap(file);	// <- bork. Creates a 32-bpp Argb image if source is 8-bpp
 														// PNG w/tranparency; BMP however retains 8-bpp indices.
-
-						LogFile.WriteLine("Width= " + bitmap.Width);
-						LogFile.WriteLine("Height= " + bitmap.Height);
-						LogFile.WriteLine("PixelFormat= " + bitmap.PixelFormat); // Format8bppIndexed
+						//LogFile.WriteLine("Width= " + bitmap.Width);
+						//LogFile.WriteLine("Height= " + bitmap.Height);
+						//LogFile.WriteLine("PixelFormat= " + bitmap.PixelFormat); // Format8bppIndexed
 
 						var sprite = BitmapService.CreateSprite(
-															bitmap,
+															b,
 															++id,
 															Pal,
 															0, 0,
@@ -561,8 +560,10 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title       = "Insert 32x40 8-bpp BMP file(s)";
-				ofd.Filter      = "BMP files (*.BMP)|*.BMP|All files (*.*)|*.*";
+				ofd.Title = "Add 32x40 8-bpp Image file(s)";
+				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
+						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
+						   + "All files (*.*)|*.*";
 				ofd.Multiselect = true;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
@@ -588,8 +589,10 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title       = "Insert 32x40 8-bpp BMP file(s)";
-				ofd.Filter      = "BMP files (*.BMP)|*.BMP|All files (*.*)|*.*";
+				ofd.Title = "Add 32x40 8-bpp Image file(s)";
+				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
+						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
+						   + "All files (*.*)|*.*";
 				ofd.Multiselect = true;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
@@ -605,25 +608,27 @@ namespace PckView
 		/// given Id.
 		/// Helper for OnInsertSpriteBeforeClick() and OnInsertSpriteAfterClick().
 		/// </summary>
-		/// <param name="terrainId">the terrain-id to start inserting at</param>
+		/// <param name="id">the terrain-id to start inserting at</param>
 		/// <param name="files">an array of filenames</param>
-		private void InsertSprites(int terrainId, string[] files)
+		private void InsertSprites(int id, string[] files)
 		{
 			int length = files.Length;
-			for (int id = terrainId; id != _pnlView.Spriteset.Count; ++id)
-				_pnlView.Spriteset[id].TerrainId = id + length;
+			for (int i = id; i != _pnlView.Spriteset.Count; ++i)
+				_pnlView.Spriteset[i].TerrainId = i + length;
 
 			foreach (string file in files)
 			{
-				var bitmap = new Bitmap(file);
+				byte[] bindata = File.ReadAllBytes(file);
+				Bitmap b = BitmapHandler.LoadBitmap(bindata);
+
 				var sprite = BitmapService.CreateSprite(
-													bitmap,
-													terrainId,
+													b,
+													id,
 													Pal,
 													0, 0,
 													XCImage.SpriteWidth,
 													XCImage.SpriteHeight);
-				_pnlView.Spriteset.Insert(terrainId++, sprite);
+				_pnlView.Spriteset.Insert(id++, sprite);
 			}
 		}
 
@@ -651,21 +656,25 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title  = "Open 32x40 8-bpp BMP file";
-				ofd.Filter = "BMP files (*.BMP)|*.BMP|All files (*.*)|*.*";
+				ofd.Title = "Add 32x40 8-bpp Image file";
+				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
+						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
+						   + "All files (*.*)|*.*";
 
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
-					var bitmap = new Bitmap(ofd.FileName);
+					byte[] bindata = File.ReadAllBytes(ofd.FileName);
+					Bitmap b = BitmapHandler.LoadBitmap(bindata);
+
 					var sprite = BitmapService.CreateSprite(
-														bitmap,
+														b,
 														_pnlView.SelectedId,
 														Pal,
 														0, 0,
 														XCImage.SpriteWidth,
 														XCImage.SpriteHeight);
 					_pnlView.Spriteset[_pnlView.SelectedId] =
-					EditorPanel.Instance.Sprite             = sprite;
+					EditorPanel.Instance.Sprite = sprite;
 
 					Refresh();
 				}
@@ -725,8 +734,8 @@ namespace PckView
 		{
 			_pnlView.Spriteset.RemoveAt(_pnlView.SelectedId);
 
-			for (int id = _pnlView.SelectedId; id != _pnlView.Spriteset.Count; ++id)
-				_pnlView.Spriteset[id].TerrainId = id;
+			for (int i = _pnlView.SelectedId; i != _pnlView.Spriteset.Count; ++i)
+				_pnlView.Spriteset[i].TerrainId = i;
 
 			EditorPanel.Instance.Sprite = null;
 
@@ -1076,23 +1085,26 @@ namespace PckView
 			{
 				using (var ofd = new OpenFileDialog())
 				{
-					ofd.Title  = "Import an 8-bpp BMP spritesheet file";
-					ofd.Filter = "BMP files (*.BMP)|*.BMP|All files (*.*)|*.*";
+					ofd.Title = "Import an 8-bpp spritesheet file";
+					ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
+							   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
+							   + "All files (*.*)|*.*";
 
 					if (ofd.ShowDialog() == DialogResult.OK)
 					{
 						_pnlView.Spriteset.Clear();
 
-						var bitmap = new Bitmap(ofd.FileName);
+						byte[] bindata = File.ReadAllBytes(ofd.FileName);
+						Bitmap b = BitmapHandler.LoadBitmap(bindata);
+
 						SpriteCollectionBase spriteset = BitmapService.CreateSpriteset(
-																					bitmap,
+																					b,
 																					Pal,
 																					XCImage.SpriteWidth,
 																					XCImage.SpriteHeight);
 						for (int i = 0; i != spriteset.Count; ++i)
-						{
 							_pnlView.Spriteset.Add(spriteset[i]);
-						}
+
 						InsertSpritesFinish();
 					}
 				}

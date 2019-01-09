@@ -145,8 +145,6 @@ namespace XCom
 
 		public static void ExportSprite(string fullpath, Bitmap bitmap)
 		{
-			//XCom.LogFile.WriteLine("PixelFormat= " + bitmap.PixelFormat); // Format8bppIndexed
-
 			bitmap.Save(fullpath, ImageFormat.Png);
 		}
 
