@@ -1097,11 +1097,11 @@ namespace PckView
 						byte[] bindata = File.ReadAllBytes(ofd.FileName);
 						Bitmap b = BitmapHandler.LoadBitmap(bindata);
 
-						SpriteCollectionBase spriteset = BitmapService.CreateSpriteset(
-																					b,
-																					Pal,
-																					XCImage.SpriteWidth,
-																					XCImage.SpriteHeight);
+						SpriteCollectionBase spriteset = BitmapService.CreateSheetSprites(
+																						b,
+																						Pal,
+																						XCImage.SpriteWidth,
+																						XCImage.SpriteHeight);
 						for (int i = 0; i != spriteset.Count; ++i)
 							_pnlView.Spriteset.Add(spriteset[i]);
 

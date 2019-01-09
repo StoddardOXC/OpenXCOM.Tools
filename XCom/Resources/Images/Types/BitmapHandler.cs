@@ -9,15 +9,18 @@ using System.Text;
 
 namespace XCom
 {
+	/// https://stackoverflow.com/questions/44835726/c-sharp-loading-an-indexed-color-image-file-correctly#answer-45100442
 	/// <summary>
 	/// Image loading toolset class which corrects the bug that prevents
 	/// paletted PNG images with transparency from being loaded as paletted.
 	/// @note Handles 8-bpp PNG,GIF,BMP (tested).
-	/// https://stackoverflow.com/questions/44835726/c-sharp-loading-an-indexed-color-image-file-correctly#answer-45100442
+	/// TODO: Vet this 'cause there's enough I've seen and done here to warrant
+	/// a thorough lookover ...
 	/// </summary>
 	public static class BitmapHandler
 	{
 		private static byte[] PNG_IDENTIFIER = {0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A};
+
 
 		/// <summary>
 		/// Loads an image, checks if it is a PNG containing palette
@@ -41,7 +44,7 @@ namespace XCom
 					// Check if it contains a palette.
 					// I'm sure it can be looked up in the header somehow, but meh.
 
-					Int32 plteOffset = FindChunk(data, "PLTE");
+					int plteOffset = FindChunk(data, "PLTE");
 					if (plteOffset != -1)
 					{
 						// Check if it contains a palette transparency chunk.
@@ -67,11 +70,11 @@ namespace XCom
 			}
 
 			using (var ms = new MemoryStream(data))
-			using (var bitmap = new Bitmap(ms))
+			using (var b = new Bitmap(ms))
 			{
-				if (bitmap.Palette.Entries.Length != 0 && dataTrns != null)
+				if (b.Palette.Entries.Length != 0 && dataTrns != null)
 				{
-					ColorPalette pal = bitmap.Palette;
+					ColorPalette pal = b.Palette;
 					for (int i = 0; i != pal.Entries.Length; ++i)
 					{
 						if (i >= dataTrns.Length)
@@ -80,14 +83,14 @@ namespace XCom
 						Color color = pal.Entries[i];
 						pal.Entries[i] = Color.FromArgb(dataTrns[i], color.R, color.G, color.B);
 					}
-					bitmap.Palette = pal;
+					b.Palette = pal;
 				}
 
 				// Images in .Net often cause odd crashes when their
 				// backing resource disappears. This prevents that from
 				// happening by copying its inner contents into a new Bitmap
 				// object.
-				return CloneImage(bitmap);
+				return CloneImage(b);
 			}
 		}
 
@@ -98,8 +101,8 @@ namespace XCom
 		/// </summary>
 		/// <param name="data">The bytes of the png image.</param>
 		/// <param name="chunkName">The name of the chunk to find.</param>
-		/// <returns>The index of the start of the png chunk, or -1 if the chunk
-		/// was not found.</returns>
+		/// <returns>The offset of the start of the png chunk, or -1 if the
+		/// chunk was not found.</returns>
 		private static int FindChunk(byte[] data, string chunkName)
 		{
 			if (data == null)
@@ -110,23 +113,26 @@ namespace XCom
 
 			// Using UTF-8 as extra check to make sure the name does not contain
 			// > 127 values.
-			byte[] chunkNamebytes = Encoding.UTF8.GetBytes(chunkName);
+			byte[] chunkNameBytes = Encoding.UTF8.GetBytes(chunkName);
 
-			if (chunkName.Length != 4 || chunkNamebytes.Length != 4)
+			if (chunkName.Length != 4 || chunkNameBytes.Length != 4)
 				throw new ArgumentException("Chunk name must be 4 ASCII characters!", "chunkName");
 
 			int offset = PNG_IDENTIFIER.Length;
 			int end = data.Length;
 
-			byte[] testBytes = new Byte[4];
+			byte[] test = new Byte[4];
 
 			// continue until either the end is reached, or there is not enough
 			// space behind it for reading a new header
-			while (offset < end && offset + 8 < end)
+			while (offset < end && offset + 8 < end) // huh - if (offset + 8 < end) then shirley (offset < end)
 			{
-				Array.Copy(data, offset + 4, testBytes, 0, 4);
+				Array.Copy(
+					   data, offset + 4,	// src,pos
+					   test, 0,				// dst,pos
+					   4);					// len
 
-				if (chunkNamebytes.SequenceEqual(testBytes))
+				if (chunkNameBytes.SequenceEqual(test))
 					return offset;
 
 				int chunkLength = GetChunkDataLength(data, offset);
@@ -138,13 +144,13 @@ namespace XCom
 		private static int GetChunkDataLength(byte[] data, int offset)
 		{
 			if (offset + 4 > data.Length)
-				throw new IndexOutOfRangeException("Bad chunk size in png image.");
+				throw new IndexOutOfRangeException("Bad chunk length in png image.");
 
 			// Don't want to use BitConverter; then you have to check platform
 			// endianness and all that mess.
 			int length = data[offset + 3] + (data[offset + 2] << 8) + (data[offset + 1] << 16) + (data[offset] << 24);
 			if (length < 0)
-				throw new IndexOutOfRangeException("Bad chunk size in png image.");
+				throw new IndexOutOfRangeException("Bad chunk endianness in png image.");
 
 			return length;
 		}
@@ -160,6 +166,7 @@ namespace XCom
 		{
 			var rect = new Rectangle(0, 0, src.Width, src.Height);
 			var dst = new Bitmap(rect.Width, rect.Height, src.PixelFormat);
+
 			dst.SetResolution(src.HorizontalResolution, src.VerticalResolution);
 
 			var srcLocked = src.LockBits(rect, ImageLockMode.ReadOnly,  src.PixelFormat);
@@ -195,8 +202,8 @@ namespace XCom
 			if (((int)src.PixelFormat & (int)PixelFormat.Indexed) != 0) //Indexed = 65536
 				dst.Palette = src.Palette;
 
-			// Restore DPI settings
-			dst.SetResolution(src.HorizontalResolution, src.VerticalResolution);
+			dst.SetResolution(src.HorizontalResolution, src.VerticalResolution); // Restore DPI settings - wtf.
+
 			return dst;
 		}
 	}

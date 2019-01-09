@@ -210,17 +210,17 @@ namespace XCom.Interfaces.Base
 		/// <param name="fullpath"></param>
 		public void SaveGifFile(string fullpath)
 		{
-			var palette = GetFirstGroundPalette();
-			if (palette == null)
+			var pal = GetFirstGroundPalette();
+			if (pal == null)
 				throw new ArgumentNullException("fullpath", "MapFileBase: At least 1 ground tile is required.");
 			// TODO: I don't want to see 'ArgumentNullException'. Just say
 			// what's wrong and save the technical details for the debugger.
 
-			var rowcols = MapSize.Rows + MapSize.Cols;
-			var bitmap = BitmapService.CreateTransparent(
-													rowcols * (XCImage.SpriteWidth / 2),
-													(MapSize.Levs - Level) * 24 + rowcols * 8,
-													palette.ColorTable);
+			var width = MapSize.Rows + MapSize.Cols;
+			var b = BitmapService.CreateTransparent(
+												width * (XCImage.SpriteWidth / 2),
+												(MapSize.Levs - Level) * 24 + width * 8,
+												pal.ColorTable);
 
 			var start = new Point(
 								(MapSize.Rows - 1) * (XCImage.SpriteWidth / 2),
@@ -256,7 +256,7 @@ namespace XCom.Interfaces.Base
 								var tilepart = part as Tilepart;
 								BitmapService.Draw( // NOTE: not actually drawing anything.
 												tilepart[0].Image,
-												bitmap,
+												b,
 												x,
 												y - tilepart.Record.TileOffset);
 							}
@@ -267,15 +267,18 @@ namespace XCom.Interfaces.Base
 
 			try
 			{
-				var rect = BitmapService.GetNontransparentRectangle(bitmap, Palette.TransparentId);
-				bitmap   = BitmapService.Crop(bitmap, rect);
-				bitmap.Save(fullpath, ImageFormat.Gif);
+				var rect = BitmapService.GetNontransparentRectangle(b, Palette.TransparentId);
+				b = BitmapService.Crop(b, rect);
+				b.Save(fullpath, ImageFormat.Gif);
 			}
-			catch
+			catch // TODO: Deal with exceptions appropriately.
 			{
-				bitmap.Save(fullpath, ImageFormat.Gif);
+				b.Save(fullpath, ImageFormat.Gif);
 				throw;
 			}
+
+			if (b != null)
+				b.Dispose();
 		}
 
 		private Palette GetFirstGroundPalette()
