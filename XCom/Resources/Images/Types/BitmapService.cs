@@ -40,19 +40,19 @@ namespace XCom
 		/// <param name="b">a 32x40 indexed Bitmap</param>
 		/// <param name="id">an appropriate set-id</param>
 		/// <param name="pal">an XCOM Palette-object</param>
-		/// <param name="x"></param>
-		/// <param name="y"></param>
 		/// <param name="width"></param>
 		/// <param name="height"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
 		/// <returns>an XCImage-object (base of PckImage)</returns>
 		public static XCImage CreateSprite(
 				Bitmap b,
 				int id,
 				Palette pal,
-				int x,
-				int y,
 				int width,
-				int height)
+				int height,
+				int x = 0,
+				int y = 0)
 		{
 			var bindata = new byte[width * height]; // image data in uncompressed 8-bpp (color-indexed) format
 
@@ -127,8 +127,8 @@ namespace XCom
 										b,
 										++id,
 										pal,
-										x, y,
-										width, height));
+										width, height,
+										x, y));
 			}
 
 			spriteset.Pal = pal;

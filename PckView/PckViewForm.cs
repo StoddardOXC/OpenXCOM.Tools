@@ -533,7 +533,6 @@ namespace PckView
 															b,
 															++id,
 															Pal,
-															0, 0,
 															XCImage.SpriteWidth,
 															XCImage.SpriteHeight);
 						_pnlView.Spriteset.Add(sprite);
@@ -625,7 +624,6 @@ namespace PckView
 													b,
 													id,
 													Pal,
-													0, 0,
 													XCImage.SpriteWidth,
 													XCImage.SpriteHeight);
 				_pnlView.Spriteset.Insert(id++, sprite);
@@ -670,7 +668,6 @@ namespace PckView
 														b,
 														_pnlView.SelectedId,
 														Pal,
-														0, 0,
 														XCImage.SpriteWidth,
 														XCImage.SpriteHeight);
 					_pnlView.Spriteset[_pnlView.SelectedId] =
