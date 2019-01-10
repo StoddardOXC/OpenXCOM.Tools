@@ -1328,8 +1328,9 @@ namespace PckView
 		}
 
 		/// <summary>
-		/// Loads a PCK file. May be called from MapView.Forms.MapObservers.TileViews.TileView.OnPckEditorClick()
-		/// NOTE: with a string like that you'd think this was .NET itself.
+		/// Loads a PCK file.
+		/// NOTE: May be called from MapView.Forms.MapObservers.TileViews.TileView.OnPckEditorClick()
+		/// - with a string like that you'd think this was .NET itself.
 		/// </summary>
 		/// <param name="pfePck">fullpath of a PCK file; check existence of the
 		/// file before call</param>
@@ -1354,9 +1355,10 @@ namespace PckView
 
 				SpriteCollection spriteset = null;
 
-				using (var fsPck = File.OpenRead(pfePck)) // try 2-byte sprite-offsets in .TAB file
-				using (var fsTab = File.OpenRead(pfeTab)) // ie, UFO/TFTD terrain-sprites, UFO unit-sprites
+				using (var fsPck = File.OpenRead(pfePck)) // try 2-byte tab-offsets in .TAB file
+				using (var fsTab = File.OpenRead(pfeTab)) // ie, UFO/TFTD terrain-sprites or Bigobs, UFO unit-sprites
 				{
+					//LogFile.WriteLine(". try 2-byte offsets");
 					spriteset = new SpriteCollection(
 												fsPck,
 												fsTab,
@@ -1364,11 +1366,12 @@ namespace PckView
 												Palette.UfoBattle);
 				}
 
-				if (spriteset.Borked)
+				if (!spriteset.BorkedBigobs && spriteset.Borked)
 				{
-					using (var fsPck = File.OpenRead(pfePck)) // try 4-byte sprite-offsets in .TAB file
+					using (var fsPck = File.OpenRead(pfePck)) // try 4-byte tab-offsets in .TAB file
 					using (var fsTab = File.OpenRead(pfeTab)) // ie, TFTD unit-sprites
 					{
+						//LogFile.WriteLine(". try 4-byte offsets");
 						spriteset = new SpriteCollection(
 													fsPck,
 													fsTab,
@@ -1377,16 +1380,40 @@ namespace PckView
 					}
 				}
 
-				if (spriteset != null)
-					spriteset.Label = SpritesetLabel;
+				if (spriteset.BorkedBigobs)
+				{
+					spriteset = null;
 
-				OnPaletteClick(
-							_paletteItems[DefaultPalette],
-							EventArgs.Empty);
+					string error = String.Empty;
+					if (!IsBigobs)
+						error = String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"Cannot load Bigobs in a 32x40 spriteset.");
+					else
+						error = String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"Cannot load Terrain or Units in a 32x48 spriteset.");
+					MessageBox.Show(
+								error,
+								"Error",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error,
+								MessageBoxDefaultButton.Button1,
+								0);
+				}
+				else
+				{
+					if (spriteset != null)
+						spriteset.Label = SpritesetLabel;
 
-				_pnlView.Spriteset = spriteset;
+					OnPaletteClick(
+								_paletteItems[DefaultPalette],
+								EventArgs.Empty);
 
-				Text = "PckView - " + pfePck;
+					_pnlView.Spriteset = spriteset;
+
+					Text = "PckView - " + pfePck;
+				}
 			}
 			else
 			{

@@ -57,7 +57,7 @@ namespace XCom
 		/// <summary>
 		/// Instantiates a PckImage, based on an XCImage.
 		/// </summary>
-		/// <param name="bindata">the compressed source data</param>
+		/// <param name="bindata">the COMPRESSED source data</param>
 		/// <param name="pal"></param>
 		/// <param name="terrainId"></param>
 		/// <param name="spriteset"></param>
@@ -82,27 +82,37 @@ namespace XCom
 
 			Pal = pal;
 
+			_spriteset.BorkedBigobs = false;
+
 			for (int id = 0; id != Bindata.Length; ++id)
 				Bindata[id] = Palette.TransparentId; // Safety: byte arrays get initialized w/ "0" by default
 
-			int src = 0;
-			int dst = 0;
+			int posSrc = 0;
+			int posDst = 0;
 
 			if (bindata[0] != SpriteTransparencyByte)
-				dst = bindata[src++] * XCImage.SpriteWidth;
+				posDst = bindata[posSrc++] * XCImage.SpriteWidth;
 
-			for (int id = src; id != bindata.Length; ++id)
+			for (; posSrc != bindata.Length; ++posSrc)
 			{
-				switch (bindata[id])
+				switch (bindata[posSrc])
 				{
 					default:
 						//LogFile.WriteLine(". Bindata.Length= " + Bindata.Length + " dst= " + dst);
 						//LogFile.WriteLine(". bindata.Length= " + bindata.Length + " id= "  + id);
-						Bindata[dst++] = bindata[id];
-						break;
+						if (posDst < Bindata.Length)
+						{
+							Bindata[posDst++] = bindata[posSrc];
+							break;
+						}
+
+						// probly trying to load a 32x48 Bigobs pck in a 32x40 spriteset.
+						// Note that this cannot be resolved absolutely.
+						_spriteset.BorkedBigobs = true;
+						return;
 
 					case SpriteTransparencyByte: // skip quantity of pixels
-						dst += bindata[++id];
+						posDst += bindata[++posSrc];
 						break;
 
 					case SpriteStopByte: // end of image
@@ -110,6 +120,12 @@ namespace XCom
 				}
 			}
 
+//			if (!_spriteset.BorkedBigobs) // check if trying to load a 32x40 Terrain/Unit pck in a 32x48 spriteset.
+//			{
+//				// there's no way to determine this.
+//			}
+//			else
+//			{
 			Image = BitmapService.CreateColorized(
 												XCImage.SpriteWidth,
 												XCImage.SpriteHeight,
@@ -120,6 +136,7 @@ namespace XCom
 												XCImage.SpriteHeight,
 												Bindata,
 												Pal.Grayscale.ColorTable);
+//			}
 		}
 		#endregion
 

@@ -29,6 +29,14 @@ namespace XCom
 		/// </summary>
 		public bool Borked
 		{ get; private set; }
+
+		/// <summary>
+		/// Flag used to indicate a mismatch between the size of bindata and
+		/// Bindata when attempting to add a PckImage.
+		/// TODO: is kludge = TRUE.
+		/// </summary>
+		public bool BorkedBigobs
+		{ get; internal set; }
 		#endregion
 
 
@@ -160,11 +168,20 @@ namespace XCom
 						for (int j = 0; j != bindataSprite.Length; ++j)
 							bindataSprite[j] = bindata[offsets[i] + j];
 
-						Add(new PckImage(
-										bindataSprite,
-										Pal,
-										i,
-										this));
+						var sprite = new PckImage(
+											bindataSprite,
+											Pal,
+											i,
+											this);
+						if (!BorkedBigobs)
+						{
+							Add(sprite);
+						}
+						else
+						{
+							Clear();
+							break;
+						}
 					}
 				}
 				// else abort. NOTE: 'Borked' is evaluated on return to PckViewForm.LoadSpriteset()

@@ -87,7 +87,7 @@ namespace PckView
 
 				EditorPanel.Instance.Sprite = null;
 
-				_sbpSpritesLabel.Text = _spriteset.Label;
+				_sbpSpritesLabel.Text = _spriteset.Label + (PckViewForm.IsBigobs ? " (32x48)" : " (32x40)");
 
 				SelectedId =
 				OverId     = -1;
