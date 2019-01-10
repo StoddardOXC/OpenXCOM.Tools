@@ -59,17 +59,23 @@ namespace MapView
 				bool front,
 				bool red)
 		{
+			#if __MonoCS__
+			Pen p = new Pen( front ? 
+				(red ? Color.Red    : Color.Green):
+				(red ? Color.Purple : Color.Blue ), 2);
+			graphics.DrawRectangle (p, x, y, halfWidth * 2, halfHeight * 5);
+			#else 
 			int id = 0;
 			if (front)
 				id = (red ? 3 : 5);
 			else
 				id = (red ? 0 : 2);
-
 			graphics.DrawImage(
 							_spriteset[id].Image,
 							x, y,
 							halfWidth  * 2,		// NOTE: the values for width and height
 							halfHeight * 5);	// are based on a sprite that's 32x40.
+			#endif
 		}
 
 		internal void DrawTargeter(
@@ -78,11 +84,16 @@ namespace MapView
 				int halfWidth,
 				int halfHeight)
 		{
+			#if __MonoCS__
+			Pen p = new Pen( Color.Yellow, 5 );
+			graphics.DrawRectangle (p, x, y, halfWidth * 2, halfHeight * 5);
+			#else 
 			graphics.DrawImage(
 							_spriteset[7].Image, // yellow targeter sprite
 							x, y,
 							halfWidth  * 2,		// NOTE: the values for width and height
 							halfHeight * 5);	// are based on a sprite that's 32x40.
+			#endif
 		}
 		#endregion
 	}

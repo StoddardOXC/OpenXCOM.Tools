@@ -896,7 +896,29 @@ namespace MapView
 		/// <param name="sprite"></param>
 		/// <param name="rect"></param>
 		private void DrawSprite(Image sprite, Rectangle rect)
-		{
+		{ 
+			#if __MonoCS__
+			Color c;
+			Brush b;
+			int wmax = sprite.Width;
+			int hmax = sprite.Height;
+			double scalex = (double)rect.Width / wmax;
+			double scaley = (double)rect.Height / hmax;
+			int sx = (int)Math.Round (scalex) + 1;
+			int sy = (int)Math.Round (scaley) + 1;
+			for (int w = 0; w < wmax; w++ ){
+				for (int h = 0; h < wmax; h++) {
+					c = ((Bitmap)sprite).GetPixel (w, h);
+					if ((c.R > 0)||(c.G > 0)||(c.B > 0)) {
+						b = new SolidBrush(c);
+						_graphics.FillRectangle(b, 
+							rect.Left + (int)Math.Round (w * scalex), 
+							rect.Top  + (int)Math.Round (h * scaley), 
+							sx, sy);
+					}
+				}
+			}
+			#else 
 			if (_spriteShadeEnabled)
 				_graphics.DrawImage(
 								sprite,
@@ -906,6 +928,7 @@ namespace MapView
 								_spriteAttributes);
 			else
 				_graphics.DrawImage(sprite, rect);
+			#endif
 		}
 
 		/// <summary>
