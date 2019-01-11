@@ -160,6 +160,11 @@ namespace PckView
 			_feditor.FormClosing += OnEditorFormClosing;
 
 
+			miCreate.MenuItems.Add(miNewTerrain);
+			miCreate.MenuItems.Add(miNewBigobs);
+			miCreate.MenuItems.Add(miNewUnitUfo);
+			miCreate.MenuItems.Add(miNewUnitTftd);
+
 //			var regInfo = new RegistryInfo(RegistryInfo.PckView, this); // subscribe to Load and Closing events.
 //			regInfo.RegisterProperties();
 //			regInfo.AddProperty("SelectedPalette");
@@ -942,15 +947,31 @@ namespace PckView
 		{
 			using (var sfd = new SaveFileDialog())
 			{
-				if (IsBigobs = (sender == miNewBigobs)) // Bigobs support for XCImage/PckImage ->
+				int tabOffsetLength;
+				if (IsBigobs = (sender == miNewBigobs)) // Bigobs support for XCImage/PckImage
 				{
 					sfd.Title = "Create a PCK (bigobs) file";
 					XCImage.SpriteHeight = 48;
+					tabOffsetLength = 2;
 				}
 				else
 				{
-					sfd.Title = "Create a PCK (terrain/unit) file";
 					XCImage.SpriteHeight = 40;
+
+					if (sender == miNewUnitTftd) // Tftd Unit support for XCImage/PckImage
+					{
+						sfd.Title = "Create a PCK (tftd unit) file";
+						tabOffsetLength = 4;
+					}
+					else
+					{
+						tabOffsetLength = 2;
+
+						if (sender == miNewUnitUfo) // Ufo Unit support for XCImage/PckImage
+							sfd.Title = "Create a PCK (ufo unit) file";
+						else
+							sfd.Title = "Create a PCK (terrain) file";
+					}
 				}
 
 				sfd.Filter     = "PCK files (*.PCK)|*.PCK|All files (*.*)|*.*";
@@ -969,14 +990,11 @@ namespace PckView
 					SpritesetDirectory = Path.GetDirectoryName(pfePck);
 					SpritesetLabel     = Path.GetFileNameWithoutExtension(pfePck);
 
-					// keep this simple. Assume 2-byte Tab file.
-					// TODO: oh oh - TFTD unit-sprites use 4-byte tab-offsets
-
 					var pal = DefaultPalette;
 					var spriteset = new SpriteCollection(
 													SpritesetLabel,
 													pal,
-													2);
+													tabOffsetLength);
 
 					OnPaletteClick(_paletteItems[pal], EventArgs.Empty);
 

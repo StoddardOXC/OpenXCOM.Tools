@@ -201,13 +201,13 @@ namespace XCom
 		/// <param name="dir">the directory to save to</param>
 		/// <param name="file">the filename without extension</param>
 		/// <param name="spriteset">pointer to the base spriteset</param>
-		/// <param name="tabOffset">2 for UFO, 4 for TFTD (roughly..)</param>
+		/// <param name="tabOffsetLength">2 for terrains/bigobs/ufo-units, 4 for tftd-units</param>
 		/// <returns>true if mission was successful</returns>
 		public static bool SaveSpriteset(
 				string dir,
 				string file,
 				SpriteCollectionBase spriteset,
-				int tabOffset)
+				int tabOffsetLength)
 		{
 			//LogFile.WriteLine("SpriteCollection.SaveSpriteset");
 			string pfePck = Path.Combine(dir, file + PckExt);
@@ -216,7 +216,7 @@ namespace XCom
 			using (var bwPck = new BinaryWriter(File.Create(pfePck)))
 			using (var bwTab = new BinaryWriter(File.Create(pfeTab)))
 			{
-				switch (tabOffset)
+				switch (tabOffsetLength)
 				{
 					case 2:
 					{

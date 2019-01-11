@@ -75,7 +75,6 @@ namespace XCom
 					terrainId)
 		{
 			//LogFile.WriteLine("PckImage..cTor");
-//			Bindata = new byte[XCImage.SpriteWidth * XCImage.SpriteHeight];
 
 			_spriteset = spriteset; // for ToString() only.
 			MapId = _idCanonical++; // for 'MapInfoOutputBox' only.
@@ -100,6 +99,7 @@ namespace XCom
 					default:
 						//LogFile.WriteLine(". Bindata.Length= " + Bindata.Length + " dst= " + dst);
 						//LogFile.WriteLine(". bindata.Length= " + bindata.Length + " id= "  + id);
+
 						if (posDst < Bindata.Length)
 						{
 							Bindata[posDst++] = bindata[posSrc];
