@@ -48,37 +48,30 @@ namespace XCom
 				{
 					if (parts.Count > 256)
 					{
-						string info = String.Empty;
+						string text = String.Empty;
 
-						int tabsTotal = 0;
+						int lengthTotal = 0;
 						foreach (string terrain in descriptor.Terrains) // do it again ...
 						{
-							if (terrain.Length > tabsTotal)
-								tabsTotal = terrain.Length;
+							if (terrain.Length > lengthTotal)
+								lengthTotal = terrain.Length;
 						}
-						tabsTotal = (tabsTotal - 1) / 8;
 
 						foreach (string terrain in descriptor.Terrains) // do it again ...
 						{
-							string stabs = "\t";
-							int tabs = (terrain.Length - 1) / 8;
-							while (tabs++ < tabsTotal)
-								stabs += "\t";
+							string st = terrain;
+
+							int length = terrain.Length;
+							while (length++ != lengthTotal)
+								st += " ";
 
 							int records = descriptor.GetRecordCount(terrain);
-							info += Environment.NewLine + terrain + stabs + "- " + records;
+							text += st + " - " + records + Environment.NewLine;
 						}
-						info += Environment.NewLine + Environment.NewLine + "total - " + parts.Count;
+						text += Environment.NewLine + "total - " + parts.Count;
 
-						MessageBox.Show(
-									"MCD records allocated by terrains exceeds 256."
-									+ Environment.NewLine
-									+ info,
-									"Warning",
-									MessageBoxButtons.OK,
-									MessageBoxIcon.Warning,
-									MessageBoxDefaultButton.Button1,
-									0);
+						MapFileError.Instance.Show();
+						MapFileError.Instance.SetText(descriptor.Label, text);
 					}
 
 					var RMP = new RouteNodeCollection(descriptor.Label, descriptor.BasePath);

@@ -399,7 +399,7 @@
 			// 
 			this.lblMcdRecords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblMcdRecords.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblMcdRecords.ForeColor = System.Drawing.SystemColors.Highlight;
+			this.lblMcdRecords.ForeColor = System.Drawing.Color.Tan;
 			this.lblMcdRecords.Location = new System.Drawing.Point(435, 30);
 			this.lblMcdRecords.Name = "lblMcdRecords";
 			this.lblMcdRecords.Size = new System.Drawing.Size(170, 15);
@@ -411,7 +411,7 @@
 			// 
 			this.lblTilesetCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTilesetCurrent.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.lblTilesetCurrent.ForeColor = System.Drawing.SystemColors.Highlight;
+			this.lblTilesetCurrent.ForeColor = System.Drawing.Color.Tan;
 			this.lblTilesetCurrent.Location = new System.Drawing.Point(435, 15);
 			this.lblTilesetCurrent.Name = "lblTilesetCurrent";
 			this.lblTilesetCurrent.Size = new System.Drawing.Size(170, 15);

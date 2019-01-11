@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -203,8 +204,12 @@ namespace MapView
 						TerrainsOriginal.Add(String.Copy(terrain));
 						records += tileset.GetRecordCount(terrain);
 					}
-
 					lblMcdRecords.Text = records + " MCD Records";
+
+					if (records > 256)
+						lblMcdRecords.ForeColor = Color.MediumVioletRed;
+					else
+						lblMcdRecords.ForeColor = Color.Tan;
 
 					BasePath = tileset.BasePath;
 					break;
@@ -428,6 +433,11 @@ namespace MapView
 				}
 			}
 			lblMcdRecords.Text = records + " MCD Records";
+
+			if (records > 256)
+				lblMcdRecords.ForeColor = Color.MediumVioletRed;
+			else
+				lblMcdRecords.ForeColor = Color.Tan;
 
 			btnTerrainCopy .Enabled =
 			btnTerrainPaste.Enabled = (Descriptor != null);
