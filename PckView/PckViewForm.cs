@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -494,6 +495,38 @@ namespace PckView
 			_feditor.Hide();
 		}
 
+
+		/// <summary>
+		/// Displays an errorbox to the user about incorrect Bitmap dimensions
+		/// and/or pixel-format.
+		/// </summary>
+		/// <param name="hint">true to suggest proper dimensions/format</param>
+		private void ShowBitmapError(bool hint = true)
+		{
+			string error = "Detected incorrect Dimensions and/or PixelFormat.";
+
+			if (hint)
+			{
+				error += Environment.NewLine + Environment.NewLine;
+				if (IsBigobs)
+					error += String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"Image needs to be 32x48 8-bpp");
+				else
+					error += String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"Image needs to be 32x40 8-bpp");
+			}
+
+			MessageBox.Show(
+						error,
+						"Error",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Error,
+						MessageBoxDefaultButton.Button1,
+						0);
+		}
+
 		/// <summary>
 		/// Adds a sprite or sprites to the collection.
 		/// Called when the contextmenu's Click event is raised.
@@ -504,31 +537,44 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-//				if (IsBigobs)
-//					ofd.Title = "Add 32x48 8-bpp PNG file(s)";
-//				else
-				ofd.Title = "Add 32x40 8-bpp Image file(s)";
+				ofd.Multiselect = true;
+
+				if (IsBigobs)
+					ofd.Title = "Add 32x48 8-bpp Image file(s)";
+				else
+					ofd.Title = "Add 32x40 8-bpp Image file(s)";
 
 				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
 						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
 						   + "All files (*.*)|*.*";
-				ofd.Multiselect = true;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
-					int id = _pnlView.Spriteset.Count - 1;
-
-					foreach (string file in ofd.FileNames)
+					var bs = new Bitmap[ofd.FileNames.Length]; // first run a check against all sprites and if any are borked set error.
+					for (int i = 0; i != ofd.FileNames.Length; ++i)
 					{
-						byte[] bindata = File.ReadAllBytes(file);
+//						var b = new Bitmap(ofd.FileNames[i]);	// <- .net.bork. Creates a 32-bpp Argb image if source is
+																// 8-bpp PNG w/tranparency; GIF,BMP however retains 8-bpp format.
+
+						byte[] bindata = File.ReadAllBytes(ofd.FileNames[i]);
 						Bitmap b = BitmapHandler.LoadBitmap(bindata);
 
-//						var bitmap = new Bitmap(file);	// <- bork. Creates a 32-bpp Argb image if source is 8-bpp
-														// PNG w/tranparency; BMP however retains 8-bpp indices.
-						//LogFile.WriteLine("Width= " + bitmap.Width);
-						//LogFile.WriteLine("Height= " + bitmap.Height);
-						//LogFile.WriteLine("PixelFormat= " + bitmap.PixelFormat); // Format8bppIndexed
+						if (   b.Width  == XCImage.SpriteWidth
+							&& b.Height == XCImage.SpriteHeight
+							&& b.PixelFormat == PixelFormat.Format8bppIndexed)
+						{
+							bs[i] = b;
+						}
+						else
+						{
+							ShowBitmapError();
+							return;
+						}
+					}
 
+					int id = _pnlView.Spriteset.Count - 1;
+					foreach (var b in bs)
+					{
 						var sprite = BitmapService.CreateSprite(
 															b,
 															++id,
@@ -559,20 +605,28 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title = "Add 32x40 8-bpp Image file(s)";
+				ofd.Multiselect = true;
+
+				if (IsBigobs)
+					ofd.Title = "Add 32x48 8-bpp Image file(s)";
+				else
+					ofd.Title = "Add 32x40 8-bpp Image file(s)";
+
 				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
 						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
 						   + "All files (*.*)|*.*";
-				ofd.Multiselect = true;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
-					InsertSprites(_pnlView.SelectedId, ofd.FileNames);
+					if (InsertSprites(_pnlView.SelectedId, ofd.FileNames))
+					{
+						_pnlView.SelectedId += ofd.FileNames.Length;
+						EditorPanel.Instance.Sprite = _pnlView.Spriteset[_pnlView.SelectedId];
 
-					_pnlView.SelectedId += ofd.FileNames.Length;
-					EditorPanel.Instance.Sprite = _pnlView.Spriteset[_pnlView.SelectedId];
-
-					InsertSpritesFinish();
+						InsertSpritesFinish();
+					}
+					else
+						ShowBitmapError();
 				}
 			}
 		}
@@ -588,16 +642,23 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title = "Add 32x40 8-bpp Image file(s)";
+				ofd.Multiselect = true;
+
+				if (IsBigobs)
+					ofd.Title = "Add 32x48 8-bpp Image file(s)";
+				else
+					ofd.Title = "Add 32x40 8-bpp Image file(s)";
+
 				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
 						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
 						   + "All files (*.*)|*.*";
-				ofd.Multiselect = true;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
-					InsertSprites(_pnlView.SelectedId + 1, ofd.FileNames);
-					InsertSpritesFinish();
+					if (InsertSprites(_pnlView.SelectedId + 1, ofd.FileNames))
+						InsertSpritesFinish();
+					else
+						ShowBitmapError();
 				}
 			}
 		}
@@ -609,17 +670,31 @@ namespace PckView
 		/// </summary>
 		/// <param name="id">the terrain-id to start inserting at</param>
 		/// <param name="files">an array of filenames</param>
-		private void InsertSprites(int id, string[] files)
+		/// <returns>true if all sprites are inserted successfully</returns>
+		private bool InsertSprites(int id, string[] files)
 		{
+			var bs = new Bitmap[files.Length]; // first run a check against all sprites and if any are borked exit w/ false.
+			for (int i = 0; i != files.Length; ++i)
+			{
+				byte[] bindata = File.ReadAllBytes(files[i]);
+				Bitmap b = BitmapHandler.LoadBitmap(bindata);
+
+				if (   b.Width  == XCImage.SpriteWidth
+					&& b.Height == XCImage.SpriteHeight
+					&& b.PixelFormat == PixelFormat.Format8bppIndexed)
+				{
+					bs[i] = b;
+				}
+				else
+					return false;
+			}
+
 			int length = files.Length;
 			for (int i = id; i != _pnlView.Spriteset.Count; ++i)
 				_pnlView.Spriteset[i].TerrainId = i + length;
 
-			foreach (string file in files)
+			foreach (var b in bs)
 			{
-				byte[] bindata = File.ReadAllBytes(file);
-				Bitmap b = BitmapHandler.LoadBitmap(bindata);
-
 				var sprite = BitmapService.CreateSprite(
 													b,
 													id,
@@ -628,6 +703,7 @@ namespace PckView
 													XCImage.SpriteHeight);
 				_pnlView.Spriteset.Insert(id++, sprite);
 			}
+			return true;
 		}
 
 		/// <summary>
@@ -654,7 +730,11 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title = "Add 32x40 8-bpp Image file";
+				if (IsBigobs)
+					ofd.Title = "Add 32x48 8-bpp Image file";
+				else
+					ofd.Title = "Add 32x40 8-bpp Image file";
+
 				ofd.Filter = "Image files (*.PNG *.GIF *.BMP)|*.PNG;*.GIF;*.BMP|"
 						   + "PNG files (*.PNG)|*.PNG|GIF files (*.GIF)|*.GIF|BMP files (*.BMP)|*.BMP|"
 						   + "All files (*.*)|*.*";
@@ -664,16 +744,23 @@ namespace PckView
 					byte[] bindata = File.ReadAllBytes(ofd.FileName);
 					Bitmap b = BitmapHandler.LoadBitmap(bindata);
 
-					var sprite = BitmapService.CreateSprite(
-														b,
-														_pnlView.SelectedId,
-														Pal,
-														XCImage.SpriteWidth,
-														XCImage.SpriteHeight);
-					_pnlView.Spriteset[_pnlView.SelectedId] =
-					EditorPanel.Instance.Sprite = sprite;
+					if (   b.Width  == XCImage.SpriteWidth
+						&& b.Height == XCImage.SpriteHeight
+						&& b.PixelFormat == PixelFormat.Format8bppIndexed)
+					{
+						var sprite = BitmapService.CreateSprite(
+															b,
+															_pnlView.SelectedId,
+															Pal,
+															XCImage.SpriteWidth,
+															XCImage.SpriteHeight);
+						_pnlView.Spriteset[_pnlView.SelectedId] =
+						EditorPanel.Instance.Sprite = sprite;
 
-					Refresh();
+						Refresh();
+					}
+					else
+						ShowBitmapError();
 				}
 			}
 		}
@@ -811,7 +898,7 @@ namespace PckView
 		{
 			using (var ofd = new OpenFileDialog())
 			{
-				ofd.Title  = "Select a PCK (terrain or unit) file";
+				ofd.Title  = "Select a PCK (terrain/unit) file";
 				ofd.Filter = "PCK files (*.PCK)|*.PCK|All files (*.*)|*.*";
 
 				if (ofd.ShowDialog() == DialogResult.OK)
@@ -853,7 +940,17 @@ namespace PckView
 		{
 			using (var sfd = new SaveFileDialog())
 			{
-				sfd.Title      = "Create a PCK file";
+				if (IsBigobs = (sender == miNewBigobs)) // Bigobs support for XCImage/PckImage ->
+				{
+					sfd.Title = "Create a PCK (bigobs) file";
+					XCImage.SpriteHeight = 48;
+				}
+				else
+				{
+					sfd.Title = "Create a PCK (terrain/unit) file";
+					XCImage.SpriteHeight = 40;
+				}
+
 				sfd.Filter     = "PCK files (*.PCK)|*.PCK|All files (*.*)|*.*";
 				sfd.DefaultExt = "PCK";
 
@@ -867,11 +964,11 @@ namespace PckView
 					{}
 
 
-					// keep this simple. Assume 2-byte Tab file.
-
 					SpritesetDirectory = Path.GetDirectoryName(pfePck);
 					SpritesetLabel     = Path.GetFileNameWithoutExtension(pfePck);
 
+					// keep this simple. Assume 2-byte Tab file.
+					// TODO: oh oh - TFTD unit-sprites use 4-byte tab-offsets
 
 					var pal = DefaultPalette;
 					var spriteset = new SpriteCollection(
@@ -1094,15 +1191,22 @@ namespace PckView
 						byte[] bindata = File.ReadAllBytes(ofd.FileName);
 						Bitmap b = BitmapHandler.LoadBitmap(bindata);
 
-						SpriteCollectionBase spriteset = BitmapService.CreateSheetSprites(
-																						b,
-																						Pal,
-																						XCImage.SpriteWidth,
-																						XCImage.SpriteHeight);
-						for (int i = 0; i != spriteset.Count; ++i)
-							_pnlView.Spriteset.Add(spriteset[i]);
+						if (   b.Width  % XCImage.SpriteWidth  == 0
+							&& b.Height % XCImage.SpriteHeight == 0
+							&& b.PixelFormat == PixelFormat.Format8bppIndexed)
+						{
+							SpriteCollectionBase spriteset = BitmapService.CreateSheetSprites(
+																							b,
+																							Pal,
+																							XCImage.SpriteWidth,
+																							XCImage.SpriteHeight);
+							for (int i = 0; i != spriteset.Count; ++i)
+								_pnlView.Spriteset.Add(spriteset[i]);
 
-						InsertSpritesFinish();
+							InsertSpritesFinish();
+						}
+						else
+							ShowBitmapError(false);
 					}
 				}
 			}
@@ -1349,8 +1453,6 @@ namespace PckView
 					XCImage.SpriteHeight = 48;
 				else
 					XCImage.SpriteHeight = 40;
-
-				PckViewPanel.TileHeight = XCImage.SpriteHeight + PckViewPanel.SpriteMargin * 2 + 1;
 
 
 				SpriteCollection spriteset = null;

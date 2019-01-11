@@ -22,7 +22,7 @@ namespace PckView
 
 
 		#region Fields (static)
-		internal const int SpriteMargin = 2;
+		private const int SpriteMargin = 2;
 
 		private const string Total = "Total ";
 		private const string None  = "n/a";
@@ -79,6 +79,8 @@ namespace PckView
 				_spriteset = value;
 
 				_spriteset.Pal = PckViewForm.Pal;
+
+				TileHeight = XCImage.SpriteHeight + SpriteMargin * 2 + 1;
 
 				_largeChange           =
 				_scrollBar.LargeChange = TileHeight;
