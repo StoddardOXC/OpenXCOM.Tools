@@ -27,11 +27,8 @@ namespace PckView
 		private const string Total = "Total ";
 		private const string None  = "n/a";
 
-		// NOTE: if sprite-size is ever allowed to change these need to be replaced
-		// w/ 'Spriteset.ImageFile.ImageSize.Width/Height' here and elsewhere.
 		private const int _tileWidth  = XCImage.SpriteWidth  + SpriteMargin * 2 + 1;
-//		private const int _tileHeight = XCImage.SpriteHeight + SpriteMargin * 2 + 1;
-		internal static int TileHeight = 40; // default to 40px (terrain/unit height)
+		private static int TileHeight = 40; // default to 40px (terrain/unit height - alt is Bigobs 48px)
 
 		private const int TableOffsetHori = 3;
 		private const int TableOffsetVert = 2;

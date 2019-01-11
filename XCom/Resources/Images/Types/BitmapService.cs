@@ -24,14 +24,10 @@ namespace XCom
 	/// </summary>
 	public static class BitmapService
 	{
-		#region Fields (static)
-		public const string PngExt = ".PNG";
-		#endregion
-
-
 		/// <summary>
-		/// Helper for CreateSheetSprites(). Ensures there aren't any StopBytes
-		/// or TransparencyBytes in the returned XCImage data.
+		/// Ensures there aren't any StopBytes or TransparencyBytes in the
+		/// returned XCImage data.
+		/// Helper for CreateSheetSprites().
 		/// Also called by PckViewForm's contextmenu:
 		/// - OnAddSpritesClick()
 		/// - InsertSprites()

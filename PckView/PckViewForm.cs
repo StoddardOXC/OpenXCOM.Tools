@@ -31,6 +31,8 @@ namespace PckView
 
 		#region Fields (static)
 		private readonly Palette DefaultPalette = Palette.UfoBattle;
+
+		private const string PngExt = ".PNG";
 		#endregion
 
 
@@ -1118,7 +1120,7 @@ namespace PckView
 														System.Globalization.CultureInfo.InvariantCulture,
 														"{0:" + digits + "}",
 														sprite.TerrainId);
-							string fullpath = Path.Combine(path, file + suffix + BitmapService.PngExt);
+							string fullpath = Path.Combine(path, file + suffix + PngExt);
 							BitmapService.ExportSprite(fullpath, sprite.Image);
 						}
 					}
@@ -1149,7 +1151,7 @@ namespace PckView
 
 					if (fbd.ShowDialog() == DialogResult.OK)
 					{
-						string fullpath = Path.Combine(fbd.SelectedPath, file + BitmapService.PngExt);
+						string fullpath = Path.Combine(fbd.SelectedPath, file + PngExt);
 						if (!File.Exists(fullpath))
 						{
 							BitmapService.ExportSpritesheet(fullpath, (SpriteCollection)_pnlView.Spriteset, Pal, 8);
@@ -1157,7 +1159,7 @@ namespace PckView
 						else
 							MessageBox.Show(
 										this,
-										file + BitmapService.PngExt + " already exists.",
+										file + PngExt + " already exists.",
 										"Error",
 										MessageBoxButtons.OK,
 										MessageBoxIcon.Error,

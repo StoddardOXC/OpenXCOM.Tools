@@ -86,10 +86,9 @@ namespace XCom
 					b.Palette = pal;
 				}
 
-				// Images in .Net often cause odd crashes when their
-				// backing resource disappears. This prevents that from
-				// happening by copying its inner contents into a new Bitmap
-				// object.
+				// Images in .Net often cause odd crashes when their backing
+				// resource disappears. This prevents that from happening by
+				// copying its inner contents into a new Bitmap object.
 				return CloneImage(b);
 			}
 		}
@@ -128,9 +127,9 @@ namespace XCom
 			while (offset < end && offset + 8 < end) // huh - if (offset + 8 < end) then shirley (offset < end)
 			{
 				Array.Copy(
-					   data, offset + 4,	// src,pos
-					   test, 0,				// dst,pos
-					   4);					// len
+						data, offset + 4,	// src,pos
+						test, 0,			// dst,pos
+						4);					// len
 
 				if (chunkNameBytes.SequenceEqual(test))
 					return offset;
@@ -182,8 +181,7 @@ namespace XCom
 			IntPtr srcPos = srcLocked.Scan0;
 			IntPtr dstPos = dstLocked.Scan0;
 
-			// Copy line by line, skipping by stride but copying actual data
-			// width
+			// Copy line by line, skipping by stride but copying actual data width
 			for (int y = 0; y < h; ++y)
 			{
 				Marshal.Copy(srcPos, imageData, 0, actualDataWidth);
