@@ -76,18 +76,18 @@ namespace XCom
 		/// </summary>
 		/// <param name="fsPck">filestream of the PCK file</param>
 		/// <param name="fsTab">filestream of the TAB file</param>
-		/// <param name="offsetLength">the length of a word in bytes of a single
+		/// <param name="tabOffsetLength">the length of a word in bytes of a single
 		/// tab-record (ie. 2 for 2-byte UFO records, 4 for 4-byte TFTD records)</param>
 		/// <param name="pal">the palette to use (typically Palette.UfoBattle
 		/// for UFO sprites or Palette.TftdBattle for TFTD sprites)</param>
 		public SpriteCollection(
 				Stream fsPck,
 				Stream fsTab,
-				int offsetLength,
+				int tabOffsetLength,
 				Palette pal)
 		{
 			//LogFile.WriteLine("SpriteCollection..cTor");
-			TabOffset = offsetLength;
+			TabOffset = tabOffsetLength;
 
 			Pal = pal;
 
@@ -96,7 +96,7 @@ namespace XCom
 
 			if (fsTab != null)
 			{
-				tabSprites = (int)fsTab.Length / offsetLength;
+				tabSprites = (int)fsTab.Length / tabOffsetLength;
 				//LogFile.WriteLine(". fsTab.Length= " + fsTab.Length);
 				//LogFile.WriteLine(". offsetLength= " + offsetLength);
 				//LogFile.WriteLine(". sprites= " + tabSprites);
@@ -106,7 +106,7 @@ namespace XCom
 				offsets = new uint[tabSprites + 1]; // NOTE: the last entry will be set to the total length of the input-bindata.
 				using (var br = new BinaryReader(fsTab))
 				{
-					switch (offsetLength)
+					switch (tabOffsetLength)
 					{
 						case 2:
 							for (int i = 0; i != tabSprites; ++i)

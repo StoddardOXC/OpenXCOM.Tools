@@ -1467,8 +1467,9 @@ namespace PckView
 			SpritesetLabel     = Path.GetFileNameWithoutExtension(pfePck);
 
 			string pfeTab = pfePck.Substring(0, pfePck.Length - 4) + SpriteCollection.TabExt;
-			if (File.Exists(pfeTab))
-			{
+
+			if (File.Exists(pfeTab))	// TODO: This check needs to be bypassed to open PCK-files that don't have a corresponding TAB-file.
+			{							// Ie. single-image Bigobs in the UFOGRAPH directory.
 				if (IsBigobs) // Bigobs support for XCImage/PckImage ->
 					XCImage.SpriteHeight = 48;
 				else
