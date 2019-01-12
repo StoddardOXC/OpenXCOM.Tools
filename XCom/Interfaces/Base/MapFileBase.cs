@@ -69,7 +69,7 @@ namespace XCom.Interfaces.Base
 		{ get; set; }
 
 		public List<TilepartBase> Parts
-		{ get; set; }
+		{ get; internal set; }
 
 		private MapLocation _location;
 		/// <summary>

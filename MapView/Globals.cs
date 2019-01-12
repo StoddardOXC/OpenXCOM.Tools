@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 
 
 namespace MapView
@@ -50,10 +51,10 @@ namespace MapView
 		/// </summary>
 		internal static void LoadExtraSprites()
 		{
-			using (var fsPck = System.Reflection.Assembly.GetExecutingAssembly()
-								.GetManifestResourceStream("MapView._Embedded.Extra.PCK"))
-			using (var fsTab = System.Reflection.Assembly.GetExecutingAssembly()
-								.GetManifestResourceStream("MapView._Embedded.Extra.TAB"))
+			using (var fsPck = Assembly.GetExecutingAssembly()
+							  .GetManifestResourceStream("MapView._Embedded.Extra.PCK"))
+			using (var fsTab = Assembly.GetExecutingAssembly()
+							  .GetManifestResourceStream("MapView._Embedded.Extra.TAB"))
 			{
 				ExtraSprites = new XCom.SpriteCollection(
 													fsPck,

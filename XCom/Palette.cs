@@ -40,7 +40,8 @@ namespace XCom
 		private const string Gray         = "#gray";
 
 
-		public static List<SolidBrush> BrushesUfoBattle = new List<SolidBrush>();
+		public static List<Brush> BrushesUfoBattle  = new List<Brush>();
+		public static List<Brush> BrushesTftdBattle = new List<Brush>();
 		#endregion
 
 
@@ -107,9 +108,11 @@ namespace XCom
 			get
 			{
 				if (_palettes[tftdbattle] == null)
+				{
 					_palettes[tftdbattle] = new Palette(Assembly.GetExecutingAssembly()
 											   .GetManifestResourceStream(Embedded + tftdbattle + PalExt));
-
+					CreateTftdBrushes();
+				}
 				return _palettes[tftdbattle] as Palette;
 			}
 		}
@@ -222,24 +225,18 @@ namespace XCom
 			{
 				Label = input.ReadLine(); // 1st line is the label.
 
-//				string line = String.Empty;
 				var rgb = new string[3];
 
 				var invariant = System.Globalization.CultureInfo.InvariantCulture;
 
-				//LogFile.WriteLine("#");
 				for (int id = 0; id != 256; ++id)
 				{
-//					line = input.ReadLine();
-					//LogFile.WriteLine(id + ": " + line);
-
 					rgb = input.ReadLine().Split(',');
 					ColorTable.Entries[id] = Color.FromArgb(
 														Int32.Parse(rgb[0], invariant),
 														Int32.Parse(rgb[1], invariant),
 														Int32.Parse(rgb[2], invariant));
 				}
-				//LogFile.WriteLine("#");
 			}
 //			checkPalette();
 		}
@@ -280,6 +277,15 @@ namespace XCom
 			foreach (var color in pal.ColorTable.Entries)
 			{
 				BrushesUfoBattle.Add(new SolidBrush(color));
+			}
+		}
+
+		private static void CreateTftdBrushes()
+		{
+			var pal = _palettes[tftdbattle] as Palette;
+			foreach (var color in pal.ColorTable.Entries)
+			{
+				BrushesTftdBattle.Add(new SolidBrush(color));
 			}
 		}
 		#endregion

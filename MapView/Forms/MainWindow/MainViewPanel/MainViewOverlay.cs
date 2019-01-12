@@ -88,6 +88,15 @@ namespace MapView
 
 		internal CuboidSprite Cuboid
 		{ private get; set; }
+
+
+		/// <summary>
+		/// List of SolidBrushes used to draw sprites from XCImage.Bindata (in
+		/// Linux). Can be either UfoBattle palette brushes or TftdBattle
+		/// palette brushes.
+		/// </summary>
+		internal List<Brush> SpriteBrushes
+		{ private get; set; }
 		#endregion
 
 
@@ -899,7 +908,7 @@ namespace MapView
 				if (palid != Palette.TransparentId)
 				{
 					_graphics.FillRectangle(
-										Palette.BrushesUfoBattle[palid],
+										SpriteBrushes[palid],
 										rect.Left + (int)(w * Globals.Scale),
 										rect.Top  + (int)(h * Globals.Scale),
 										_d, _d);
