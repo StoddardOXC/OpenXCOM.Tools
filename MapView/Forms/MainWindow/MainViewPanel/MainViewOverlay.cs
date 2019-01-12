@@ -909,8 +909,8 @@ namespace MapView
 				{
 					_graphics.FillRectangle(
 										SpriteBrushes[palid],
-										rect.Left + (int)(w * Globals.Scale),
-										rect.Top  + (int)(h * Globals.Scale),
+										rect.X + (int)(w * Globals.Scale),
+										rect.Y + (int)(h * Globals.Scale),
 										_d, _d);
 				}
 			}
