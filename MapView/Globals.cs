@@ -6,8 +6,8 @@ namespace MapView
 	internal static class Globals
 	{
 		#region Fields (static)
-		internal const double ScaleMinimum = 0.3;
-		internal const double ScaleMaximum = 3.0;
+		internal const double ScaleMinimum = 0.25;
+		internal const double ScaleMaximum = 3.00;
 		#endregion
 
 

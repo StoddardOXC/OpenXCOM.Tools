@@ -643,6 +643,8 @@ namespace MapView
 
 
 		#region Draw
+		private int _d; // dimension (scaled both x and y) of a drawn sprite. For Linus et al.
+
 		/// <summary>
 		/// Draws the Map in MainView.
 		/// </summary>
@@ -677,6 +679,8 @@ namespace MapView
 										end.X - start.X + 1,
 										end.Y - start.Y + 1);
 				}
+
+				_d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
 
 				for (int
 					lev = MapBase.MapSize.Levs - 1;
@@ -885,12 +889,6 @@ namespace MapView
 
 		private void DrawBindata(IList<byte> bindata, Rectangle rect)
 		{
-			double scalex = (double)rect.Width  / XCImage.SpriteWidth;
-			double scaley = (double)rect.Height / XCImage.SpriteHeight40;
-
-			int sx = (int)Math.Round(scalex) + 1;
-			int sy = (int)Math.Round(scaley) + 1;
-
 			int palid;
 
 			int i = -1, h,w;
@@ -902,9 +900,9 @@ namespace MapView
 				{
 					_graphics.FillRectangle(
 										Palette.BrushesUfoBattle[palid],
-										rect.Left + (int)Math.Round(w * scalex),
-										rect.Top  + (int)Math.Round(h * scaley),
-										sx, sy);
+										rect.Left + (int)(w * Globals.Scale),
+										rect.Top  + (int)(h * Globals.Scale),
+										_d, _d);
 				}
 			}
 		}
