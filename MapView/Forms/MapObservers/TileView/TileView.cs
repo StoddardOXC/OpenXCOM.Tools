@@ -144,7 +144,7 @@ namespace MapView.Forms.MapObservers.TileViews
 				ViewerFormsManager.TopView     .Control   .SelectQuadrant(SelectedTilepart.Record.PartType);
 				ViewerFormsManager.TopRouteView.ControlTop.SelectQuadrant(SelectedTilepart.Record.PartType);
 
-				f.Text = BuildTitleString(SelectedTilepart.TilesetId, SelectedTilepart.Id);
+				f.Text = BuildTitleString(SelectedTilepart.TerrainsetId, SelectedTilepart.TerrainId);
 				record = SelectedTilepart.Record;
 			}
 			else
@@ -156,7 +156,7 @@ namespace MapView.Forms.MapObservers.TileViews
 
 		/// <summary>
 		/// Fires when a tile is selected. Passes an event to
-		/// 'TileSelecteEvent_Observer0'.
+		/// 'TileSelectedEvent_Observer0'.
 		/// </summary>
 		/// <param name="part"></param>
 		private void OnTileSelected(TilepartBase part)
@@ -167,7 +167,7 @@ namespace MapView.Forms.MapObservers.TileViews
 
 			if (part != null)
 			{
-				f.Text = BuildTitleString(part.TilesetId, part.Id);
+				f.Text = BuildTitleString(part.TerrainsetId, part.TerrainId);
 				record = part.Record;
 			}
 			else
@@ -388,7 +388,7 @@ namespace MapView.Forms.MapObservers.TileViews
 					var tile = SelectedTilepart;
 					if (tile != null)
 					{
-						f.Text = BuildTitleString(tile.TilesetId, tile.Id);
+						f.Text = BuildTitleString(tile.TerrainsetId, tile.TerrainId);
 						record = tile.Record;
 					}
 					else

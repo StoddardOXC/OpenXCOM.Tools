@@ -18,7 +18,6 @@ namespace XCom.Interfaces.Base
 		/// <summary>
 		/// Gets the image-array used to animate this tile.
 		/// </summary>
-//		public System.Collections.ObjectModel.Collection<XCImage> Images
 		public XCImage[] Images
 		{ get; set; }
 
@@ -33,15 +32,16 @@ namespace XCom.Interfaces.Base
 		}
 
 		/// <summary>
-		/// The ID of this tilepart that's unique to its terrain/MCD.
+		/// The ID of this tilepart that's unique to its terrain/MCD-record.
 		/// </summary>
-		public int Id
+		public int TerrainId
 		{ get; private set; }
 
 		/// <summary>
-		/// The ID of this tilepart that's unique to the Map.
+		/// The ID of this tilepart that's unique to the Map across all
+		/// allocated terrains.
 		/// </summary>
-		public int TilesetId
+		public int TerrainsetId
 		{ get; set; }
 
 
@@ -51,8 +51,8 @@ namespace XCom.Interfaces.Base
 		/// <param name="id"></param>
 		internal TilepartBase(int id)
 		{
-			Id = id;
-			TilesetId = -1;
+			TerrainId = id;
+			TerrainsetId = -1;
 		}
 	}
 }

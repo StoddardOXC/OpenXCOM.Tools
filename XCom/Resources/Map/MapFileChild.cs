@@ -59,7 +59,7 @@ namespace XCom
 			if (File.Exists(FullPath))
 			{
 				for (int i = 0; i != parts.Count; ++i)
-					parts[i].TilesetId = i;
+					parts[i].TerrainsetId = i;
 
 				ReadMapFile(parts);
 				SetupRouteNodes(routes);
@@ -245,7 +245,7 @@ namespace XCom
 
 			foreach (var tile1 in Parts)
 			{
-				if (tile1.Id == 0)
+				if (tile1.TerrainId == 0)
 					++id;
 
 				if (tile1 == part)
@@ -346,22 +346,22 @@ namespace XCom
 					if (tile.Ground == null)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.Ground.TilesetId + 2)); // why "+2" -> reserved for the 2 Blank tiles.
+						fs.WriteByte((byte)(tile.Ground.TerrainsetId + 2)); // why "+2" -> reserved for the 2 Blank tiles.
 
 					if (tile.West == null)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.West.TilesetId + 2));
+						fs.WriteByte((byte)(tile.West.TerrainsetId + 2));
 
 					if (tile.North == null)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.North.TilesetId + 2));
+						fs.WriteByte((byte)(tile.North.TerrainsetId + 2));
 
 					if (tile.Content == null)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.Content.TilesetId + 2));
+						fs.WriteByte((byte)(tile.Content.TerrainsetId + 2));
 				}
 			}
 		}

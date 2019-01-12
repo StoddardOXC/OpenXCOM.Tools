@@ -94,7 +94,7 @@ namespace MapView.Forms.MapObservers.TileViews
 			{
 				if (value != null)
 				{
-					_id = value.TilesetId + 1; // +1 to account for the eraser - not sure.
+					_id = value.TerrainsetId + 1; // +1 to account for the eraser - not sure.
 
 					if (TileSelectedEvent != null)
 						TileSelectedEvent(PartSelected);
