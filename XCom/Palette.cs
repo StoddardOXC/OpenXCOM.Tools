@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -15,7 +16,7 @@ namespace XCom
 	public sealed class Palette
 	{
 		#region Fields (static)
-		internal const byte TransparentId = 0x00;
+		public const byte TransparentId = 0x00;
 
 		private static readonly Hashtable _palettes = new Hashtable();
 
@@ -37,6 +38,9 @@ namespace XCom
 		/// The suffix for the label (key) of the grayscale version of the palette.
 		/// </summary>
 		private const string Gray         = "#gray";
+
+
+		public static List<SolidBrush> BrushesUfoBattle = new List<SolidBrush>();
 		#endregion
 
 
@@ -49,8 +53,11 @@ namespace XCom
 			get
 			{
 				if (_palettes[ufobattle] == null)
+				{
 					_palettes[ufobattle] = new Palette(Assembly.GetExecutingAssembly()
 											  .GetManifestResourceStream(Embedded + ufobattle + PalExt));
+					CreateUfoBrushes();
+				}
 
 				return _palettes[ufobattle] as Palette;
 			}
@@ -221,13 +228,13 @@ namespace XCom
 				var invariant = System.Globalization.CultureInfo.InvariantCulture;
 
 				//LogFile.WriteLine("#");
-				for (int id = 0; id != 256; )
+				for (int id = 0; id != 256; ++id)
 				{
 //					line = input.ReadLine();
 					//LogFile.WriteLine(id + ": " + line);
 
 					rgb = input.ReadLine().Split(',');
-					ColorTable.Entries[id++] = Color.FromArgb(
+					ColorTable.Entries[id] = Color.FromArgb(
 														Int32.Parse(rgb[0], invariant),
 														Int32.Parse(rgb[1], invariant),
 														Int32.Parse(rgb[2], invariant));
@@ -262,6 +269,18 @@ namespace XCom
 			ColorTable.Entries[TransparentId] = Color.FromArgb(
 															transparent ? 0 : 255,
 															ColorTable.Entries[TransparentId]);
+		}
+		#endregion
+
+
+		#region Methods (static)
+		private static void CreateUfoBrushes()
+		{
+			var pal = _palettes[ufobattle] as Palette;
+			foreach (var color in pal.ColorTable.Entries)
+			{
+				BrushesUfoBattle.Add(new SolidBrush(color));
+			}
 		}
 		#endregion
 

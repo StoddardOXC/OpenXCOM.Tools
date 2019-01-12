@@ -837,13 +837,11 @@ namespace MapView
 			{
 				if ((part = tile.Ground) != null)
 				{
-					var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-										  : part[MainViewUnderlay.AniStep].Image;
-					DrawSprite(
-							sprite,
-							new Rectangle(
-									x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-									HalfWidth * 2, HalfHeight * 5));
+					var bindata = part[MainViewUnderlay.AniStep].Bindata;
+					DrawBindata(bindata,
+								new Rectangle(
+											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+											HalfWidth * 2, HalfHeight * 5));
 				}
 			}
 
@@ -851,13 +849,11 @@ namespace MapView
 			{
 				if ((part = tile.West) != null)
 				{
-					var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-										  : part[MainViewUnderlay.AniStep].Image;
-					DrawSprite(
-							sprite,
-							new Rectangle(
-									x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-									HalfWidth * 2, HalfHeight * 5));
+					var bindata = part[MainViewUnderlay.AniStep].Bindata;
+					DrawBindata(bindata,
+								new Rectangle(
+											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+											HalfWidth * 2, HalfHeight * 5));
 				}
 			}
 
@@ -865,13 +861,11 @@ namespace MapView
 			{
 				if ((part = tile.North) != null)
 				{
-					var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-										  : part[MainViewUnderlay.AniStep].Image;
-					DrawSprite(
-							sprite,
-							new Rectangle(
-									x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-									HalfWidth * 2, HalfHeight * 5));
+					var bindata = part[MainViewUnderlay.AniStep].Bindata;
+					DrawBindata(bindata,
+								new Rectangle(
+											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+											HalfWidth * 2, HalfHeight * 5));
 				}
 			}
 
@@ -879,18 +873,45 @@ namespace MapView
 			{
 				if ((part = tile.Content) != null)
 				{
-					var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-										  : part[MainViewUnderlay.AniStep].Image;
-					DrawSprite(
-							sprite,
-							new Rectangle(
-									x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-									HalfWidth * 2, HalfHeight * 5));
+					var bindata = part[MainViewUnderlay.AniStep].Bindata;
+					DrawBindata(bindata,
+								new Rectangle(
+											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+											HalfWidth * 2, HalfHeight * 5));
 				}
 			}
 		}
 
-		/// <summary>
+		private void DrawBindata(byte[] bindata, Rectangle rect)
+		{
+			double scalex = (double)rect.Width  / XCImage.SpriteWidth;
+			double scaley = (double)rect.Height / XCImage.SpriteHeight40;
+
+			int sx = (int)Math.Round(scalex) + 1;
+			int sy = (int)Math.Round(scaley) + 1;
+
+			int palid;
+
+			int i = 0, h,w;
+			while (i != bindata.Length)
+			{
+				for (h = 0; h != XCImage.SpriteHeight40; ++h)
+				for (w = 0; w != XCImage.SpriteWidth;    ++w)
+				{
+					palid = bindata[i++];
+					if (palid != Palette.TransparentId)
+					{
+						_graphics.FillRectangle(
+											Palette.BrushesUfoBattle[palid],
+											rect.Left + (int)Math.Round(w * scalex),
+											rect.Top  + (int)Math.Round(h * scaley),
+											sx, sy);
+					}
+				}
+			}
+		}
+
+/*		/// <summary>
 		/// Draws a tilepart's sprite.
 		/// </summary>
 		/// <param name="sprite"></param>
@@ -906,7 +927,7 @@ namespace MapView
 								_spriteAttributes);
 			else
 				_graphics.DrawImage(sprite, rect);
-		}
+		} */
 
 		/// <summary>
 		/// Draws a red lozenge around any selected Tiles if the option to draw
