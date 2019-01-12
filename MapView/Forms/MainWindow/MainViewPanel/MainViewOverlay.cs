@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -882,7 +883,7 @@ namespace MapView
 			}
 		}
 
-		private void DrawBindata(byte[] bindata, Rectangle rect)
+		private void DrawBindata(IList<byte> bindata, Rectangle rect)
 		{
 			double scalex = (double)rect.Width  / XCImage.SpriteWidth;
 			double scaley = (double)rect.Height / XCImage.SpriteHeight40;
@@ -892,21 +893,18 @@ namespace MapView
 
 			int palid;
 
-			int i = 0, h,w;
-			while (i != bindata.Length)
+			int i = -1, h,w;
+			for (h = 0; h != XCImage.SpriteHeight40; ++h)
+			for (w = 0; w != XCImage.SpriteWidth;    ++w)
 			{
-				for (h = 0; h != XCImage.SpriteHeight40; ++h)
-				for (w = 0; w != XCImage.SpriteWidth;    ++w)
+				palid = bindata[++i];
+				if (palid != Palette.TransparentId)
 				{
-					palid = bindata[i++];
-					if (palid != Palette.TransparentId)
-					{
-						_graphics.FillRectangle(
-											Palette.BrushesUfoBattle[palid],
-											rect.Left + (int)Math.Round(w * scalex),
-											rect.Top  + (int)Math.Round(h * scaley),
-											sx, sy);
-					}
+					_graphics.FillRectangle(
+										Palette.BrushesUfoBattle[palid],
+										rect.Left + (int)Math.Round(w * scalex),
+										rect.Top  + (int)Math.Round(h * scaley),
+										sx, sy);
 				}
 			}
 		}
