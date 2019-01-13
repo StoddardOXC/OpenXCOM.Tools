@@ -23,11 +23,11 @@ namespace MapView.Forms.MainWindow
 		private readonly ToolStripTextBox _tstbSearch = new ToolStripTextBox();	// NOTE: These instantiations of toolstrip-objects that
 																				// are classvars are for MainView, while the toolstrip-
 		private ToolStripButton _tsbZoomAuto = new ToolStripButton();			// objects for TopView and TopRouteView(Top) are
-		private ToolStripButton _tsbZoomIn   = new ToolStripButton();			// instantiated in the functions below.
-		private ToolStripButton _tsbZoomOut  = new ToolStripButton();
+		private ToolStripButton _tsbZoomOut  = new ToolStripButton();			// instantiated in the functions below.
+		private ToolStripButton _tsbZoomIn   = new ToolStripButton();
 
-		private ToolStripButton _tsbUp       = new ToolStripButton();
 		private ToolStripButton _tsbDown     = new ToolStripButton();
+		private ToolStripButton _tsbUp       = new ToolStripButton();
 		private ToolStripButton _tsbCut      = new ToolStripButton();
 		private ToolStripButton _tsbCopy     = new ToolStripButton();
 		private ToolStripButton _tsbPaste    = new ToolStripButton();
@@ -90,8 +90,8 @@ namespace MapView.Forms.MainWindow
 			{
 				new ToolStripSeparator(),
 				_tsbZoomAuto,
-				_tsbZoomIn,
-				_tsbZoomOut
+				_tsbZoomOut,
+				_tsbZoomIn
 			};
 			toolStrip.Items.AddRange(tsItems);
 
@@ -103,19 +103,19 @@ namespace MapView.Forms.MainWindow
 			_tsbZoomAuto.ToolTipText  = "autoscale";
 			_tsbZoomAuto.Click       += XCMainWindow.Instance.OnAutoScaleClick;
 
-			// ZoomIn btn
-			_tsbZoomIn.Name           = "tsbZoomIn";
-			_tsbZoomIn.DisplayStyle   = ToolStripItemDisplayStyle.Image;
-			_tsbZoomIn.Image          = Resources.ZoomIn1;
-			_tsbZoomIn.ToolTipText    = "scale In";
-			_tsbZoomIn.Click         += XCMainWindow.Instance.OnZoomInClick;
-
 			// ZoomOut btn
 			_tsbZoomOut.Name          = "tsbZoomOut";
 			_tsbZoomOut.DisplayStyle  = ToolStripItemDisplayStyle.Image;
 			_tsbZoomOut.Image         = Resources.ZoomOut1;
 			_tsbZoomOut.ToolTipText   = "scale Out";
 			_tsbZoomOut.Click        += XCMainWindow.Instance.OnZoomOutClick;
+
+			// ZoomIn btn
+			_tsbZoomIn.Name           = "tsbZoomIn";
+			_tsbZoomIn.DisplayStyle   = ToolStripItemDisplayStyle.Image;
+			_tsbZoomIn.Image          = Resources.ZoomIn1;
+			_tsbZoomIn.ToolTipText    = "scale In";
+			_tsbZoomIn.Click         += XCMainWindow.Instance.OnZoomInClick;
 		}
 
 
@@ -127,8 +127,8 @@ namespace MapView.Forms.MainWindow
 		/// <param name="tertiary">false for MainView's toolstrip, true for TopView's and TopRouteView's</param>
 		internal void CreateToolstripEditorObjects(ToolStrip toolStrip, bool tertiary)
 		{
-			ToolStripButton tsbUp;
 			ToolStripButton tsbDown;
+			ToolStripButton tsbUp;
 			ToolStripButton tsbCut;
 			ToolStripButton tsbCopy;
 			ToolStripButton tsbPaste;
@@ -136,8 +136,8 @@ namespace MapView.Forms.MainWindow
 
 			if (tertiary)
 			{
-				tsbUp    = new ToolStripButton(); // NOTE: MainView's toolstrip buttons are classvars because
-				tsbDown  = new ToolStripButton(); // they will be disabled when the app loads and will be enabled
+				tsbDown  = new ToolStripButton(); // NOTE: MainView's toolstrip buttons are classvars because
+				tsbUp    = new ToolStripButton(); // they will be disabled when the app loads and will be enabled
 				tsbCut   = new ToolStripButton(); // when the user clicks and loads a Map. The tertiary viewers'
 				tsbCopy  = new ToolStripButton(); // toolstrip buttons don't need to be disabled because those
 				tsbPaste = new ToolStripButton(); // viewers appear to the user after user clicks and loads a
@@ -145,8 +145,8 @@ namespace MapView.Forms.MainWindow
 			}
 			else
 			{
-				tsbUp    = _tsbUp;
 				tsbDown  = _tsbDown;
+				tsbUp    = _tsbUp;
 				tsbCut   = _tsbCut;
 				tsbCopy  = _tsbCopy;
 				tsbPaste = _tsbPaste;
@@ -156,8 +156,8 @@ namespace MapView.Forms.MainWindow
 			var tsItems = new ToolStripItem[]
 			{
 				new ToolStripSeparator(), // NOTE: c# cant figure out how to use 1 separator 4 times.
-				tsbUp,
 				tsbDown,
+				tsbUp,
 				new ToolStripSeparator(),
 				tsbCut,
 				tsbCopy,
@@ -168,19 +168,19 @@ namespace MapView.Forms.MainWindow
 			};
 			toolStrip.Items.AddRange(tsItems);
 
-			// LevelUp btn
-			tsbUp.Name            = "tsbUp";
-			tsbUp.DisplayStyle    = ToolStripItemDisplayStyle.Image;
-			tsbUp.Image           = Resources.up;
-			tsbUp.ToolTipText     = "level up";
-			tsbUp.Click          += OnUpClick;
-
 			// LevelDown btn
 			tsbDown.Name          = "tsbDown";
 			tsbDown.DisplayStyle  = ToolStripItemDisplayStyle.Image;
 			tsbDown.Image         = Resources.down;
 			tsbDown.ToolTipText   = "level down";
 			tsbDown.Click        += OnDownClick;
+
+			// LevelUp btn
+			tsbUp.Name            = "tsbUp";
+			tsbUp.DisplayStyle    = ToolStripItemDisplayStyle.Image;
+			tsbUp.Image           = Resources.up;
+			tsbUp.ToolTipText     = "level up";
+			tsbUp.Click          += OnUpClick;
 
 			// Cut btn
 			tsbCut.Name           = "tsbCut";
@@ -263,10 +263,10 @@ namespace MapView.Forms.MainWindow
 		internal void EnableToolStrip(bool enable)
 		{
 			_tsbZoomAuto.Enabled =
-			_tsbZoomIn  .Enabled =
 			_tsbZoomOut .Enabled =
-			_tsbUp      .Enabled =
+			_tsbZoomIn  .Enabled =
 			_tsbDown    .Enabled =
+			_tsbUp      .Enabled =
 			_tsbCut     .Enabled =
 			_tsbCopy    .Enabled =
 //			_tsbPaste   .Enabled = // do not enable Paste until a Cut or Copy has occured
@@ -276,16 +276,16 @@ namespace MapView.Forms.MainWindow
 
 
 		#region Eventcalls (editstrip)
-		private void OnUpClick(object sender, EventArgs e)
-		{
-			if (_mainViewUnderlay.MainViewOverlay.MapBase != null)
-				_mainViewUnderlay.MainViewOverlay.MapBase.LevelUp();
-		}
-
 		private void OnDownClick(object sender, EventArgs e)
 		{
 			if (_mainViewUnderlay.MainViewOverlay.MapBase != null)
 				_mainViewUnderlay.MainViewOverlay.MapBase.LevelDown();
+		}
+
+		private void OnUpClick(object sender, EventArgs e)
+		{
+			if (_mainViewUnderlay.MainViewOverlay.MapBase != null)
+				_mainViewUnderlay.MainViewOverlay.MapBase.LevelUp();
 		}
 		#endregion
 
