@@ -2321,47 +2321,51 @@ namespace MapView
 			{
 				//LogFile.WriteLine(". descriptor= " + descriptor);
 
-				miSaveAll    .Enabled =
-				miSaveMap    .Enabled =
-				miSaveRoutes .Enabled =
-				miSaveAs     .Enabled =
-				miSaveImage  .Enabled =
-				miResize     .Enabled =
-				miInfo       .Enabled = true;
-
-//				miRegenOccult.Enabled = true; // disabled in designer w/ Visible=FALSE.
-//				miExport     .Enabled = true; // disabled in designer w/ Visible=FALSE.
-
-				_mainViewUnderlay.MainViewOverlay.FirstClick = false;
-
 				var @base = MapFileService.LoadTileset(descriptor);
-				_mainViewUnderlay.MapBase = @base;
+				if (@base != null)
+				{
+					miSaveAll    .Enabled =
+					miSaveMap    .Enabled =
+					miSaveRoutes .Enabled =
+					miSaveAs     .Enabled =
+					miSaveImage  .Enabled =
+					miResize     .Enabled =
+					miInfo       .Enabled = true;
 
-				ViewerFormsManager.ToolFactory.EnableToolStrip(true);
+//					miRegenOccult.Enabled = true; // disabled in designer w/ Visible=FALSE.
+//					miExport     .Enabled = true; // disabled in designer w/ Visible=FALSE.
 
-				RouteCheckService.CheckNodeBounds(@base as MapFileChild);
+					_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-				Text = "Map Editor - " + descriptor.BasePath;
 
-				tsslMapLabel.Text = descriptor.Label;
-				tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
-													  : "size: n/a";
-				tsslPosition.Text = String.Empty;
+					_mainViewUnderlay.MapBase = @base;
 
-				ViewerFormsManager.RouteView   .Control     .ClearSelectedInfo();
-				ViewerFormsManager.TopRouteView.ControlRoute.ClearSelectedInfo();
+					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
 
-				ViewerFormsManager.RouteView   .Control     .DisableOg();
-				ViewerFormsManager.TopRouteView.ControlRoute.DisableOg();
+					RouteCheckService.CheckNodeBounds(@base as MapFileChild);
 
-				Options[Doors].Value = false; // toggle off door-animations; not sure that this is necessary to do.
-				miDoors.Checked = false;
-				ToggleDoorSprites(false);
+					Text = "Map Editor - " + descriptor.BasePath;
 
-				if (!menuViewers.Enabled) // open/close the forms that appear in the Viewers menu.
-					_mainMenusManager.StartViewers();
+					tsslMapLabel.Text = descriptor.Label;
+					tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
+														  : "size: n/a";
+					tsslPosition.Text = String.Empty;
 
-				ViewerFormsManager.SetObservers(@base); // reset all observer events
+					ViewerFormsManager.RouteView   .Control     .ClearSelectedInfo();
+					ViewerFormsManager.TopRouteView.ControlRoute.ClearSelectedInfo();
+
+					ViewerFormsManager.RouteView   .Control     .DisableOg();
+					ViewerFormsManager.TopRouteView.ControlRoute.DisableOg();
+
+					Options[Doors].Value = false; // toggle off door-animations; not sure that this is necessary to do.
+					miDoors.Checked = false;
+					ToggleDoorSprites(false);
+
+					if (!menuViewers.Enabled) // open/close the forms that appear in the Viewers menu.
+						_mainMenusManager.StartViewers();
+
+					ViewerFormsManager.SetObservers(@base); // reset all observer events
+				}
 			}
 		}
 

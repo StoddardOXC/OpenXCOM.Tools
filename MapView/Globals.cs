@@ -1,4 +1,7 @@
 using System;
+using System.Reflection;
+
+using XCom;
 
 
 namespace MapView
@@ -6,8 +9,8 @@ namespace MapView
 	internal static class Globals
 	{
 		#region Fields (static)
-		internal const double ScaleMinimum = 0.3;
-		internal const double ScaleMaximum = 3.0;
+		internal const double ScaleMinimum = 0.25;
+		internal const double ScaleMaximum = 3.00;
 		#endregion
 
 
@@ -50,16 +53,16 @@ namespace MapView
 		/// </summary>
 		internal static void LoadExtraSprites()
 		{
-			using (var fsPck = System.Reflection.Assembly.GetExecutingAssembly()
-								.GetManifestResourceStream("MapView._Embedded.Extra.PCK"))
-			using (var fsTab = System.Reflection.Assembly.GetExecutingAssembly()
-								.GetManifestResourceStream("MapView._Embedded.Extra.TAB"))
+			using (var fsPck = Assembly.GetExecutingAssembly()
+							  .GetManifestResourceStream("MapView._Embedded.Extra.PCK"))
+			using (var fsTab = Assembly.GetExecutingAssembly()
+							  .GetManifestResourceStream("MapView._Embedded.Extra.TAB"))
 			{
-				ExtraSprites = new XCom.SpriteCollection(
-													fsPck,
-													fsTab,
-													2,
-													XCom.Palette.UfoBattle);
+				ExtraSprites = new SpriteCollection(
+												fsPck,
+												fsTab,
+												2,
+												Palette.UfoBattle);
 			}
 		}
 

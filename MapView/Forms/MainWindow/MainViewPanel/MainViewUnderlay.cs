@@ -332,7 +332,7 @@ namespace MapView
 			//XCom.LogFile.WriteLine("");
 			//XCom.LogFile.WriteLine("MainViewUnderlay.SetScale");
 
-			var required = GetRequiredOverlaySize(1);
+			var required = GetRequiredOverlaySize(1.0);
 			Globals.Scale = Math.Min(
 									(double)(Width  - OffsetX) / required.Width,
 									(double)(Height - OffsetY) / required.Height);
