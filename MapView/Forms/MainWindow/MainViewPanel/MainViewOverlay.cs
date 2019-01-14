@@ -209,8 +209,8 @@ namespace MapView
 //		private float _spriteShadeLocal = 1.0f;										// initial val for local sprite shade
 		private float SpriteShadeLocal
 		{
-			get;// { /*return _spriteShadeLocal;*/ }
-			set;// { /*_spriteShadeLocal = value;*/ }
+			get;// { return _spriteShadeLocal; }
+			set;// { _spriteShadeLocal = value; }
 		}
 
 		// NOTE: Options don't like enums afaict, hence this workaround w/
