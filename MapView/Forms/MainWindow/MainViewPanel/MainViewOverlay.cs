@@ -691,6 +691,8 @@ namespace MapView
 
 				_d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
 
+				MapTileBase tile;
+
 				for (int
 					lev = MapBase.MapSize.Levs - 1;
 					lev >= MapBase.Level && lev != -1;
@@ -732,10 +734,11 @@ namespace MapView
 												lev == MapBase.Level);
 							}
 
-							if (lev == MapBase.Level || !MapBase[row, col, lev].Occulted)
+							tile = MapBase[row, col, lev];
+							if (lev == MapBase.Level || !tile.Occulted)
 							{
 								DrawTile(
-										(XCMapTile)MapBase[row, col, lev],
+										(XCMapTile)tile,
 										x, y,
 										_graySelection && FirstClick
 											&& lev == MapBase.Level
@@ -847,52 +850,44 @@ namespace MapView
 			TilepartBase part = null;
 
 			var topView = ViewerFormsManager.TopView.Control;
-			if (topView.GroundVisible)
+			if (topView.GroundVisible
+			    && (part = tile.Ground) != null)
 			{
-				if ((part = tile.Ground) != null)
-				{
-					var bindata = part[MainViewUnderlay.AniStep].Bindata;
-					DrawBindata(bindata,
-								new Rectangle(
-											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-											HalfWidth * 2, HalfHeight * 5));
-				}
+				var bindata = part[MainViewUnderlay.AniStep].Bindata;
+				DrawBindata(bindata,
+							new Rectangle(
+										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+										HalfWidth * 2, HalfHeight * 5));
 			}
 
-			if (topView.WestVisible)
+			if (topView.WestVisible
+			    && (part = tile.West) != null)
 			{
-				if ((part = tile.West) != null)
-				{
-					var bindata = part[MainViewUnderlay.AniStep].Bindata;
-					DrawBindata(bindata,
-								new Rectangle(
-											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-											HalfWidth * 2, HalfHeight * 5));
-				}
+				var bindata = part[MainViewUnderlay.AniStep].Bindata;
+				DrawBindata(bindata,
+							new Rectangle(
+										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+										HalfWidth * 2, HalfHeight * 5));
 			}
 
-			if (topView.NorthVisible)
+			if (topView.NorthVisible
+			    && (part = tile.North) != null)
 			{
-				if ((part = tile.North) != null)
-				{
-					var bindata = part[MainViewUnderlay.AniStep].Bindata;
-					DrawBindata(bindata,
-								new Rectangle(
-											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-											HalfWidth * 2, HalfHeight * 5));
-				}
+				var bindata = part[MainViewUnderlay.AniStep].Bindata;
+				DrawBindata(bindata,
+							new Rectangle(
+										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+										HalfWidth * 2, HalfHeight * 5));
 			}
 
-			if (topView.ContentVisible)
+			if (topView.ContentVisible
+			    && (part = tile.Content) != null)
 			{
-				if ((part = tile.Content) != null)
-				{
-					var bindata = part[MainViewUnderlay.AniStep].Bindata;
-					DrawBindata(bindata,
-								new Rectangle(
-											x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-											HalfWidth * 2, HalfHeight * 5));
-				}
+				var bindata = part[MainViewUnderlay.AniStep].Bindata;
+				DrawBindata(bindata,
+							new Rectangle(
+										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
+										HalfWidth * 2, HalfHeight * 5));
 			}
 		}
 
