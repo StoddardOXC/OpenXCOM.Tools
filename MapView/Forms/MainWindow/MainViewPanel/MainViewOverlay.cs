@@ -183,7 +183,7 @@ namespace MapView
 		}
 
 
-		private bool _spriteShadeEnabled = true;
+//		private bool _spriteShadeEnabled = true;
 
 		// NOTE: Options don't like floats afaict, hence this workaround w/
 		// 'SpriteShade' and 'SpriteShadeLocal' ->
@@ -195,7 +195,7 @@ namespace MapView
 			{
 				_spriteShade = value;
 
-				if (_spriteShade > 9 && _spriteShade < 101)
+/*				if (_spriteShade > 9 && _spriteShade < 101)
 				{
 					_spriteShadeEnabled = true;
 					SpriteShadeLocal = _spriteShade * 0.03f;
@@ -203,14 +203,14 @@ namespace MapView
 				else
 					_spriteShadeEnabled = false;
 
-				Refresh();
+				Refresh(); */
 			}
 		}
-		private float _spriteShadeLocal = 1.0f;										// initial val for local sprite shade
+//		private float _spriteShadeLocal = 1.0f;										// initial val for local sprite shade
 		private float SpriteShadeLocal
 		{
-			get { return _spriteShadeLocal; }
-			set { _spriteShadeLocal = value; }
+			get;// { /*return _spriteShadeLocal;*/ }
+			set;// { /*_spriteShadeLocal = value;*/ }
 		}
 
 		// NOTE: Options don't like enums afaict, hence this workaround w/
@@ -665,11 +665,11 @@ namespace MapView
 			if (MapBase != null)
 			{
 				_graphics = e.Graphics;
-				_graphics.InterpolationMode = InterpolationLocal;
+//				_graphics.InterpolationMode = InterpolationLocal;
 				_graphics.PixelOffsetMode   = PixelOffsetMode.HighQuality;
 
-				if (_spriteShadeEnabled)
-					_spriteAttributes.SetGamma(SpriteShadeLocal, ColorAdjustType.Bitmap);
+//				if (_spriteShadeEnabled)
+//					_spriteAttributes.SetGamma(SpriteShadeLocal, ColorAdjustType.Bitmap);
 
 				// Image Processing using C# - https://www.codeproject.com/Articles/33838/Image-Processing-using-C
 				// ColorMatrix Guide - https://docs.rainmeter.net/tips/colormatrix-guide/
