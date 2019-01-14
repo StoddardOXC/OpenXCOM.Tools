@@ -851,7 +851,7 @@ namespace MapView
 
 			var topView = ViewerFormsManager.TopView.Control;
 			if (topView.GroundVisible
-			    && (part = tile.Ground) != null)
+				&& (part = tile.Ground) != null)
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
@@ -861,7 +861,7 @@ namespace MapView
 			}
 
 			if (topView.WestVisible
-			    && (part = tile.West) != null)
+				&& (part = tile.West) != null)
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
@@ -871,7 +871,7 @@ namespace MapView
 			}
 
 			if (topView.NorthVisible
-			    && (part = tile.North) != null)
+				&& (part = tile.North) != null)
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
@@ -881,7 +881,7 @@ namespace MapView
 			}
 
 			if (topView.ContentVisible
-			    && (part = tile.Content) != null)
+				&& (part = tile.Content) != null)
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
