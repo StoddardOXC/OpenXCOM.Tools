@@ -855,9 +855,7 @@ namespace MapView
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
-							new Rectangle(
-										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-										HalfWidth * 2, HalfHeight * 5));
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 
 			if (topView.WestVisible
@@ -865,9 +863,7 @@ namespace MapView
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
-							new Rectangle(
-										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-										HalfWidth * 2, HalfHeight * 5));
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 
 			if (topView.NorthVisible
@@ -875,9 +871,7 @@ namespace MapView
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
-							new Rectangle(
-										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-										HalfWidth * 2, HalfHeight * 5));
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 
 			if (topView.ContentVisible
@@ -885,17 +879,15 @@ namespace MapView
 			{
 				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawBindata(bindata,
-							new Rectangle(
-										x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-										HalfWidth * 2, HalfHeight * 5));
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 		}
 
-		private void DrawBindata(IList<byte> bindata, Rectangle rect)
+		private void DrawBindata(IList<byte> bindata, int x, int y)
 		{
 			int palid;
 
-			int i = -1, h,w;
+			int i = -1, w,h;
 			for (h = 0; h != XCImage.SpriteHeight40; ++h)
 			for (w = 0; w != XCImage.SpriteWidth;    ++w)
 			{
@@ -904,8 +896,8 @@ namespace MapView
 				{
 					_graphics.FillRectangle(
 										SpriteBrushes[palid],
-										rect.X + (int)(w * Globals.Scale),
-										rect.Y + (int)(h * Globals.Scale),
+										x + (int)(w * Globals.Scale),
+										y + (int)(h * Globals.Scale),
 										_d, _d);
 				}
 			}
