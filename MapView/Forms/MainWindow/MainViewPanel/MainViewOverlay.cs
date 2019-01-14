@@ -660,7 +660,7 @@ namespace MapView
 		/// <param name="e"></param>
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			base.OnPaint(e);
+//			base.OnPaint(e);
 
 			if (MapBase != null)
 			{
