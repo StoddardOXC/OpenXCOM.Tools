@@ -261,6 +261,31 @@ namespace MapView
 
 			pnlSpacer.Left = gbTerrains.Width / 2 - pnlSpacer.Width / 2 - SystemInformation.VerticalScrollBarWidth / 2;
 		}
+
+		/// <summary>
+		/// Checks if the box has been closed by Cancel/exit click and if so do
+		/// terrain verifications.
+		/// @note Terrains get changed on-the-fly and do not require an Accept
+		/// click. But the Map needs to be reloaded when things go back to
+		/// OnAdd/EditTilesetClick() in XCMainWindow.
+		/// </summary>
+		/// <param name="e"></param>
+		protected override void OnFormClosing(FormClosingEventArgs e)
+		{
+			if (DialogResult != DialogResult.OK)
+			{
+				if (Descriptor.Terrains.Count == 0)
+				{
+					e.Cancel = true;
+					ShowErrorDialog("The Map must have at least one terrain allocated.");
+				}
+				else if (!Descriptor.Terrains.SequenceEqual(TerrainsOriginal))
+				{
+					DialogResult = DialogResult.OK;
+				}
+			}
+			base.OnFormClosing(e);
+		}
 		#endregion Eventcalls (override)
 
 
@@ -453,7 +478,7 @@ namespace MapView
 				string terrain = String.Empty;
 				string[] terrains = Directory.GetFiles(
 													dirTerrain,
-													"*.pck",
+													"*.pck", // TODO: is GetFiles() case-in/sensitive
 													SearchOption.TopDirectoryOnly);
 				for (int i = 0; i != terrains.Length; ++i)
 				{
