@@ -889,14 +889,14 @@ namespace MapView
 		/// Draws a tilepart's sprite.
 		/// </summary>
 		/// <param name="sprite"></param>
-		/// <param name="rect"></param>
+		/// <param name="rect">destination rectangle</param>
 		private void DrawSprite(Image sprite, Rectangle rect)
 		{
 			if (_spriteShadeEnabled)
 				_graphics.DrawImage(
 								sprite,
 								rect,
-								0, 0, XCImage.SpriteWidth, XCImage.SpriteHeight,
+								0, 0, XCImage.SpriteWidth, XCImage.SpriteHeight40,
 								GraphicsUnit.Pixel,
 								_spriteAttributes);
 			else
