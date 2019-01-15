@@ -826,11 +826,11 @@ namespace MapView
 		/// <param name="tile"></param>
 		/// <param name="x"></param>
 		/// <param name="y"></param>
-		/// <param name="isGray"></param>
+		/// <param name="gray">true to draw the grayscale version of any tile-sprites</param>
 		private void DrawTile(
 				XCMapTile tile,
 				int x, int y,
-				bool isGray)
+				bool gray)
 		{
 			// NOTE: The width and height args are based on a sprite that's 32x40.
 			// Going back to a universal sprite-size would do this:
@@ -844,8 +844,8 @@ namespace MapView
 			if (topView.GroundVisible
 				&& (part = tile.Ground) != null)
 			{
-				var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									  : part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
+									: part[MainViewUnderlay.AniStep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -856,8 +856,8 @@ namespace MapView
 			if (topView.WestVisible
 				&& (part = tile.West) != null)
 			{
-				var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									  : part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
+									: part[MainViewUnderlay.AniStep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -868,8 +868,8 @@ namespace MapView
 			if (topView.NorthVisible
 				&& (part = tile.North) != null)
 			{
-				var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									  : part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
+									: part[MainViewUnderlay.AniStep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -880,8 +880,8 @@ namespace MapView
 			if (topView.ContentVisible
 				&& (part = tile.Content) != null)
 			{
-				var sprite = (isGray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									  : part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
+									: part[MainViewUnderlay.AniStep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
