@@ -642,6 +642,8 @@ namespace MapView
 
 
 		#region Draw
+		int _halfwidth2, _halfheight5;
+
 		/// <summary>
 		/// Draws the Map in MainView.
 		/// </summary>
@@ -678,6 +680,9 @@ namespace MapView
 				}
 
 				MapTileBase tile;
+
+				_halfwidth2  = HalfWidth  * 2;
+				_halfheight5 = HalfHeight * 5;
 
 				for (int
 					lev = MapBase.MapSize.Levs - 1;
@@ -845,7 +850,7 @@ namespace MapView
 						sprite,
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								HalfWidth * 2, HalfHeight * 5));
+								_halfwidth2, _halfheight5));
 			}
 
 			if (topView.WestVisible
@@ -857,7 +862,7 @@ namespace MapView
 						sprite,
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								HalfWidth * 2, HalfHeight * 5));
+								_halfwidth2, _halfheight5));
 			}
 
 			if (topView.NorthVisible
@@ -869,7 +874,7 @@ namespace MapView
 						sprite,
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								HalfWidth * 2, HalfHeight * 5));
+								_halfwidth2, _halfheight5));
 			}
 
 			if (topView.ContentVisible
@@ -881,7 +886,7 @@ namespace MapView
 						sprite,
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								HalfWidth * 2, HalfHeight * 5));
+								_halfwidth2, _halfheight5));
 			}
 		}
 
