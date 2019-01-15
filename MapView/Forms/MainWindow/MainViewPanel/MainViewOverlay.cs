@@ -684,6 +684,10 @@ namespace MapView
 				_halfwidth2  = HalfWidth  * 2;
 				_halfheight5 = HalfHeight * 5;
 
+				bool isTargeted = Focused
+							   && !_suppressTargeter
+							   && ClientRectangle.Contains(PointToClient(Cursor.Position));
+
 				for (int
 					lev = MapBase.MapSize.Levs - 1;
 					lev >= MapBase.Level && lev != -1;
@@ -710,7 +714,7 @@ namespace MapView
 									x += HalfWidth,
 									y += HalfHeight)
 						{
-							bool isClicked = FirstClick //&& Cuboid != null
+							bool isClicked = FirstClick
 										  && (   (col == DragStart.X && row == DragStart.Y)
 											  || (col == DragEnd.X   && row == DragEnd.Y));
 
@@ -746,9 +750,7 @@ namespace MapView
 												true,
 												lev == MapBase.Level);
 							}
-							else if (Focused
-								&& !_suppressTargeter
-								&& ClientRectangle.Contains(PointToClient(Cursor.Position))
+							else if (isTargeted
 								&& col == _colOver
 								&& row == _rowOver
 								&& lev == MapBase.Level)
