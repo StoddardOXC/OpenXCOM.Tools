@@ -644,6 +644,8 @@ namespace MapView
 		#region Draw
 		int _halfwidth2, _halfheight5;
 
+		Bitmap _b;
+
 		/// <summary>
 		/// Draws the Map in MainView.
 		/// </summary>
@@ -667,7 +669,12 @@ namespace MapView
 				ControlPaint.DrawBorder3D(_graphics, ClientRectangle, Border3DStyle.Etched);
 
 
-				var dragRect = new Rectangle();
+
+				ConcoctPanelImage();
+				_graphics.DrawImageUnscaled(_b, Point.Empty);
+
+
+/*				var dragRect = new Rectangle();
 				if (FirstClick)
 				{
 					var start = GetAbsoluteDragStart();
@@ -678,6 +685,7 @@ namespace MapView
 										end.X - start.X + 1,
 										end.Y - start.Y + 1);
 				}
+
 
 				MapTileBase tile;
 
@@ -771,9 +779,124 @@ namespace MapView
 					|| (dragRect.Width > 1 && dragRect.Height > 1))
 				{
 					DrawSelectionBorder(dragRect);
-				}
+				} */
 			}
 		}
+
+		private void ConcoctPanelImage()
+		{
+			_b = new Bitmap(Width, Height, PixelFormat.Format32bppRgb);
+
+
+			var dragRect = new Rectangle();
+			if (FirstClick)
+			{
+				var start = GetAbsoluteDragStart();
+				var end   = GetAbsoluteDragEnd();
+
+				dragRect = new Rectangle(
+									start.X, start.Y,
+									end.X - start.X + 1,
+									end.Y - start.Y + 1);
+			}
+
+
+			MapTileBase tile;
+
+			_halfwidth2  = HalfWidth  * 2;
+			_halfheight5 = HalfHeight * 5;
+
+			bool isTargeted = Focused
+						   && !_suppressTargeter
+						   && ClientRectangle.Contains(PointToClient(Cursor.Position));
+
+			for (int
+				lev = MapBase.MapSize.Levs - 1;
+				lev >= MapBase.Level && lev != -1;
+				--lev)
+			{
+				if (_showGrid && lev == MapBase.Level)
+					DrawGrid();
+
+				for (int
+						row = 0,
+							startY = Origin.Y + (HalfHeight * lev * 3),
+							startX = Origin.X;
+						row != MapBase.MapSize.Rows;
+						++row,
+							startY += HalfHeight,
+							startX -= HalfWidth)
+				{
+					for (int
+							col = 0,
+								x = startX,
+								y = startY;
+							col != MapBase.MapSize.Cols;
+							++col,
+								x += HalfWidth,
+								y += HalfHeight)
+					{
+						bool isClicked = FirstClick
+									  && (   (col == DragStart.X && row == DragStart.Y)
+										  || (col == DragEnd.X   && row == DragEnd.Y));
+
+						if (isClicked)
+						{
+							Cuboid.DrawCuboid(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight,
+											false,
+											lev == MapBase.Level);
+						}
+
+						tile = MapBase[row, col, lev];
+						if (lev == MapBase.Level || !tile.Occulted)
+						{
+							DrawTile(
+									(XCMapTile)tile,
+									x, y,
+									_graySelection && FirstClick
+										&& lev == MapBase.Level
+										&& dragRect.Contains(col, row));
+						}
+
+						if (isClicked)
+						{
+							Cuboid.DrawCuboid(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight,
+											true,
+											lev == MapBase.Level);
+						}
+						else if (isTargeted
+							&& col == _colOver
+							&& row == _rowOver
+							&& lev == MapBase.Level)
+						{
+							Cuboid.DrawTargeter(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight);
+						}
+					}
+				}
+			}
+
+//			if (_drawSelectionBox) // always false.
+//			if (FirstClick && !_graySelection)
+			if (    dragRect.Width > 2 || dragRect.Height > 2
+				|| (dragRect.Width > 1 && dragRect.Height > 1))
+			{
+				DrawSelectionBorder(dragRect);
+			}
+		}
+
+
 
 		/// <summary>
 		/// Draws the grid-lines and the grid-sheet.
