@@ -71,10 +71,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <PostBuildEvent>copy /y C:\GIT\OpenXCOM.Tools\ConfigConverter\bin\Release\ConfigConverter.exe C:\0xC_kL\editors\MapView_kL\ConfigConverter\
-</PostBuildEvent>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <BaseAddress>4194304</BaseAddress>
     <PlatformTarget>AnyCPU</PlatformTarget>
