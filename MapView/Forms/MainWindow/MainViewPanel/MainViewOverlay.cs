@@ -100,6 +100,10 @@ namespace MapView
 		private ImageAttributes _spriteAttributes = new ImageAttributes();
 
 		private Brush _brushLayer;
+		private Pen _penSelection = new Pen(Color.FromArgb(60, Color.Red), 2);
+
+		private int _anistep;
+		private int _cols, _rows;
 		#endregion
 
 
@@ -673,12 +677,18 @@ namespace MapView
 
 				ControlPaint.DrawBorder3D(_graphics, ClientRectangle, Border3DStyle.Etched);
 
+
+				_anistep = MainViewUnderlay.AniStep;
+
+				_cols = MapBase.MapSize.Cols;
+				_rows = MapBase.MapSize.Rows;
+
 #if LOCKBITS
 				_b = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
-				ConcoctPanelImage();
-				_graphics.DrawImage(_b, 0, 0, _b.Width, _b.Height);
-//				_graphics.DrawImageUnscaled(_b, Point.Empty); // uh does not draw the image unscaled. it still uses the DPI in the Graphics object ...
-#else
+				BuildPanelImage();
+//				_graphics.DrawImage(_b, 0, 0, _b.Width, _b.Height);
+				_graphics.DrawImageUnscaled(_b, Point.Empty);	// uh does not draw the image unscaled. it
+#else															// still uses the DPI in the Graphics object ...
 				var dragRect = new Rectangle();
 				if (FirstClick)
 				{
@@ -713,7 +723,7 @@ namespace MapView
 							row = 0,
 								startY = Origin.Y + (HalfHeight * lev * 3),
 								startX = Origin.X;
-							row != MapBase.MapSize.Rows;
+							row != _rows;
 							++row,
 								startY += HalfHeight,
 								startX -= HalfWidth)
@@ -722,7 +732,7 @@ namespace MapView
 								col = 0,
 									x = startX,
 									y = startY;
-								col != MapBase.MapSize.Cols;
+								col != _cols;
 								++col,
 									x += HalfWidth,
 									y += HalfHeight)
@@ -791,13 +801,10 @@ namespace MapView
 
 
 #if LOCKBITS
-		private void ConcoctPanelImage()
+		private void BuildPanelImage()
 		{
 			Graphics graphics = Graphics.FromImage(_b);
-			graphics.Clear(Color.White);
-
-//			graphics.FillRectangle(new SolidBrush(Color.Chartreuse), new Rectangle(0,0,Width,Height));
-
+			graphics.Clear(Color.Transparent);
 
 			var dragRect = new Rectangle();
 			if (FirstClick)
@@ -830,7 +837,7 @@ namespace MapView
 						row = 0,
 							startY = Origin.Y + (HalfHeight * lev * 3),
 							startX = Origin.X;
-						row != MapBase.MapSize.Rows;
+						row != _rows;
 						++row,
 							startY += HalfHeight,
 							startX -= HalfWidth)
@@ -839,7 +846,7 @@ namespace MapView
 							col = 0,
 								x = startX,
 								y = startY;
-							col != MapBase.MapSize.Cols;
+							col != _cols;
 							++col,
 								x += HalfWidth,
 								y += HalfHeight)
@@ -908,16 +915,16 @@ namespace MapView
 			int x = Origin.X + HalfWidth;
 			int y = Origin.Y + HalfHeight * (MapBase.Level + 1) * 3;
 
-			int x1 = MapBase.MapSize.Rows * HalfWidth;
-			int y1 = MapBase.MapSize.Rows * HalfHeight;
+			int x1 = _rows * HalfWidth;
+			int y1 = _rows * HalfHeight;
 
 			var pt0 = new Point(x, y);
 			var pt1 = new Point(
-							x + MapBase.MapSize.Cols * HalfWidth,
-							y + MapBase.MapSize.Cols * HalfHeight);
+							x + _cols * HalfWidth,
+							y + _cols * HalfHeight);
 			var pt2 = new Point(
-							x + (MapBase.MapSize.Cols - MapBase.MapSize.Rows) * HalfWidth,
-							y + (MapBase.MapSize.Rows + MapBase.MapSize.Cols) * HalfHeight);
+							x + (_cols - _rows) * HalfWidth,
+							y + (_rows + _cols) * HalfHeight);
 			var pt3 = new Point(x - x1, y + y1);
 
 			_layerFill.Reset();
@@ -929,15 +936,15 @@ namespace MapView
 			graphics.FillPath(_brushLayer, _layerFill); // the grid-sheet
 
 			// draw the grid-lines ->
-			for (int i = 0; i <= MapBase.MapSize.Rows; ++i)
+			for (int i = 0; i <= _rows; ++i)
 				graphics.DrawLine(
 								_penGrid,
 								x - HalfWidth  * i,
 								y + HalfHeight * i,
-								x + (MapBase.MapSize.Cols - i) * HalfWidth,
-								y + (MapBase.MapSize.Cols + i) * HalfHeight);
+								x + (_cols - i) * HalfWidth,
+								y + (_cols + i) * HalfHeight);
 
-			for (int i = 0; i <= MapBase.MapSize.Cols; ++i)
+			for (int i = 0; i <= _cols; ++i)
 				graphics.DrawLine(
 								_penGrid,
 								x + HalfWidth  * i,
@@ -954,16 +961,16 @@ namespace MapView
 			int x = Origin.X + HalfWidth;
 			int y = Origin.Y + HalfHeight * (MapBase.Level + 1) * 3;
 
-			int x1 = MapBase.MapSize.Rows * HalfWidth;
-			int y1 = MapBase.MapSize.Rows * HalfHeight;
+			int x1 = _rows * HalfWidth;
+			int y1 = _rows * HalfHeight;
 
 			var pt0 = new Point(x, y);
 			var pt1 = new Point(
-							x + MapBase.MapSize.Cols * HalfWidth,
-							y + MapBase.MapSize.Cols * HalfHeight);
+							x + _cols * HalfWidth,
+							y + _cols * HalfHeight);
 			var pt2 = new Point(
-							x + (MapBase.MapSize.Cols - MapBase.MapSize.Rows) * HalfWidth,
-							y + (MapBase.MapSize.Rows + MapBase.MapSize.Cols) * HalfHeight);
+							x + (_cols - _rows) * HalfWidth,
+							y + (_rows + _cols) * HalfHeight);
 			var pt3 = new Point(x - x1, y + y1);
 
 			_layerFill.Reset();
@@ -975,15 +982,15 @@ namespace MapView
 			_graphics.FillPath(_brushLayer, _layerFill); // the grid-sheet
 
 			// draw the grid-lines ->
-			for (int i = 0; i <= MapBase.MapSize.Rows; ++i)
+			for (int i = 0; i <= _rows; ++i)
 				_graphics.DrawLine(
 								_penGrid,
 								x - HalfWidth  * i,
 								y + HalfHeight * i,
-								x + (MapBase.MapSize.Cols - i) * HalfWidth,
-								y + (MapBase.MapSize.Cols + i) * HalfHeight);
+								x + (_cols - i) * HalfWidth,
+								y + (_cols + i) * HalfHeight);
 
-			for (int i = 0; i <= MapBase.MapSize.Cols; ++i)
+			for (int i = 0; i <= _cols; ++i)
 				_graphics.DrawLine(
 								_penGrid,
 								x + HalfWidth  * i,
@@ -1004,42 +1011,38 @@ namespace MapView
 			//   (int)(sprite.Height * Globals.Scale)
 			// with its attendent consequences.
 
-			TilepartBase part = null;
+			TilepartBase part;
 
 			var topView = ViewerFormsManager.TopView.Control;
 			if (topView.GroundVisible
 				&& (part = tile.Ground) != null)
 			{
-				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawSprite(
-						bindata,
+						part[_anistep].Bindata,
 						x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 
 			if (topView.WestVisible
 				&& (part = tile.West) != null)
 			{
-				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawSprite(
-						bindata,
+						part[_anistep].Bindata,
 						x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 
 			if (topView.NorthVisible
 				&& (part = tile.North) != null)
 			{
-				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawSprite(
-						bindata,
+						part[_anistep].Bindata,
 						x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 
 			if (topView.ContentVisible
 				&& (part = tile.Content) != null)
 			{
-				var bindata = part[MainViewUnderlay.AniStep].Bindata;
 				DrawSprite(
-						bindata,
+						part[_anistep].Bindata,
 						x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 		}
@@ -1062,14 +1065,14 @@ namespace MapView
 			//   (int)(sprite.Height * Globals.Scale)
 			// with its attendent consequences.
 
-			TilepartBase part = null;
+			TilepartBase part;
 
 			var topView = ViewerFormsManager.TopView.Control;
 			if (topView.GroundVisible
 				&& (part = tile.Ground) != null)
 			{
-				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									: part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[_anistep].SpriteGray
+									: part[_anistep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1080,8 +1083,8 @@ namespace MapView
 			if (topView.WestVisible
 				&& (part = tile.West) != null)
 			{
-				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									: part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[_anistep].SpriteGray
+									: part[_anistep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1092,8 +1095,8 @@ namespace MapView
 			if (topView.NorthVisible
 				&& (part = tile.North) != null)
 			{
-				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									: part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[_anistep].SpriteGray
+									: part[_anistep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1104,8 +1107,8 @@ namespace MapView
 			if (topView.ContentVisible
 				&& (part = tile.Content) != null)
 			{
-				var sprite = (gray) ? part[MainViewUnderlay.AniStep].SpriteGray
-									: part[MainViewUnderlay.AniStep].Image;
+				var sprite = (gray) ? part[_anistep].SpriteGray
+									: part[_anistep].Image;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1121,7 +1124,7 @@ namespace MapView
 			var data = _b.LockBits(
 								new Rectangle(0, 0, _b.Width, _b.Height),
 								ImageLockMode.WriteOnly,
-								PixelFormat.Format32bppArgb);//_b.PixelFormat);
+								PixelFormat.Format32bppArgb);
 			var scan0 = data.Scan0;
 
 			unsafe
@@ -1146,8 +1149,9 @@ namespace MapView
 //y + (int)(h * Globals.Scale),
 //_d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
 
-				for (uint y = 0; y != XCImage.SpriteHeight40; ++y)
-				for (uint x = 0; x != XCImage.SpriteWidth;    ++x)
+				uint x,y,offset;
+				for (y = 0; y != XCImage.SpriteHeight40; ++y)
+				for (x = 0; x != XCImage.SpriteWidth;    ++x)
 				{
 					palid = bindata[++i];
 
@@ -1156,22 +1160,14 @@ namespace MapView
 						pos = start
 							+ (((uint)y0 + y) * stride)
 							+ (((uint)x0 + x) * 4);
-						for (uint offset = 0; offset != 4; ++offset) // 4 bytes in dest-pixel.
+						for (offset = 0; offset != 4; ++offset) // 4 bytes in dest-pixel.
 						{
 							switch (offset)
 							{
-								case 0:
-									pos[offset] = Palette.UfoBattle[palid].B;
-									break;
-								case 1:
-									pos[offset] = Palette.UfoBattle[palid].G;
-									break;
-								case 2:
-									pos[offset] = Palette.UfoBattle[palid].R;
-									break;
-								case 3:
-									pos[offset] = 255;
-									break;
+								case 0: pos[offset] = Palette.UfoBattle[palid].B; break;
+								case 1: pos[offset] = Palette.UfoBattle[palid].G; break;
+								case 2: pos[offset] = Palette.UfoBattle[palid].R; break;
+								case 3: pos[offset] = 255;                        break;
 							}
 						}
 					}
@@ -1212,14 +1208,10 @@ namespace MapView
 			bottom.X += HalfWidth;
 			left.X   += HalfWidth;
 
-			float penWidth = Globals.Scale < 1.5 ? 2
-												 : 3;
-			var pen = new Pen(Color.FromArgb(60, Color.Red), penWidth);
-
-			graphics.DrawLine(pen, top,    right);
-			graphics.DrawLine(pen, right,  bottom);
-			graphics.DrawLine(pen, bottom, left);
-			graphics.DrawLine(pen, left,   top);
+			graphics.DrawLine(_penSelection, top,    right);
+			graphics.DrawLine(_penSelection, right,  bottom);
+			graphics.DrawLine(_penSelection, bottom, left);
+			graphics.DrawLine(_penSelection, left,   top);
 		}
 #else
 		/// <summary>
@@ -1239,14 +1231,10 @@ namespace MapView
 			bottom.X += HalfWidth;
 			left.X   += HalfWidth;
 
-			float penWidth = Globals.Scale < 1.5 ? 2
-												 : 3;
-			var pen = new Pen(Color.FromArgb(60, Color.Red), penWidth);
-
-			_graphics.DrawLine(pen, top,    right);
-			_graphics.DrawLine(pen, right,  bottom);
-			_graphics.DrawLine(pen, bottom, left);
-			_graphics.DrawLine(pen, left,   top);
+			_graphics.DrawLine(_penSelection, top,    right);
+			_graphics.DrawLine(_penSelection, right,  bottom);
+			_graphics.DrawLine(_penSelection, bottom, left);
+			_graphics.DrawLine(_penSelection, left,   top);
 		}
 #endif
 		#endregion
