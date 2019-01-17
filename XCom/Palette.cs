@@ -15,7 +15,7 @@ namespace XCom
 	public sealed class Palette
 	{
 		#region Fields (static)
-		internal const byte TransparentId = 0x00;
+		public const byte TransparentId = 0x00;
 
 		private static readonly Hashtable _palettes = new Hashtable();
 
