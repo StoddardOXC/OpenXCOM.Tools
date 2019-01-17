@@ -93,7 +93,7 @@ namespace MapView
 			}
 #else
 			graphics.DrawImage(
-							_spriteset[id].Image,
+							_spriteset[id].Sprite,
 							x, y,
 							halfWidth  * 2,		// NOTE: the values for width and height
 							halfHeight * 5);	// are based on a sprite that's 32x40.
@@ -129,7 +129,7 @@ namespace MapView
 			}
 #else
 			graphics.DrawImage(
-							_spriteset[7].Image, // yellow targeter sprite
+							_spriteset[7].Sprite, // yellow targeter sprite
 							x, y,
 							halfWidth  * 2,		// NOTE: the values for width and height
 							halfHeight * 5);	// are based on a sprite that's 32x40.

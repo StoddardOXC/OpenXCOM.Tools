@@ -1108,7 +1108,7 @@ namespace MapView
 							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 #else
 				var sprite = (gray) ? part[_anistep].SpriteGray
-									: part[_anistep].Image;
+									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1126,7 +1126,7 @@ namespace MapView
 							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 #else
 				var sprite = (gray) ? part[_anistep].SpriteGray
-									: part[_anistep].Image;
+									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1144,7 +1144,7 @@ namespace MapView
 							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 #else
 				var sprite = (gray) ? part[_anistep].SpriteGray
-									: part[_anistep].Image;
+									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
 						new Rectangle(
@@ -1162,7 +1162,7 @@ namespace MapView
 							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 #else
 				var sprite = (gray) ? part[_anistep].SpriteGray
-									: part[_anistep].Image;
+									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
 						new Rectangle(

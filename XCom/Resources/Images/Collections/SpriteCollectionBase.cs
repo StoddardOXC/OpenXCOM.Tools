@@ -23,7 +23,7 @@ namespace XCom
 				_pal = value;
 
 				foreach (XCImage sprite in this)
-					sprite.Image.Palette = _pal.ColorTable;
+					sprite.Sprite.Palette = _pal.ColorTable;
 			}
 		}
 

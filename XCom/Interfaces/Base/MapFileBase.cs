@@ -255,7 +255,7 @@ namespace XCom.Interfaces.Base
 							{
 								var tilepart = part as Tilepart;
 								BitmapService.Draw( // NOTE: not actually drawing anything.
-												tilepart[0].Image,
+												tilepart[0].Sprite,
 												b,
 												x,
 												y - tilepart.Record.TileOffset);

@@ -20,7 +20,7 @@ namespace XCom.Interfaces
 		public int TerrainId
 		{ get; set; }
 
-		public Bitmap Image // TODO: change to 'Sprite' ... expect a designer to fu.
+		public Bitmap Sprite
 		{ get; set; }
 
 		public Bitmap SpriteGray
@@ -34,8 +34,8 @@ namespace XCom.Interfaces
 			{
 				_palette = value;
 
-				if (Image != null)
-					Image.Palette = _palette.ColorTable;
+				if (Sprite != null)
+					Sprite.Palette = _palette.ColorTable;
 			}
 		}
 		#endregion
@@ -66,7 +66,7 @@ namespace XCom.Interfaces
 			Pal     = pal;
 
 			if (Pal != null)											// NOTE: this is to check for a call by BitmapService.CreateSprite()
-				Image = BitmapService.CreateColorized(					// which is called by
+				Sprite = BitmapService.CreateColorized(					// which is called by
 													width,				// BitmapService.CreateSpriteset() and
 													height,				// several PckViewForm contextmenu events
 													Bindata,			// BUT: the call by PckImage..cTor initializer needs to decode

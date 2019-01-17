@@ -167,7 +167,7 @@ namespace XCom
 				{
 					int x = i % width * (XCImage.SpriteWidth  + pad);
 					int y = i / width * (XCImage.SpriteHeight + pad);
-					Draw(spriteset[i].Image, b, x, y);
+					Draw(spriteset[i].Sprite, b, x, y);
 				}
 
 				ExportSprite(fullpath, b);

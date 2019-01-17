@@ -176,7 +176,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.Ground != null)
 			{
 				graphics.DrawImage(
-								tile.Ground[MainViewUnderlay.AniStep].Image,
+								tile.Ground[MainViewUnderlay.AniStep].Sprite,
 								StartX,
 								StartY - tile.Ground.Record.TileOffset);
 
@@ -185,7 +185,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			}
 			else
 				graphics.DrawImage(
-								Globals.ExtraSprites[3].Image,
+								Globals.ExtraSprites[3].Sprite,
 								StartX,
 								StartY);
 
@@ -193,7 +193,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.West != null)
 			{
 				graphics.DrawImage(
-								tile.West[MainViewUnderlay.AniStep].Image,
+								tile.West[MainViewUnderlay.AniStep].Sprite,
 								StartX + QuadWidthTotal,
 								StartY - tile.West.Record.TileOffset);
 
@@ -202,7 +202,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			}
 			else
 				graphics.DrawImage(
-								Globals.ExtraSprites[1].Image,
+								Globals.ExtraSprites[1].Sprite,
 								StartX + QuadWidthTotal,
 								StartY);
 
@@ -210,7 +210,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.North != null)
 			{
 				graphics.DrawImage(
-								tile.North[MainViewUnderlay.AniStep].Image,
+								tile.North[MainViewUnderlay.AniStep].Sprite,
 								StartX + QuadWidthTotal * 2,
 								StartY - tile.North.Record.TileOffset);
 
@@ -219,7 +219,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			}
 			else
 				graphics.DrawImage(
-								Globals.ExtraSprites[2].Image,
+								Globals.ExtraSprites[2].Sprite,
 								StartX + QuadWidthTotal * 2,
 								StartY);
 
@@ -227,7 +227,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.Content != null)
 			{
 				graphics.DrawImage(
-								tile.Content[MainViewUnderlay.AniStep].Image,
+								tile.Content[MainViewUnderlay.AniStep].Sprite,
 								StartX + QuadWidthTotal * 3,
 								StartY - tile.Content.Record.TileOffset);
 
@@ -236,7 +236,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			}
 			else
 				graphics.DrawImage(
-								Globals.ExtraSprites[4].Image,
+								Globals.ExtraSprites[4].Sprite,
 								StartX + QuadWidthTotal * 3,
 								StartY);
 

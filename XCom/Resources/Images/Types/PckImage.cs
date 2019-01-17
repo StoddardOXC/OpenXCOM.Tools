@@ -126,7 +126,7 @@ namespace XCom
 //			}
 //			else
 //			{
-			Image = BitmapService.CreateColorized(
+			Sprite = BitmapService.CreateColorized(
 												XCImage.SpriteWidth,
 												XCImage.SpriteHeight,
 												Bindata,
@@ -163,8 +163,8 @@ namespace XCom
 						{
 							first = false;
 
-							binlist     .Add((byte)(lenTransparent / sprite.Image.Width));	// qty of initial transparent rows
-							lenTransparent = (byte)(lenTransparent % sprite.Image.Width);	// qty of transparent pixels starting on the next row
+							binlist     .Add((byte)(lenTransparent / sprite.Sprite.Width));	// qty of initial transparent rows
+							lenTransparent = (byte)(lenTransparent % sprite.Sprite.Width);	// qty of transparent pixels starting on the next row
 						}
 
 						while (lenTransparent >= ByteMaximumValue)

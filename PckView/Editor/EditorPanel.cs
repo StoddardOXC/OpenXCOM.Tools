@@ -185,7 +185,7 @@ namespace PckView
 //									var color = PckViewForm.Pal[palId];
 
 									Sprite.Bindata[bindataId] = (byte)palId;
-									Sprite.Image = BitmapService.CreateColorized(
+									Sprite.Sprite = BitmapService.CreateColorized(
 																			XCImage.SpriteWidth,
 																			XCImage.SpriteHeight,
 																			Sprite.Bindata,
@@ -277,7 +277,7 @@ namespace PckView
 				for (int y = 0; y != XCImage.SpriteHeight; ++y)
 				for (int x = 0; x != XCImage.SpriteWidth;  ++x)
 					graphics.FillRectangle(
-										new SolidBrush(Sprite.Image.GetPixel(x, y)),
+										new SolidBrush(Sprite.Sprite.GetPixel(x, y)),
 										x * _scale,
 										y * _scale,
 											_scale,

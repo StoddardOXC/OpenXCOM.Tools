@@ -347,7 +347,7 @@ namespace PckView
 											TableOffsetVert + TileHeight - SpriteMargin - 1);
 
 					graphics.DrawImage(
-									Spriteset[id].Image,
+									Spriteset[id].Sprite,
 									TableOffsetHori + tileX * _tileWidth + SpriteMargin,
 									TableOffsetVert + tileY * TileHeight + SpriteMargin + _startY);
 				}

@@ -891,7 +891,7 @@ namespace PckView
 				sfd.FileName   = _pnlView.Spriteset.Label + suffix;
 
 				if (sfd.ShowDialog() == DialogResult.OK)
-					BitmapService.ExportSprite(sfd.FileName, sprite.Image);
+					BitmapService.ExportSprite(sfd.FileName, sprite.Sprite);
 			}
 		}
 
@@ -1139,7 +1139,7 @@ namespace PckView
 														"{0:" + digits + "}",
 														sprite.TerrainId);
 							string fullpath = Path.Combine(path, file + suffix + PngExt);
-							BitmapService.ExportSprite(fullpath, sprite.Image);
+							BitmapService.ExportSprite(fullpath, sprite.Sprite);
 						}
 					}
 				}
