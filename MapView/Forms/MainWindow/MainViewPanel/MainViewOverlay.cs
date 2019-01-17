@@ -1,4 +1,4 @@
-#define LOCKBITS // toggle this to change OnPaint routine
+//#define LOCKBITS // toggle this to change OnPaint routine
 
 using System;
 using System.Collections.Generic;
@@ -801,10 +801,18 @@ namespace MapView
 
 
 #if LOCKBITS
+		BitmapData _data; IntPtr _scan0;
 		private void BuildPanelImage()
 		{
 			Graphics graphics = Graphics.FromImage(_b);
 			graphics.Clear(Color.Transparent);
+
+			_data = _b.LockBits(
+							new Rectangle(0, 0, _b.Width, _b.Height),
+							ImageLockMode.WriteOnly,
+							PixelFormat.Format32bppArgb);
+			_scan0 = _data.Scan0;
+
 
 			var dragRect = new Rectangle();
 			if (FirstClick)
@@ -830,8 +838,8 @@ namespace MapView
 				lev >= MapBase.Level && lev != -1;
 				--lev)
 			{
-				if (_showGrid && lev == MapBase.Level)
-					DrawGrid(graphics);
+//				if (_showGrid && lev == MapBase.Level)
+//					DrawGrid(graphics);
 
 				for (int
 						row = 0,
@@ -851,20 +859,20 @@ namespace MapView
 								x += HalfWidth,
 								y += HalfHeight)
 					{
-						bool isClicked = FirstClick
-									  && (   (col == DragStart.X && row == DragStart.Y)
-										  || (col == DragEnd.X   && row == DragEnd.Y));
+//						bool isClicked = FirstClick
+//									  && (   (col == DragStart.X && row == DragStart.Y)
+//										  || (col == DragEnd.X   && row == DragEnd.Y));
 
-						if (isClicked)
-						{
-							Cuboid.DrawCuboid(
-											graphics,
-											x, y,
-											HalfWidth,
-											HalfHeight,
-											false,
-											lev == MapBase.Level);
-						}
+//						if (isClicked)
+//						{
+//							Cuboid.DrawCuboid(
+//											graphics,
+//											x, y,
+//											HalfWidth,
+//											HalfHeight,
+//											false,
+//											lev == MapBase.Level);
+//						}
 
 						tile = MapBase[row, col, lev];
 						if (lev == MapBase.Level || !tile.Occulted)
@@ -874,30 +882,31 @@ namespace MapView
 									x, y);
 						}
 
-						if (isClicked)
-						{
-							Cuboid.DrawCuboid(
-											graphics,
-											x, y,
-											HalfWidth,
-											HalfHeight,
-											true,
-											lev == MapBase.Level);
-						}
-						else if (isTargeted
-							&& col == _colOver
-							&& row == _rowOver
-							&& lev == MapBase.Level)
-						{
-							Cuboid.DrawTargeter(
-											graphics,
-											x, y,
-											HalfWidth,
-											HalfHeight);
-						}
+//						if (isClicked)
+//						{
+//							Cuboid.DrawCuboid(
+//											graphics,
+//											x, y,
+//											HalfWidth,
+//											HalfHeight,
+//											true,
+//											lev == MapBase.Level);
+//						}
+//						else if (isTargeted
+//							&& col == _colOver
+//							&& row == _rowOver
+//							&& lev == MapBase.Level)
+//						{
+//							Cuboid.DrawTargeter(
+//											graphics,
+//											x, y,
+//											HalfWidth,
+//											HalfHeight);
+//						}
 					}
 				}
 			}
+			_b.UnlockBits(_data);
 
 			if (    dragRect.Width > 2 || dragRect.Height > 2
 				|| (dragRect.Width > 1 && dragRect.Height > 1))
@@ -1121,11 +1130,11 @@ namespace MapView
 #if LOCKBITS
 		private void DrawSprite(IList<byte> bindata, int x0, int y0)
 		{
-			var data = _b.LockBits(
-								new Rectangle(0, 0, _b.Width, _b.Height),
-								ImageLockMode.WriteOnly,
-								PixelFormat.Format32bppArgb);
-			var scan0 = data.Scan0;
+//			var data = _b.LockBits(
+//								new Rectangle(0, 0, _b.Width, _b.Height),
+//								ImageLockMode.WriteOnly,
+//								PixelFormat.Format32bppArgb);
+//			var scan0 = data.Scan0;
 
 			unsafe
 			{
@@ -1136,9 +1145,9 @@ namespace MapView
 //					dstPos = (byte*)dstStart.ToPointer() + dstLocked.Stride * (_b.Height - 1);
 //				uint dstStride = (uint)Math.Abs(dstLocked.Stride);
 
-				var start = (byte*)scan0.ToPointer();
+				var start = (byte*)_scan0.ToPointer();
 
-				uint stride = (uint)data.Stride;
+				uint stride = (uint)_data.Stride;
 
 				byte palid;
 				int i = -1;
@@ -1173,7 +1182,7 @@ namespace MapView
 					}
 				}
 			}
-			_b.UnlockBits(data);
+//			_b.UnlockBits(data);
 		}
 #else
 		/// <summary>
