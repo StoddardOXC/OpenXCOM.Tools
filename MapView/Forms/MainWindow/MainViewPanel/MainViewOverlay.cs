@@ -2,7 +2,9 @@
 //#define LOCKBITS // toggle this to change OnPaint routine in standard build.
 
 using System;
+#if MV_MONO || LOCKBITS
 using System.Collections.Generic;
+#endif
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
