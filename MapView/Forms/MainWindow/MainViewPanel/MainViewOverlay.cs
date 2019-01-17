@@ -645,10 +645,11 @@ namespace MapView
 
 
 		#region Draw
-		int _halfwidth2, _halfheight5;
-
+#if LOCKBITS
 		Bitmap _b;
-		const bool _lockbits = true;
+#else
+		int _halfwidth2, _halfheight5;
+#endif
 
 		/// <summary>
 		/// Draws the Map in MainView.
@@ -813,9 +814,6 @@ namespace MapView
 
 			MapTileBase tile;
 
-			_halfwidth2  = HalfWidth  * 2;
-			_halfheight5 = HalfHeight * 5;
-
 			bool isTargeted = Focused
 						   && !_suppressTargeter
 						   && ClientRectangle.Contains(PointToClient(Cursor.Position));
@@ -899,6 +897,8 @@ namespace MapView
 			{
 				DrawSelectionBorder(dragRect, graphics);
 			}
+
+			graphics.Dispose();
 		}
 #endif
 
