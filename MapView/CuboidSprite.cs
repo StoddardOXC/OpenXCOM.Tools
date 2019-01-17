@@ -1,7 +1,12 @@
+//#define MV_MONO // for Linus et al.
+
 using System;
 using System.Drawing;
 
 using XCom;
+#if MV_MONO
+using XCom.Interfaces;
+#endif
 
 
 namespace MapView
@@ -21,7 +26,7 @@ namespace MapView
 		{
 			_spriteset = spriteset;
 
-//			foreach (PckImage sprite in spriteset)
+//			foreach (PckImage sprite in _spriteset)
 //			{
 //				var b     = sprite.Image;
 //				var pal   = b.Palette;	// <- this is only a copy.
@@ -65,11 +70,34 @@ namespace MapView
 			else
 				id = (red ? 0 : 2);
 
+#if MV_MONO
+			var d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
+
+			var bindata = _spriteset[id].Bindata;
+
+			int palid;
+
+			int i = -1, h,w;
+			for (h = 0; h != XCImage.SpriteHeight40; ++h)
+			for (w = 0; w != XCImage.SpriteWidth;    ++w)
+			{
+				palid = bindata[++i];
+				if (palid != Palette.TransparentId)
+				{
+					graphics.FillRectangle(
+										Palette.BrushesUfoBattle[palid],
+										x + (int)(w * Globals.Scale),
+										y + (int)(h * Globals.Scale),
+										d, d);
+				}
+			}
+#else
 			graphics.DrawImage(
 							_spriteset[id].Image,
 							x, y,
 							halfWidth  * 2,		// NOTE: the values for width and height
 							halfHeight * 5);	// are based on a sprite that's 32x40.
+#endif
 		}
 
 		internal void DrawTargeter(
@@ -78,11 +106,34 @@ namespace MapView
 				int halfWidth,
 				int halfHeight)
 		{
+#if MV_MONO
+			var d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
+
+			var bindata = _spriteset[7].Bindata;
+
+			int palid;
+
+			int i = -1, h,w;
+			for (h = 0; h != XCImage.SpriteHeight40; ++h)
+			for (w = 0; w != XCImage.SpriteWidth;    ++w)
+			{
+				palid = bindata[++i];
+				if (palid != Palette.TransparentId)
+				{
+					graphics.FillRectangle(
+										Palette.BrushesUfoBattle[palid],
+										x + (int)(w * Globals.Scale),
+										y + (int)(h * Globals.Scale),
+										d, d);
+				}
+			}
+#else
 			graphics.DrawImage(
 							_spriteset[7].Image, // yellow targeter sprite
 							x, y,
 							halfWidth  * 2,		// NOTE: the values for width and height
 							halfHeight * 5);	// are based on a sprite that's 32x40.
+#endif
 		}
 		#endregion
 	}

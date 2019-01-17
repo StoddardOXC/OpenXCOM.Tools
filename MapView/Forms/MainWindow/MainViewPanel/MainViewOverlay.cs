@@ -1,4 +1,5 @@
-//#define LOCKBITS // toggle this to change OnPaint routine
+//#define MV_MONO // for Linus et al.
+//#define LOCKBITS // toggle this to change OnPaint routine in standard build.
 
 using System;
 using System.Collections.Generic;
@@ -90,6 +91,16 @@ namespace MapView
 
 		internal CuboidSprite Cuboid
 		{ private get; set; }
+
+#if MV_MONO
+		/// <summary>
+		/// List of SolidBrushes used to draw sprites from XCImage.Bindata (in
+		/// Linux). Can be either UfoBattle palette brushes or TftdBattle
+		/// palette brushes.
+		/// </summary>
+		internal List<Brush> SpriteBrushes
+		{ private get; set; }
+#endif
 		#endregion
 
 
@@ -649,7 +660,9 @@ namespace MapView
 
 
 		#region Draw
-#if LOCKBITS
+#if MV_MONO
+		private int _d; // dimension (scaled both x and y) of a drawn sprite. For Linus et al.
+#elif LOCKBITS
 		Bitmap _b;
 #else
 		int _halfwidth2, _halfheight5;
@@ -661,16 +674,18 @@ namespace MapView
 		/// <param name="e"></param>
 		protected override void OnPaint(PaintEventArgs e)
 		{
-			base.OnPaint(e);
+//			base.OnPaint(e);
 
 			if (MapBase != null)
 			{
 				_graphics = e.Graphics;
-				_graphics.InterpolationMode = InterpolationLocal;
 				_graphics.PixelOffsetMode   = PixelOffsetMode.HighQuality;
+#if !MV_MONO // & !LOCKBITS
+				_graphics.InterpolationMode = InterpolationLocal;
 
 				if (_spriteShadeEnabled)
 					_spriteAttributes.SetGamma(SpriteShadeLocal, ColorAdjustType.Bitmap);
+#endif
 
 				// Image Processing using C# - https://www.codeproject.com/Articles/33838/Image-Processing-using-C
 				// ColorMatrix Guide - https://docs.rainmeter.net/tips/colormatrix-guide/
@@ -683,7 +698,7 @@ namespace MapView
 				_cols = MapBase.MapSize.Cols;
 				_rows = MapBase.MapSize.Rows;
 
-#if LOCKBITS
+#if LOCKBITS && !MV_MONO
 				_b = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
 				BuildPanelImage();
 //				_graphics.DrawImage(_b, 0, 0, _b.Width, _b.Height);
@@ -706,6 +721,11 @@ namespace MapView
 
 				_halfwidth2  = HalfWidth  * 2;
 				_halfheight5 = HalfHeight * 5;
+
+#if MV_MONO
+				_d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
+#endif
+
 
 				bool isTargeted = Focused
 							   && !_suppressTargeter
@@ -800,7 +820,7 @@ namespace MapView
 		}
 
 
-#if LOCKBITS
+#if LOCKBITS && !MV_MONO
 		BitmapData _data; IntPtr _scan0;
 		private void BuildPanelImage()
 		{
@@ -918,7 +938,7 @@ namespace MapView
 		}
 #endif
 
-#if LOCKBITS
+#if LOCKBITS && !MV_MONO
 		private void DrawGrid(Graphics graphics)
 		{
 			int x = Origin.X + HalfWidth;
@@ -1009,7 +1029,7 @@ namespace MapView
 		}
 #endif
 
-#if LOCKBITS
+#if LOCKBITS && !MV_MONO
 		private void DrawTile(
 				XCMapTile tile,
 				int x, int y)
@@ -1055,7 +1075,7 @@ namespace MapView
 						x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
 			}
 		}
-#else
+#else // not Lockbits or is Mono
 		/// <summary>
 		/// Draws the tileparts in the Tile.
 		/// </summary>
@@ -1066,7 +1086,7 @@ namespace MapView
 		private void DrawTile(
 				XCMapTile tile,
 				int x, int y,
-				bool gray)
+				bool gray) // <- not used in MV_MONO build
 		{
 			// NOTE: The width and height args are based on a sprite that's 32x40.
 			// Going back to a universal sprite-size would do this:
@@ -1080,6 +1100,11 @@ namespace MapView
 			if (topView.GroundVisible
 				&& (part = tile.Ground) != null)
 			{
+#if MV_MONO
+				var bindata = part[_anistep].Bindata;
+				DrawBindata(bindata,
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
+#else
 				var sprite = (gray) ? part[_anistep].SpriteGray
 									: part[_anistep].Image;
 				DrawSprite(
@@ -1087,11 +1112,17 @@ namespace MapView
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
 								_halfwidth2, _halfheight5));
+#endif
 			}
 
 			if (topView.WestVisible
 				&& (part = tile.West) != null)
 			{
+#if MV_MONO
+				var bindata = part[_anistep].Bindata;
+				DrawBindata(bindata,
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
+#else
 				var sprite = (gray) ? part[_anistep].SpriteGray
 									: part[_anistep].Image;
 				DrawSprite(
@@ -1099,11 +1130,17 @@ namespace MapView
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
 								_halfwidth2, _halfheight5));
+#endif
 			}
 
 			if (topView.NorthVisible
 				&& (part = tile.North) != null)
 			{
+#if MV_MONO
+				var bindata = part[_anistep].Bindata;
+				DrawBindata(bindata,
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
+#else
 				var sprite = (gray) ? part[_anistep].SpriteGray
 									: part[_anistep].Image;
 				DrawSprite(
@@ -1111,11 +1148,17 @@ namespace MapView
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
 								_halfwidth2, _halfheight5));
+#endif
 			}
 
 			if (topView.ContentVisible
 				&& (part = tile.Content) != null)
 			{
+#if MV_MONO
+				var bindata = part[_anistep].Bindata;
+				DrawBindata(bindata,
+							x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst);
+#else
 				var sprite = (gray) ? part[_anistep].SpriteGray
 									: part[_anistep].Image;
 				DrawSprite(
@@ -1123,11 +1166,31 @@ namespace MapView
 						new Rectangle(
 								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
 								_halfwidth2, _halfheight5));
+#endif
 			}
 		}
 #endif
 
-#if LOCKBITS
+#if MV_MONO
+		private void DrawBindata(IList<byte> bindata, int x, int y)
+		{
+			int palid;
+
+			int i = -1, w,h;
+			for (h = 0; h != XCImage.SpriteHeight40; ++h)
+			for (w = 0; w != XCImage.SpriteWidth;    ++w)
+			{
+				palid = bindata[++i];
+				if (palid != Palette.TransparentId)
+				{
+					_graphics.FillRectangle(
+										SpriteBrushes[palid],
+										x + (int)(w * Globals.Scale),
+										y + (int)(h * Globals.Scale),
+										_d, _d);
+			}
+		}
+#elif LOCKBITS
 		private void DrawSprite(IList<byte> bindata, int x0, int y0)
 		{
 //			var data = _b.LockBits(
@@ -1185,7 +1248,6 @@ namespace MapView
 //			_b.UnlockBits(data);
 		}
 #else
-		/// <summary>
 		/// Draws a tilepart's sprite.
 		/// </summary>
 		/// <param name="sprite"></param>

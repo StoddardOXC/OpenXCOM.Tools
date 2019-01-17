@@ -1,3 +1,5 @@
+//#define MV_MONO // for Linus et al.
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -2337,7 +2339,14 @@ namespace MapView
 
 					_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-
+#if MV_MONO
+					if (@base.Parts[0][0].Pal == Palette.UfoBattle)
+					{
+						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesUfoBattle;
+					}
+					else
+						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesTftdBattle;
+#endif
 					_mainViewUnderlay.MapBase = @base;
 
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
