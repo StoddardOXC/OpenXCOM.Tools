@@ -1108,6 +1108,9 @@ namespace MapView
 			// with its attendent consequences.
 
 			TilepartBase part;
+			var rect = new Rectangle(
+								x, y,
+								_halfwidth2, _halfheight5);
 
 			var topView = ViewerFormsManager.TopView.Control;
 			if (topView.GroundVisible
@@ -1115,11 +1118,8 @@ namespace MapView
 			{
 				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
-				DrawSprite(
-						sprite,
-						new Rectangle(
-								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								_halfwidth2, _halfheight5));
+				rect.Y -= part.Record.TileOffset * HalfHeight / HalfHeightConst;
+				DrawSprite(sprite, rect);
 			}
 
 			if (topView.WestVisible
@@ -1127,11 +1127,8 @@ namespace MapView
 			{
 				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
-				DrawSprite(
-						sprite,
-						new Rectangle(
-								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								_halfwidth2, _halfheight5));
+				rect.Y -= part.Record.TileOffset * HalfHeight / HalfHeightConst;
+				DrawSprite(sprite, rect);
 			}
 
 			if (topView.NorthVisible
@@ -1139,11 +1136,8 @@ namespace MapView
 			{
 				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
-				DrawSprite(
-						sprite,
-						new Rectangle(
-								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								_halfwidth2, _halfheight5));
+				rect.Y -= part.Record.TileOffset * HalfHeight / HalfHeightConst;
+				DrawSprite(sprite, rect);
 			}
 
 			if (topView.ContentVisible
@@ -1151,11 +1145,8 @@ namespace MapView
 			{
 				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
-				DrawSprite(
-						sprite,
-						new Rectangle(
-								x, y - part.Record.TileOffset * HalfHeight / HalfHeightConst,
-								_halfwidth2, _halfheight5));
+				rect.Y -= part.Record.TileOffset * HalfHeight / HalfHeightConst;
+				DrawSprite(sprite, rect);
 			}
 		}
 
