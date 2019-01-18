@@ -63,7 +63,7 @@
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugType>None</DebugType>
+    <DebugType>PdbOnly</DebugType>
     <StartAction>Project</StartAction>
     <Optimize>True</Optimize>
     <OutputPath>bin\Release\</OutputPath>
