@@ -108,7 +108,7 @@ namespace MapView
 		private ImageAttributes _spriteAttributes = new ImageAttributes();
 
 		private Brush _brushLayer;
-		private Pen _penSelection = new Pen(Color.FromArgb(60, Color.Red), 2);
+		private Pen _penSelection = new Pen(Color.Tomato, 2);
 
 		private int _anistep;
 		private int _cols, _rows;
