@@ -699,126 +699,248 @@ namespace MapView
 				_rows = MapBase.MapSize.Rows;
 
 #if !LOCKBITS
-				var dragRect = new Rectangle();
-				if (FirstClick)
-				{
-					var start = GetAbsoluteDragStart();
-					var end   = GetAbsoluteDragEnd();
-
-					dragRect = new Rectangle(
-										start.X, start.Y,
-										end.X - start.X + 1,
-										end.Y - start.Y + 1);
-				}
-
-
-				MapTileBase tile;
-
-				_halfwidth2  = HalfWidth  * 2;
-				_halfheight5 = HalfHeight * 5;
-
 				if (XCMainWindow.UseMonoDraw)
+				{
 					_d = (int)(Globals.Scale - 0.1) + 1; // NOTE: Globals.ScaleMinimum is 0.25; don't let it drop to negative value.
-
-				bool isTargeted = Focused
-							   && !_suppressTargeter
-							   && ClientRectangle.Contains(PointToClient(Cursor.Position));
-
-				for (int
-					lev = MapBase.MapSize.Levs - 1;
-					lev >= MapBase.Level && lev != -1;
-					--lev)
+					DrawPicasso();
+				}
+				else
 				{
-					if (_showGrid && lev == MapBase.Level)
-						DrawGrid();
-
-					for (int
-							row = 0,
-								startY = Origin.Y + (HalfHeight * lev * 3),
-								startX = Origin.X;
-							row != _rows;
-							++row,
-								startY += HalfHeight,
-								startX -= HalfWidth)
-					{
-						for (int
-								col = 0,
-									x = startX,
-									y = startY;
-								col != _cols;
-								++col,
-									x += HalfWidth,
-									y += HalfHeight)
-						{
-							bool isClicked = FirstClick
-										  && (   (col == DragStart.X && row == DragStart.Y)
-											  || (col == DragEnd.X   && row == DragEnd.Y));
-
-							if (isClicked)
-							{
-								Cuboid.DrawCuboid(
-												_graphics,
-												x, y,
-												HalfWidth,
-												HalfHeight,
-												false,
-												lev == MapBase.Level);
-							}
-
-							tile = MapBase[row, col, lev];
-							if (lev == MapBase.Level || !tile.Occulted)
-							{
-								if (XCMainWindow.UseMonoDraw)
-									DrawTile(
-											(XCMapTile)tile,
-											x, y);
-								else
-									DrawTile(
-											(XCMapTile)tile,
-											x, y,
-											_graySelection && FirstClick
-												&& lev == MapBase.Level
-												&& dragRect.Contains(col, row));
-							}
-
-							if (isClicked)
-							{
-								Cuboid.DrawCuboid(
-												_graphics,
-												x, y,
-												HalfWidth,
-												HalfHeight,
-												true,
-												lev == MapBase.Level);
-							}
-							else if (isTargeted
-								&& col == _colOver
-								&& row == _rowOver
-								&& lev == MapBase.Level)
-							{
-								Cuboid.DrawTargeter(
-												_graphics,
-												x, y,
-												HalfWidth,
-												HalfHeight);
-							}
-						}
-					}
+					_halfwidth2  = HalfWidth  * 2;
+					_halfheight5 = HalfHeight * 5;
+					DrawRembrandt();
 				}
 
-//				if (_drawSelectionBox) // always false.
-//				if (FirstClick && !_graySelection)
-				if (    dragRect.Width > 2 || dragRect.Height > 2
-					|| (dragRect.Width > 1 && dragRect.Height > 1))
-				{
-					DrawSelectionBorder(dragRect);
-				}
 #else
 				_b = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
 				BuildPanelImage();
 //				_graphics.DrawImage(_b, 0, 0, _b.Width, _b.Height);
 				_graphics.DrawImageUnscaled(_b, Point.Empty);	// uh does not draw the image unscaled. it
 #endif															// still uses the DPI in the Graphics object ...
+			}
+		}
+
+
+		/// <summary>
+		/// Draws the panel using the standard algorithm.
+		/// @note This is nearly identical to DrawPicasso; they are separated
+		/// only because they'd cause multiple calls to DrawTile() conditioned
+		/// on the setting of 'UseMonoDraw' in the lev/row/col loops.
+		/// </summary>
+		private void DrawRembrandt()
+		{
+			var dragRect = new Rectangle();
+			if (FirstClick)
+			{
+				var start = GetAbsoluteDragStart();
+				var end   = GetAbsoluteDragEnd();
+
+				dragRect = new Rectangle(
+									start.X, start.Y,
+									end.X - start.X + 1,
+									end.Y - start.Y + 1);
+			}
+
+
+			MapTileBase tile;
+
+			bool isTargeted = Focused
+						   && !_suppressTargeter
+						   && ClientRectangle.Contains(PointToClient(Cursor.Position));
+
+			for (int
+				lev = MapBase.MapSize.Levs - 1;
+				lev >= MapBase.Level && lev != -1;
+				--lev)
+			{
+				if (_showGrid && lev == MapBase.Level)
+					DrawGrid();
+
+				for (int
+						row = 0,
+							startY = Origin.Y + (HalfHeight * lev * 3),
+							startX = Origin.X;
+						row != _rows;
+						++row,
+							startY += HalfHeight,
+							startX -= HalfWidth)
+				{
+					for (int
+							col = 0,
+								x = startX,
+								y = startY;
+							col != _cols;
+							++col,
+								x += HalfWidth,
+								y += HalfHeight)
+					{
+						bool isClicked = FirstClick
+									  && (   (col == DragStart.X && row == DragStart.Y)
+										  || (col == DragEnd.X   && row == DragEnd.Y));
+
+						if (isClicked)
+						{
+							Cuboid.DrawCuboid(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight,
+											false,
+											lev == MapBase.Level);
+						}
+
+						tile = MapBase[row, col, lev];
+						if (!tile.Occulted || lev == MapBase.Level)
+						{
+							// THIS IS THE ONLY DIFFERENCE BETWEEN REMBRANDT AND PICASSO ->
+							DrawTile(
+									(XCMapTile)tile,
+									x, y,
+									_graySelection && FirstClick
+										&& lev == MapBase.Level
+										&& dragRect.Contains(col, row));
+						}
+
+						if (isClicked)
+						{
+							Cuboid.DrawCuboid(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight,
+											true,
+											lev == MapBase.Level);
+						}
+						else if (isTargeted
+							&& col == _colOver
+							&& row == _rowOver
+							&& lev == MapBase.Level)
+						{
+							Cuboid.DrawTargeter(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight);
+						}
+					}
+				}
+			}
+
+//			if (_drawSelectionBox) // always false.
+//			if (FirstClick && !_graySelection)
+			if (    dragRect.Width > 2 || dragRect.Height > 2
+				|| (dragRect.Width > 1 && dragRect.Height > 1))
+			{
+				DrawSelectionBorder(dragRect);
+			}
+		}
+
+		/// <summary>
+		/// Draws the panel using the Mono algorithm.
+		/// @note This is nearly identical to DrawRembrandt; they are separated
+		/// only because they'd cause multiple calls to DrawTile() conditioned
+		/// on the setting of 'UseMonoDraw' in the lev/row/col loops.
+		/// </summary>
+		private void DrawPicasso()
+		{
+			var dragRect = new Rectangle();
+			if (FirstClick)
+			{
+				var start = GetAbsoluteDragStart();
+				var end   = GetAbsoluteDragEnd();
+
+				dragRect = new Rectangle(
+									start.X, start.Y,
+									end.X - start.X + 1,
+									end.Y - start.Y + 1);
+			}
+
+
+			MapTileBase tile;
+
+			bool isTargeted = Focused
+						   && !_suppressTargeter
+						   && ClientRectangle.Contains(PointToClient(Cursor.Position));
+
+			for (int
+				lev = MapBase.MapSize.Levs - 1;
+				lev >= MapBase.Level && lev != -1;
+				--lev)
+			{
+				if (_showGrid && lev == MapBase.Level)
+					DrawGrid();
+
+				for (int
+						row = 0,
+							startY = Origin.Y + (HalfHeight * lev * 3),
+							startX = Origin.X;
+						row != _rows;
+						++row,
+							startY += HalfHeight,
+							startX -= HalfWidth)
+				{
+					for (int
+							col = 0,
+								x = startX,
+								y = startY;
+							col != _cols;
+							++col,
+								x += HalfWidth,
+								y += HalfHeight)
+					{
+						bool isClicked = FirstClick
+									  && (   (col == DragStart.X && row == DragStart.Y)
+										  || (col == DragEnd.X   && row == DragEnd.Y));
+
+						if (isClicked)
+						{
+							Cuboid.DrawCuboid(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight,
+											false,
+											lev == MapBase.Level);
+						}
+
+						tile = MapBase[row, col, lev];
+						if (!tile.Occulted || lev == MapBase.Level)
+						{
+							// THIS IS THE ONLY DIFFERENCE BETWEEN REMBRANDT AND PICASSO ->
+							DrawTile((XCMapTile)tile, x, y);
+						}
+
+						if (isClicked)
+						{
+							Cuboid.DrawCuboid(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight,
+											true,
+											lev == MapBase.Level);
+						}
+						else if (isTargeted
+							&& col == _colOver
+							&& row == _rowOver
+							&& lev == MapBase.Level)
+						{
+							Cuboid.DrawTargeter(
+											_graphics,
+											x, y,
+											HalfWidth,
+											HalfHeight);
+						}
+					}
+				}
+			}
+
+//			if (_drawSelectionBox) // always false.
+//			if (FirstClick && !_graySelection)
+			if (    dragRect.Width > 2 || dragRect.Height > 2
+				|| (dragRect.Width > 1 && dragRect.Height > 1))
+			{
+				DrawSelectionBorder(dragRect);
 			}
 		}
 
@@ -1230,7 +1352,7 @@ namespace MapView
 			for (w = 0; w != XCImage.SpriteWidth;    ++w)
 			{
 				palid = bindata[++i];
-				if (palid != Palette.TransparentId)
+				if (palid != Palette.TransparentId) // <- this is the fix for Mono.
 				{
 					_graphics.FillRectangle(
 										SpriteBrushes[palid],
