@@ -681,7 +681,7 @@ namespace MapView
 				if (!XCMainWindow.UseMonoDraw)
 				{
 					_graphics.InterpolationMode = InterpolationLocal;
-	
+
 					if (_spriteShadeEnabled)
 						_spriteAttributes.SetGamma(SpriteShadeLocal, ColorAdjustType.Bitmap);
 			}
