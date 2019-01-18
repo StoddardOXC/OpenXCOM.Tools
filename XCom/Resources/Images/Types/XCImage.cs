@@ -23,7 +23,7 @@ namespace XCom.Interfaces
 		public Bitmap Sprite
 		{ get; set; }
 
-		public Bitmap SpriteGray
+		public Bitmap SpriteGr
 		{ get; protected set; }
 
 		private Palette _palette;

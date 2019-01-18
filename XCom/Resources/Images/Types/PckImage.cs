@@ -131,7 +131,7 @@ namespace XCom
 												XCImage.SpriteHeight,
 												Bindata,
 												Pal.ColorTable);
-			SpriteGray = BitmapService.CreateColorized(
+			SpriteGr = BitmapService.CreateColorized(
 												XCImage.SpriteWidth,
 												XCImage.SpriteHeight,
 												Bindata,

@@ -684,7 +684,7 @@ namespace MapView
 
 					if (_spriteShadeEnabled)
 						_spriteAttributes.SetGamma(SpriteShadeLocal, ColorAdjustType.Bitmap);
-			}
+				}
 #endif
 
 				// Image Processing using C# - https://www.codeproject.com/Articles/33838/Image-Processing-using-C
@@ -1038,7 +1038,7 @@ namespace MapView
 
 
 		/// <summary>
-		/// Draws the tileparts in the Tile.
+		/// Draws the tileparts in the Tile if 'UseMono'.
 		/// </summary>
 		/// <param name="tile"></param>
 		/// <param name="x"></param>
@@ -1090,7 +1090,7 @@ namespace MapView
 		}
 
 		/// <summary>
-		/// Draws the tileparts in the Tile.
+		/// Draws the tileparts in the Tile if not 'UseMono'.
 		/// </summary>
 		/// <param name="tile"></param>
 		/// <param name="x"></param>
@@ -1113,7 +1113,7 @@ namespace MapView
 			if (topView.GroundVisible
 				&& (part = tile.Ground) != null)
 			{
-				var sprite = (gray) ? part[_anistep].SpriteGray
+				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
@@ -1125,7 +1125,7 @@ namespace MapView
 			if (topView.WestVisible
 				&& (part = tile.West) != null)
 			{
-				var sprite = (gray) ? part[_anistep].SpriteGray
+				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
@@ -1137,7 +1137,7 @@ namespace MapView
 			if (topView.NorthVisible
 				&& (part = tile.North) != null)
 			{
-				var sprite = (gray) ? part[_anistep].SpriteGray
+				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
@@ -1149,7 +1149,7 @@ namespace MapView
 			if (topView.ContentVisible
 				&& (part = tile.Content) != null)
 			{
-				var sprite = (gray) ? part[_anistep].SpriteGray
+				var sprite = (gray) ? part[_anistep].SpriteGr
 									: part[_anistep].Sprite;
 				DrawSprite(
 						sprite,
