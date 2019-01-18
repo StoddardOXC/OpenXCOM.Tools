@@ -176,15 +176,6 @@ namespace XCom
 			private set { ColorTable.Entries[id] = value; }
 		}
 
-//		/// <summary>
-//		/// Gets the color that can be transparent.
-//		/// NOTE: was used by 'CuboidSprite'.
-//		/// </summary>
-//		public Color Transparent
-//		{
-//			get { return ColorTable.Entries[TransparentId]; }
-//		}
-
 		/// <summary>
 		/// Gets a grayscale version of the palette.
 		/// </summary>
@@ -198,15 +189,24 @@ namespace XCom
 
 					_palettes[pal.Label] = pal;
 
+					Color color; int val;
 					for (int id = 0; id != ColorTable.Entries.Length; ++id)
 					{
-						int val = (int)(this[id].R * 0.1 + this[id].G * 0.5 + this[id].B * 0.25);
+						color = this[id];
+						val = (int)(color.R * 0.2 + color.G * 0.5 + color.B * 0.3);
 						pal[id] = Color.FromArgb(val, val, val);
 					}
 				}
 				return _palettes[Label + Gray] as Palette;
 			}
 		}
+
+//		/// <summary>
+//		/// Gets the color that can be transparent.
+//		/// NOTE: was used by 'CuboidSprite'.
+//		/// </summary>
+//		public Color Transparent
+//		{ get { return ColorTable.Entries[TransparentId]; } }
 		#endregion
 
 
