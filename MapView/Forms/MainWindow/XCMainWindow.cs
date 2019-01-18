@@ -1,5 +1,3 @@
-//#define MV_MONO // for Linus et al.
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -42,7 +40,6 @@ namespace MapView
 		private readonly ViewersManager        _viewersManager;
 		private readonly MainMenusManager      _mainMenusManager;
 
-//		private readonly LoadingForm           _loadingProgress;
 //		private readonly ConsoleWarningHandler _warningHandler;
 
 		private Form _foptions;
@@ -52,12 +49,17 @@ namespace MapView
 
 		private bool _bypassActivatedEvent;
 		private bool _allowBringToFront;
+
+		private Color _colorSearch;
 		#endregion
 
 
 		#region Properties (static)
 		internal static XCMainWindow Instance
 		{ get; set; }
+
+		public static bool UseMonoDraw
+		{ get; private set; }
 		#endregion
 
 
@@ -84,8 +86,6 @@ namespace MapView
 		/// </summary>
 		internal TreeNode Searched
 		{ private get; set; }
-
-		private Color _colorSearch;
 		#endregion
 
 
@@ -513,6 +513,8 @@ namespace MapView
 		private const string SpriteShade         = "SpriteShade";
 		private const string Interpolation       = "Interpolation";
 
+		private const string UseMono             = "UseMono";
+
 
 		/// <summary>
 		/// Loads (a) MainView's screen-size and -position from YAML,
@@ -622,6 +624,15 @@ namespace MapView
 								+ " unless the subsidiary viewers are closed (tentative)",
 							Global,
 							handler);
+			Options.AddOption(
+							UseMono,
+							false,
+							"If true use sprite-drawing algorithms that are designed for Mono."
+								+ " This fixes an issue on non-Windows systems where non-transparent"
+								+ " black boxes appear around sprites but it bypasses Interpolation"
+								+ " and SpriteShade routines. Selected tiles will not be grayed",
+							Global,
+							handler);
 
 			Options.AddOption(
 							ShowGrid,
@@ -657,7 +668,8 @@ namespace MapView
 			Options.AddOption(
 							GraySelection,
 							MainViewUnderlay.Instance.MainViewOverlay.GraySelection,
-							"If true the selection area will be drawn in grayscale",
+							"If true the selection area will be drawn in grayscale"
+								+ " (only if UseMono is false)",
 							MapView,
 							null, MainViewUnderlay.Instance.MainViewOverlay);
 
@@ -665,7 +677,8 @@ namespace MapView
 							SpriteShade,
 							MainViewUnderlay.Instance.MainViewOverlay.SpriteShade,
 							"The darkness of the tile sprites (10..100 default 0 off, unity is 33)"
-								+ " Values outside the range turn sprite shading off",
+								+ " Values outside the range turn sprite shading off"
+								+ " (only if UseMono is false)",
 							Sprites,
 							null, MainViewUnderlay.Instance.MainViewOverlay);
 
@@ -681,7 +694,7 @@ namespace MapView
 			Options.AddOption(
 							Interpolation,
 							MainViewUnderlay.Instance.MainViewOverlay.Interpolation,
-							desc,
+							desc + Environment.NewLine + "(only if UseMono is false)",
 							Sprites,
 							null, MainViewUnderlay.Instance.MainViewOverlay);
 
@@ -746,6 +759,11 @@ namespace MapView
 
 				case AllowBringToFront:
 					_allowBringToFront = (bool)value;
+					break;
+
+				case UseMono:
+					UseMonoDraw = (bool)value;
+					_mainViewUnderlay.MainViewOverlay.Refresh();
 					break;
 
 				case SaveWindowPositions:
@@ -1224,16 +1242,7 @@ namespace MapView
 				sfdSaveDialog.FileName = _mainViewUnderlay.MapBase.Descriptor.Label;
 				if (sfdSaveDialog.ShowDialog() == DialogResult.OK)
 				{
-//					_loadingProgress.Show();
-
-//					try
-//					{
 					_mainViewUnderlay.MapBase.SaveGifFile(sfdSaveDialog.FileName);
-//					}
-//					finally
-//					{
-//						_loadingProgress.Hide();
-//					}
 				}
 			}
 		}
@@ -2339,14 +2348,13 @@ namespace MapView
 
 					_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-#if MV_MONO
-					if (@base.Parts[0][0].Pal == Palette.UfoBattle)
+					if (@base.Parts[0][0].Pal == Palette.UfoBattle) // used by Mono only ->
 					{
 						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesUfoBattle;
 					}
 					else
 						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesTftdBattle;
-#endif
+
 					_mainViewUnderlay.MapBase = @base;
 
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);

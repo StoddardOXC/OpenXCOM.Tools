@@ -1,10 +1,6 @@
-//#define MV_MONO // for Linus et al.
-
 using System;
 using System.Collections;
-#if MV_MONO
 using System.Collections.Generic;
-#endif
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -43,10 +39,8 @@ namespace XCom
 		/// </summary>
 		private const string Gray         = "#gray";
 
-#if MV_MONO
-		public static List<Brush> BrushesUfoBattle  = new List<Brush>();
-		public static List<Brush> BrushesTftdBattle = new List<Brush>();
-#endif
+		public static List<Brush> BrushesUfoBattle  = new List<Brush>(); // used by Mono only
+		public static List<Brush> BrushesTftdBattle = new List<Brush>(); // used by Mono only
 		#endregion
 
 
@@ -62,9 +56,7 @@ namespace XCom
 				{
 					_palettes[ufobattle] = new Palette(Assembly.GetExecutingAssembly()
 											  .GetManifestResourceStream(Embedded + ufobattle + PalExt));
-#if MV_MONO
 					CreateUfoBrushes();
-#endif
 				}
 
 				return _palettes[ufobattle] as Palette;
@@ -118,9 +110,7 @@ namespace XCom
 				{
 					_palettes[tftdbattle] = new Palette(Assembly.GetExecutingAssembly()
 											   .GetManifestResourceStream(Embedded + tftdbattle + PalExt));
-#if MV_MONO
 					CreateTftdBrushes();
-#endif
 				}
 				return _palettes[tftdbattle] as Palette;
 			}
@@ -280,7 +270,6 @@ namespace XCom
 
 
 		#region Methods (static)
-#if MV_MONO
 		private static void CreateUfoBrushes()
 		{
 			var pal = _palettes[ufobattle] as Palette;
@@ -298,7 +287,6 @@ namespace XCom
 				BrushesTftdBattle.Add(new SolidBrush(color));
 			}
 		}
-#endif
 		#endregion
 
 
