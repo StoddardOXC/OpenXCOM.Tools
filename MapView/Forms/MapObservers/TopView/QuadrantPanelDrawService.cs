@@ -172,11 +172,13 @@ namespace MapView.Forms.MapObservers.TopViews
 
 
 			// draw the Sprites
+			int anistep = MainViewUnderlay.AniStep;
+
 			// Ground ->
 			if (tile != null && tile.Ground != null)
 			{
 				graphics.DrawImage(
-								tile.Ground[MainViewUnderlay.AniStep].Sprite,
+								tile.Ground[anistep].Sprite,
 								StartX,
 								StartY - tile.Ground.Record.TileOffset);
 
@@ -193,7 +195,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.West != null)
 			{
 				graphics.DrawImage(
-								tile.West[MainViewUnderlay.AniStep].Sprite,
+								tile.West[anistep].Sprite,
 								StartX + QuadWidthTotal,
 								StartY - tile.West.Record.TileOffset);
 
@@ -210,7 +212,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.North != null)
 			{
 				graphics.DrawImage(
-								tile.North[MainViewUnderlay.AniStep].Sprite,
+								tile.North[anistep].Sprite,
 								StartX + QuadWidthTotal * 2,
 								StartY - tile.North.Record.TileOffset);
 
@@ -227,7 +229,7 @@ namespace MapView.Forms.MapObservers.TopViews
 			if (tile != null && tile.Content != null)
 			{
 				graphics.DrawImage(
-								tile.Content[MainViewUnderlay.AniStep].Sprite,
+								tile.Content[anistep].Sprite,
 								StartX + QuadWidthTotal * 3,
 								StartY - tile.Content.Record.TileOffset);
 
