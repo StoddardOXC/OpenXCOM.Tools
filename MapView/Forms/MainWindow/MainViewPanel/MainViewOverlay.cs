@@ -187,9 +187,9 @@ namespace MapView
 			}
 		}
 
-
+#if !LOCKBITS
 		private bool _spriteShadeEnabled = true;
-
+#endif
 		// NOTE: Options don't like floats afaict, hence this workaround w/
 		// 'SpriteShade' and 'SpriteShadeLocal' ->
 		private int _spriteShade;													// 0 = initial val for sprite shade Option
@@ -202,12 +202,15 @@ namespace MapView
 
 				if (_spriteShade > 9 && _spriteShade < 101)
 				{
+#if !LOCKBITS
 					_spriteShadeEnabled = true;
+#endif
 					SpriteShadeLocal = _spriteShade * 0.03f;
 				}
+#if !LOCKBITS
 				else
 					_spriteShadeEnabled = false;
-
+#endif
 				Refresh();
 			}
 		}
@@ -955,19 +958,6 @@ namespace MapView
 			_scan0 = _data.Scan0;
 
 
-			var dragRect = new Rectangle();
-			if (FirstClick)
-			{
-				var start = GetAbsoluteDragStart();
-				var end   = GetAbsoluteDragEnd();
-
-				dragRect = new Rectangle(
-									start.X, start.Y,
-									end.X - start.X + 1,
-									end.Y - start.Y + 1);
-			}
-
-
 			MapTileBase tile;
 
 			bool isTargeted = Focused
@@ -1049,10 +1039,21 @@ namespace MapView
 			}
 			_b.UnlockBits(_data);
 
-			if (    dragRect.Width > 2 || dragRect.Height > 2
-				|| (dragRect.Width > 1 && dragRect.Height > 1))
+			if (FirstClick)
 			{
-				DrawSelectionBorder(dragRect, graphics);
+				var start = GetAbsoluteDragStart();
+				var end   = GetAbsoluteDragEnd();
+
+				var dragrect = new Rectangle(
+										start.X, start.Y,
+										end.X - start.X + 1,
+										end.Y - start.Y + 1);
+
+				if (    dragrect.Width > 2 || dragrect.Height > 2
+					|| (dragrect.Width > 1 && dragrect.Height > 1))
+				{
+					DrawSelectionBorder(dragrect, graphics);
+				}
 			}
 
 			graphics.Dispose();
