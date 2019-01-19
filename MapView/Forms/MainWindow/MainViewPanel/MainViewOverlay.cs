@@ -108,7 +108,6 @@ namespace MapView
 		private ImageAttributes _spriteAttributes = new ImageAttributes();
 
 		private Brush _brushLayer;
-		private Pen _penSelection = new Pen(Color.Tomato, 2);
 
 		private int _anistep;
 		private int _cols, _rows;
@@ -128,7 +127,7 @@ namespace MapView
 			}
 		}
 
-		private int _opacity = 200;													// initial opacity for the grid-layer Option
+		private int _opacity = 180;													// initial opacity for the grid-layer Option
 		public int GridLayerOpacity													// <- public for Reflection.
 		{
 			get { return _opacity; }
@@ -140,7 +139,7 @@ namespace MapView
 			}
 		}
 
-		private Pen _penGrid = new Pen(Brushes.Black, 1);							// initial pen for grid-lines Option
+		private Pen _penGrid = new Pen(Color.Black, 1);								// initial pen for grid-lines Option
 		public Color GridLineColor													// <- public for Reflection.
 		{
 			get { return _penGrid.Color; }
@@ -167,6 +166,26 @@ namespace MapView
 			set
 			{
 				_showGrid = value;
+				Refresh();
+			}
+		}
+
+		private Pen _penSelect = new Pen(Color.Tomato, 2);							// initial pen for selection-border Option
+		public Color SelectionLineColor												// <- public for Reflection.
+		{
+			get { return _penSelect.Color; }
+			set
+			{
+				_penSelect.Color = value;
+				Refresh();
+			}
+		}
+		public int SelectionLineWidth												// <- public for Reflection.
+		{
+			get { return (int)_penSelect.Width; }
+			set
+			{
+				_penSelect.Width = value;
 				Refresh();
 			}
 		}
@@ -1381,50 +1400,49 @@ namespace MapView
 
 #if !LOCKBITS
 		/// <summary>
-		/// Draws a red lozenge around any selected Tiles if the option to draw
-		/// selected tiles in grayscale is FALSE.
+		/// Draws a colored lozenge around any selected Tiles.
 		/// </summary>
-		/// <param name="dragRect"></param>
-		private void DrawSelectionBorder(Rectangle dragRect)
+		/// <param name="dragrect"></param>
+		private void DrawSelectionBorder(Rectangle dragrect)
 		{
-			var top    = GetScreenCoordinates(new Point(dragRect.X,     dragRect.Y));
-			var right  = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Y));
-			var bottom = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Bottom));
-			var left   = GetScreenCoordinates(new Point(dragRect.Left,  dragRect.Bottom));
+			var top    = GetScreenCoordinates(new Point(dragrect.X,     dragrect.Y));
+			var right  = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Y));
+			var bottom = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Bottom));
+			var left   = GetScreenCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
 
 			top.X    += HalfWidth;
 			right.X  += HalfWidth;
 			bottom.X += HalfWidth;
 			left.X   += HalfWidth;
 
-			_graphics.DrawLine(_penSelection, top,    right);
-			_graphics.DrawLine(_penSelection, right,  bottom);
-			_graphics.DrawLine(_penSelection, bottom, left);
-			_graphics.DrawLine(_penSelection, left,   top);
+			_graphics.DrawLine(_penSelect, top,    right);
+			_graphics.DrawLine(_penSelect, right,  bottom);
+			_graphics.DrawLine(_penSelect, bottom, left);
+			_graphics.DrawLine(_penSelect, left,   top);
 		}
 #else
 		/// <summary>
 		/// Draws a red lozenge around any selected Tiles if the option to draw
 		/// selected tiles in grayscale is FALSE.
 		/// </summary>
-		/// <param name="dragRect"></param>
+		/// <param name="dragrect"></param>
 		/// <param name="graphics"></param>
-		private void DrawSelectionBorder(Rectangle dragRect, Graphics graphics)
+		private void DrawSelectionBorder(Rectangle dragrect, Graphics graphics)
 		{
-			var top    = GetScreenCoordinates(new Point(dragRect.X,     dragRect.Y));
-			var right  = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Y));
-			var bottom = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Bottom));
-			var left   = GetScreenCoordinates(new Point(dragRect.Left,  dragRect.Bottom));
+			var top    = GetScreenCoordinates(new Point(dragrect.X,     dragrect.Y));
+			var right  = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Y));
+			var bottom = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Bottom));
+			var left   = GetScreenCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
 
 			top.X    += HalfWidth;
 			right.X  += HalfWidth;
 			bottom.X += HalfWidth;
 			left.X   += HalfWidth;
 
-			graphics.DrawLine(_penSelection, top,    right);
-			graphics.DrawLine(_penSelection, right,  bottom);
-			graphics.DrawLine(_penSelection, bottom, left);
-			graphics.DrawLine(_penSelection, left,   top);
+			graphics.DrawLine(_penSelect, top,    right);
+			graphics.DrawLine(_penSelect, right,  bottom);
+			graphics.DrawLine(_penSelect, bottom, left);
+			graphics.DrawLine(_penSelect, left,   top);
 		}
 #endif
 		#endregion

@@ -515,6 +515,8 @@ namespace MapView
 		private const string GridLineColor       = "GridLineColor";
 		private const string GridLineWidth       = "GridLineWidth";
 
+		private const string SelectionLineColor  = "SelectionLineColor";
+		private const string SelectionLineWidth  = "SelectionLineWidth";
 		private const string GraySelection       = "GraySelection";
 
 		private const string SpriteShade         = "SpriteShade";
@@ -670,6 +672,18 @@ namespace MapView
 							GridLineWidth,
 							MainViewUnderlay.Instance.MainViewOverlay.GridLineWidth,
 							"Width of the grid lines in pixels",
+							MapView,
+							null, MainViewUnderlay.Instance.MainViewOverlay);
+			Options.AddOption(
+							SelectionLineColor,
+							MainViewUnderlay.Instance.MainViewOverlay.SelectionLineColor,
+							"Color of the border of selected tiles",
+							MapView,
+							null, MainViewUnderlay.Instance.MainViewOverlay);
+			Options.AddOption(
+							SelectionLineWidth,
+							MainViewUnderlay.Instance.MainViewOverlay.SelectionLineWidth,
+							"Width of the border of selected tiles in pixels",
 							MapView,
 							null, MainViewUnderlay.Instance.MainViewOverlay);
 			Options.AddOption(
