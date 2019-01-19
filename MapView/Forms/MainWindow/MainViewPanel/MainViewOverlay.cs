@@ -657,11 +657,15 @@ namespace MapView
 
 
 		#region Draw
-#if LOCKBITS
-		Bitmap _b;
-#else
+#if !LOCKBITS
 		int _halfwidth2, _halfheight5; // standard draw only.
-		private int _d; // dimension (scaled both x and y) of a drawn sprite. UseMonoDraw only.
+
+		/// <summary>
+		/// Dimension (scaled both x and y) of a drawn sprite.
+		/// </summary>
+		private int _d; // Mono draw only.
+#else
+		Bitmap _b;
 #endif
 
 		/// <summary>
