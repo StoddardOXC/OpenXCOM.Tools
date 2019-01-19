@@ -189,12 +189,8 @@ namespace MapView
 			// NOTE: This code (the constructor of a Form) shouldn't run when
 			// opening the designer; it appears to run only when actually
 			// running the application:
-			// NOTE: This workaround is also done in the OnLoad() event. Because
-			// it seems (untested) that Linux systems using Mono might not
-			// recognize it here. Unfortunately, if this is handled by the
-			// OnLoad() handler only, then the user-setting of MainView's
-			// width/height metric will be ignored. But maybe it will fix an
-			// issue where the MainView window-size does not become uncapped.
+			// NOTE: Mono users have to restart the app for the window to be
+			// resizable.
 
 			MaximumSize =
 			MinimumSize = new Size(0,0); // fu.net
@@ -930,34 +926,6 @@ namespace MapView
 
 
 		#region Eventcalls (override)
-		protected override void OnLoad(EventArgs e)
-		{
-			base.OnLoad(e);
-
-			// WORKAROUND: The size of the form in the designer keeps increasing
-			// (for whatever reason) based on the
-			// 'SystemInformation.CaptionButtonSize.Height' value (the titlebar
-			// height - note that 'SystemInformation.CaptionHeight' seems to be
-			// 1 pixel larger, which (for whatever reason) is not the
-			// 'SystemInformation.BorderSize.Height'). To prevent all that, in
-			// the designer cap the form's Size by setting its MaximumSize to
-			// the Size - but now run this code that sets the MaximumSize to
-			// "0,0" (unlimited, as wanted). And, as a safety, do the same thing
-			// with MinimumSize ... if desired.
-			//
-			// - observed & tested in SharpDevelop 5.1
-			//
-			// NOTE: This workaround is also done in the cTor. Because
-			// it seems (untested) that Linux systems using Mono might not
-			// recognize it there. Unfortunately, if this is handled by the
-			// OnLoad() handler only, then the user-setting of MainView's
-			// width/height metric will be ignored. But maybe it will fix an
-			// issue where the MainView window-size does not become uncapped.
-
-			MaximumSize = new Size(0,0); // fu.net
-			MinimumSize = new Size(0,0); // fu.net
-		}
-
 		/// <summary>
 		/// Overrides the OnActivated event. Brings any other open viewers to
 		/// the top of the desktop, along with this.
