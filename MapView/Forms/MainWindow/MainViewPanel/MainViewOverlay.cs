@@ -1405,44 +1405,43 @@ namespace MapView
 		/// <param name="dragrect"></param>
 		private void DrawSelectionBorder(Rectangle dragrect)
 		{
-			var top    = GetClientCoordinates(new Point(dragrect.X,     dragrect.Y));
-			var right  = GetClientCoordinates(new Point(dragrect.Right, dragrect.Y));
-			var bottom = GetClientCoordinates(new Point(dragrect.Right, dragrect.Bottom));
-			var left   = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
+			var t = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Top));
+			var r = GetClientCoordinates(new Point(dragrect.Right, dragrect.Top));
+			var b = GetClientCoordinates(new Point(dragrect.Right, dragrect.Bottom));
+			var l = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
 
-			top.X    += HalfWidth;
-			right.X  += HalfWidth;
-			bottom.X += HalfWidth;
-			left.X   += HalfWidth;
+			t.X += HalfWidth;
+			r.X += HalfWidth;
+			b.X += HalfWidth;
+			l.X += HalfWidth;
 
-			_graphics.DrawLine(_penSelect, top,    right);
-			_graphics.DrawLine(_penSelect, right,  bottom);
-			_graphics.DrawLine(_penSelect, bottom, left);
-			_graphics.DrawLine(_penSelect, left,   top);
+			_graphics.DrawLine(_penSelect, t, r);
+			_graphics.DrawLine(_penSelect, r, b);
+			_graphics.DrawLine(_penSelect, b, l);
+			_graphics.DrawLine(_penSelect, l, t);
 		}
 #else
 		/// <summary>
-		/// Draws a red lozenge around any selected Tiles if the option to draw
-		/// selected tiles in grayscale is FALSE.
+		/// Draws a colored lozenge around any selected Tiles.
 		/// </summary>
 		/// <param name="dragrect"></param>
 		/// <param name="graphics"></param>
 		private void DrawSelectionBorder(Rectangle dragrect, Graphics graphics)
 		{
-			var top    = GetClientCoordinates(new Point(dragrect.X,     dragrect.Y));
-			var right  = GetClientCoordinates(new Point(dragrect.Right, dragrect.Y));
-			var bottom = GetClientCoordinates(new Point(dragrect.Right, dragrect.Bottom));
-			var left   = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
+			var t = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Top));
+			var r = GetClientCoordinates(new Point(dragrect.Right, dragrect.Top));
+			var b = GetClientCoordinates(new Point(dragrect.Right, dragrect.Bottom));
+			var l = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
 
-			top.X    += HalfWidth;
-			right.X  += HalfWidth;
-			bottom.X += HalfWidth;
-			left.X   += HalfWidth;
+			t.X += HalfWidth;
+			r.X += HalfWidth;
+			b.X += HalfWidth;
+			l.X += HalfWidth;
 
-			graphics.DrawLine(_penSelect, top,    right);
-			graphics.DrawLine(_penSelect, right,  bottom);
-			graphics.DrawLine(_penSelect, bottom, left);
-			graphics.DrawLine(_penSelect, left,   top);
+			graphics.DrawLine(_penSelect, t, r);
+			graphics.DrawLine(_penSelect, r, b);
+			graphics.DrawLine(_penSelect, b, l);
+			graphics.DrawLine(_penSelect, l, t);
 		}
 #endif
 		#endregion
