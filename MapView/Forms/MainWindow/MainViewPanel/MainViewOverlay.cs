@@ -931,14 +931,15 @@ namespace MapView
 				var start = GetAbsoluteDragStart();
 				var end   = GetAbsoluteDragEnd();
 
-				var dragrect = new Rectangle(
-										start.X, start.Y,
-										end.X - start.X + 1,
-										end.Y - start.Y + 1);
+				int width  = end.X - start.X + 1;
+				int height = end.Y - start.Y + 1;
 
-				if (    dragrect.Width > 2 || dragrect.Height > 2
-					|| (dragrect.Width > 1 && dragrect.Height > 1))
+				if (    width > 2 || height > 2
+					|| (width > 1 && height > 1))
 				{
+					var dragrect = new Rectangle(
+											start.X, start.Y,
+											width, height);
 					DrawSelectionBorder(dragrect);
 				}
 			}
@@ -1044,14 +1045,15 @@ namespace MapView
 				var start = GetAbsoluteDragStart();
 				var end   = GetAbsoluteDragEnd();
 
-				var dragrect = new Rectangle(
-										start.X, start.Y,
-										end.X - start.X + 1,
-										end.Y - start.Y + 1);
+				int width  = end.X - start.X + 1;
+				int height = end.Y - start.Y + 1;
 
-				if (    dragrect.Width > 2 || dragrect.Height > 2
-					|| (dragrect.Width > 1 && dragrect.Height > 1))
+				if (    width > 2 || height > 2
+					|| (width > 1 && height > 1))
 				{
+					var dragrect = new Rectangle(
+											start.X, start.Y,
+											width, height);
 					DrawSelectionBorder(dragrect, graphics);
 				}
 			}
