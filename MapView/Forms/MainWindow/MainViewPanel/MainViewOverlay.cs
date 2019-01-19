@@ -1405,7 +1405,7 @@ namespace MapView
 		/// <param name="dragrect"></param>
 		private void DrawSelectionBorder(Rectangle dragrect)
 		{
-			var top    = GetScreenCoordinates(new Point(dragrect.X,     dragrect.Y));
+			var top    = GetScreenCoordinates(new Point(dragrect.X,     dragrect.Y)); // TODO: Is that really needed.
 			var right  = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Y));
 			var bottom = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Bottom));
 			var left   = GetScreenCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
