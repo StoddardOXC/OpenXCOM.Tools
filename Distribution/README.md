@@ -5,7 +5,7 @@ note for Mono users: MapView needs to run once and then be restarted for its win
 Built against .NET 4.5.1
 
 2019 January 19<br>
-not available quite yet.
+[MapView2_190119.7z](https://drive.google.com/file/d/1RjjDJjg8V35ORAIQISwlxG_Dj1DuRIyx/view?usp=sharing)
 
 - option to workaround the transparency issue in Mono
 - options to set the selection border's color and width
