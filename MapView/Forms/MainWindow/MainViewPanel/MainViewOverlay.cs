@@ -725,20 +725,20 @@ namespace MapView
 		/// Draws the panel using the standard algorithm.
 		/// @note This is nearly identical to DrawPicasso; they are separated
 		/// only because they'd cause multiple calls to DrawTile() conditioned
-		/// on the setting of 'UseMonoDraw' in the lev/row/col loops.
+		/// on the setting of 'UseMonoDraw' inside the lev/row/col loops.
 		/// </summary>
 		private void DrawRembrandt()
 		{
-			var dragRect = new Rectangle();
+			var dragrect = new Rectangle(-1,-1, 0,0); // This is different between REMBRANDT and PICASSO ->
 			if (FirstClick)
 			{
 				var start = GetAbsoluteDragStart();
 				var end   = GetAbsoluteDragEnd();
 
-				dragRect = new Rectangle(
-									start.X, start.Y,
-									end.X - start.X + 1,
-									end.Y - start.Y + 1);
+				dragrect.X = start.X;
+				dragrect.Y = start.Y;
+				dragrect.Width  = end.X - start.X + 1;
+				dragrect.Height = end.Y - start.Y + 1;
 			}
 
 
@@ -789,16 +789,16 @@ namespace MapView
 											lev == MapBase.Level);
 						}
 
-						tile = MapBase[row, col, lev];
-						if (!tile.Occulted || lev == MapBase.Level)
+						if (!(tile = MapBase[row, col, lev]).Occulted
+							|| lev == MapBase.Level)
 						{
-							// THIS IS THE ONLY DIFFERENCE BETWEEN REMBRANDT AND PICASSO ->
+							// This is different between REMBRANDT and PICASSO ->
 							DrawTile(
 									(XCMapTile)tile,
 									x, y,
-									_graySelection && FirstClick
+									_graySelection
 										&& lev == MapBase.Level
-										&& dragRect.Contains(col, row));
+										&& dragrect.Contains(col, row));
 						}
 
 						if (isClicked)
@@ -826,12 +826,10 @@ namespace MapView
 				}
 			}
 
-//			if (_drawSelectionBox) // always false.
-//			if (FirstClick && !_graySelection)
-			if (    dragRect.Width > 2 || dragRect.Height > 2
-				|| (dragRect.Width > 1 && dragRect.Height > 1))
+			if (    dragrect.Width > 2 || dragrect.Height > 2 // This is different between REMBRANDT and PICASSO ->
+				|| (dragrect.Width > 1 && dragrect.Height > 1))
 			{
-				DrawSelectionBorder(dragRect);
+				DrawSelectionBorder(dragrect);
 			}
 		}
 
@@ -839,23 +837,10 @@ namespace MapView
 		/// Draws the panel using the Mono algorithm.
 		/// @note This is nearly identical to DrawRembrandt; they are separated
 		/// only because they'd cause multiple calls to DrawTile() conditioned
-		/// on the setting of 'UseMonoDraw' in the lev/row/col loops.
+		/// on the setting of 'UseMonoDraw' inside the lev/row/col loops.
 		/// </summary>
 		private void DrawPicasso()
 		{
-			var dragRect = new Rectangle();
-			if (FirstClick)
-			{
-				var start = GetAbsoluteDragStart();
-				var end   = GetAbsoluteDragEnd();
-
-				dragRect = new Rectangle(
-									start.X, start.Y,
-									end.X - start.X + 1,
-									end.Y - start.Y + 1);
-			}
-
-
 			MapTileBase tile;
 
 			bool isTargeted = Focused
@@ -903,10 +888,10 @@ namespace MapView
 											lev == MapBase.Level);
 						}
 
-						tile = MapBase[row, col, lev];
-						if (!tile.Occulted || lev == MapBase.Level)
+						if (!(tile = MapBase[row, col, lev]).Occulted
+							|| lev == MapBase.Level)
 						{
-							// THIS IS THE ONLY DIFFERENCE BETWEEN REMBRANDT AND PICASSO ->
+							// This is different between REMBRANDT and PICASSO ->
 							DrawTile((XCMapTile)tile, x, y);
 						}
 
@@ -935,12 +920,21 @@ namespace MapView
 				}
 			}
 
-//			if (_drawSelectionBox) // always false.
-//			if (FirstClick && !_graySelection)
-			if (    dragRect.Width > 2 || dragRect.Height > 2
-				|| (dragRect.Width > 1 && dragRect.Height > 1))
+			if (FirstClick) // This is different between REMBRANDT and PICASSO ->
 			{
-				DrawSelectionBorder(dragRect);
+				var start = GetAbsoluteDragStart();
+				var end   = GetAbsoluteDragEnd();
+
+				var dragrect = new Rectangle(
+										start.X, start.Y,
+										end.X - start.X + 1,
+										end.Y - start.Y + 1);
+
+				if (    dragrect.Width > 2 || dragrect.Height > 2
+					|| (dragrect.Width > 1 && dragrect.Height > 1))
+				{
+					DrawSelectionBorder(dragrect);
+				}
 			}
 		}
 
