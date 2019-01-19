@@ -1405,10 +1405,10 @@ namespace MapView
 		/// <param name="dragrect"></param>
 		private void DrawSelectionBorder(Rectangle dragrect)
 		{
-			var top    = GetScreenCoordinates(new Point(dragrect.X,     dragrect.Y)); // TODO: Is that really needed.
-			var right  = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Y));
-			var bottom = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Bottom));
-			var left   = GetScreenCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
+			var top    = GetClientCoordinates(new Point(dragrect.X,     dragrect.Y));
+			var right  = GetClientCoordinates(new Point(dragrect.Right, dragrect.Y));
+			var bottom = GetClientCoordinates(new Point(dragrect.Right, dragrect.Bottom));
+			var left   = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
 
 			top.X    += HalfWidth;
 			right.X  += HalfWidth;
@@ -1429,10 +1429,10 @@ namespace MapView
 		/// <param name="graphics"></param>
 		private void DrawSelectionBorder(Rectangle dragrect, Graphics graphics)
 		{
-			var top    = GetScreenCoordinates(new Point(dragrect.X,     dragrect.Y));
-			var right  = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Y));
-			var bottom = GetScreenCoordinates(new Point(dragrect.Right, dragrect.Bottom));
-			var left   = GetScreenCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
+			var top    = GetClientCoordinates(new Point(dragrect.X,     dragrect.Y));
+			var right  = GetClientCoordinates(new Point(dragrect.Right, dragrect.Y));
+			var bottom = GetClientCoordinates(new Point(dragrect.Right, dragrect.Bottom));
+			var left   = GetClientCoordinates(new Point(dragrect.Left,  dragrect.Bottom));
 
 			top.X    += HalfWidth;
 			right.X  += HalfWidth;
@@ -1450,11 +1450,11 @@ namespace MapView
 
 		#region Coordinate conversion
 		/// <summary>
-		/// Converts a point from tile-location to screen-coordinates.
+		/// Converts a point from tile-location to client-coordinates.
 		/// </summary>
 		/// <param name="point">the x/y-position of a tile</param>
 		/// <returns></returns>
-		private Point GetScreenCoordinates(Point point)
+		private Point GetClientCoordinates(Point point)
 		{
 			int verticalOffset = HalfHeight * (MapBase.Level + 1) * 3;
 			return new Point(
@@ -1463,7 +1463,7 @@ namespace MapView
 		}
 
 		/// <summary>
-		/// Converts a position from screen-coordinates to tile-location.
+		/// Converts a position from client-coordinates to tile-location.
 		/// </summary>
 		/// <param name="x">the x-position of the mouse cursor</param>
 		/// <param name="y">the y-position of the mouse cursor</param>
