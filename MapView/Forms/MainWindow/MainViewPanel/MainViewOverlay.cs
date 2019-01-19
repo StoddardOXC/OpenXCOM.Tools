@@ -657,12 +657,11 @@ namespace MapView
 
 
 		#region Draw
-		private int _d; // dimension (scaled both x and y) of a drawn sprite. UseMonoDraw only.
-
 #if LOCKBITS
 		Bitmap _b;
 #else
-		int _halfwidth2, _halfheight5;
+		int _halfwidth2, _halfheight5; // standard draw only.
+		private int _d; // dimension (scaled both x and y) of a drawn sprite. UseMonoDraw only.
 #endif
 
 		/// <summary>
@@ -720,7 +719,7 @@ namespace MapView
 			}
 		}
 
-
+#if !LOCKBITS
 		/// <summary>
 		/// Draws the panel using the standard algorithm.
 		/// @note This is nearly identical to DrawPicasso; they are separated
@@ -938,8 +937,7 @@ namespace MapView
 			}
 		}
 
-
-#if LOCKBITS
+#else
 		BitmapData _data; IntPtr _scan0;
 		private void BuildPanelImage()
 		{
@@ -1057,7 +1055,53 @@ namespace MapView
 		}
 #endif
 
-#if LOCKBITS
+#if !LOCKBITS
+		/// <summary>
+		/// Draws the grid-lines and the grid-sheet.
+		/// </summary>
+		private void DrawGrid()
+		{
+			int x = Origin.X + HalfWidth;
+			int y = Origin.Y + HalfHeight * (MapBase.Level + 1) * 3;
+
+			int x1 = _rows * HalfWidth;
+			int y1 = _rows * HalfHeight;
+
+			var pt0 = new Point(x, y);
+			var pt1 = new Point(
+							x + _cols * HalfWidth,
+							y + _cols * HalfHeight);
+			var pt2 = new Point(
+							x + (_cols - _rows) * HalfWidth,
+							y + (_rows + _cols) * HalfHeight);
+			var pt3 = new Point(x - x1, y + y1);
+
+			_layerFill.Reset();
+			_layerFill.AddLine(pt0, pt1);
+			_layerFill.AddLine(pt1, pt2);
+			_layerFill.AddLine(pt2, pt3);
+			_layerFill.CloseFigure();
+
+			_graphics.FillPath(_brushLayer, _layerFill); // the grid-sheet
+
+			// draw the grid-lines ->
+			for (int i = 0; i <= _rows; ++i)
+				_graphics.DrawLine(
+								_penGrid,
+								x - HalfWidth  * i,
+								y + HalfHeight * i,
+								x + (_cols - i) * HalfWidth,
+								y + (_cols + i) * HalfHeight);
+
+			for (int i = 0; i <= _cols; ++i)
+				_graphics.DrawLine(
+								_penGrid,
+								x + HalfWidth  * i,
+								y + HalfHeight * i,
+								x - x1 + HalfWidth  * i,
+								y + y1 + HalfHeight * i);
+		}
+#else
 		/// <summary>
 		/// Draws the grid-lines and the grid-sheet.
 		/// </summary>
@@ -1104,57 +1148,10 @@ namespace MapView
 								x - x1 + HalfWidth  * i,
 								y + y1 + HalfHeight * i);
 		}
-#else
-		/// <summary>
-		/// Draws the grid-lines and the grid-sheet.
-		/// </summary>
-		private void DrawGrid()
-		{
-			int x = Origin.X + HalfWidth;
-			int y = Origin.Y + HalfHeight * (MapBase.Level + 1) * 3;
-
-			int x1 = _rows * HalfWidth;
-			int y1 = _rows * HalfHeight;
-
-			var pt0 = new Point(x, y);
-			var pt1 = new Point(
-							x + _cols * HalfWidth,
-							y + _cols * HalfHeight);
-			var pt2 = new Point(
-							x + (_cols - _rows) * HalfWidth,
-							y + (_rows + _cols) * HalfHeight);
-			var pt3 = new Point(x - x1, y + y1);
-
-			_layerFill.Reset();
-			_layerFill.AddLine(pt0, pt1);
-			_layerFill.AddLine(pt1, pt2);
-			_layerFill.AddLine(pt2, pt3);
-			_layerFill.CloseFigure();
-
-			_graphics.FillPath(_brushLayer, _layerFill); // the grid-sheet
-
-			// draw the grid-lines ->
-			for (int i = 0; i <= _rows; ++i)
-				_graphics.DrawLine(
-								_penGrid,
-								x - HalfWidth  * i,
-								y + HalfHeight * i,
-								x + (_cols - i) * HalfWidth,
-								y + (_cols + i) * HalfHeight);
-
-			for (int i = 0; i <= _cols; ++i)
-				_graphics.DrawLine(
-								_penGrid,
-								x + HalfWidth  * i,
-								y + HalfHeight * i,
-								x - x1 + HalfWidth  * i,
-								y + y1 + HalfHeight * i);
-		}
 #endif
 
-
 		/// <summary>
-		/// Draws the tileparts in the Tile if 'UseMono'.
+		/// Draws the tileparts in the Tile if 'UseMono' or LOCKBITS.
 		/// </summary>
 		/// <param name="tile"></param>
 		/// <param name="x"></param>
@@ -1205,6 +1202,7 @@ namespace MapView
 			}
 		}
 
+#if !LOCKBITS
 		/// <summary>
 		/// Draws the tileparts in the Tile if not 'UseMono'.
 		/// </summary>
@@ -1266,8 +1264,50 @@ namespace MapView
 			}
 		}
 
+		/// <summary>
+		/// Draws a tilepart's sprite w/ FillRectangle().
+		/// </summary>
+		/// <param name="bindata">binary data of XCImage (list of palette-ids)</param>
+		/// <param name="x">x-pixel start</param>
+		/// <param name="y">y-pixel start</param>
+		private void DrawSprite(IList<byte> bindata, int x, int y)
+		{
+			int palid;
 
-#if LOCKBITS
+			int i = -1, w,h;
+			for (h = 0; h != XCImage.SpriteHeight40; ++h)
+			for (w = 0; w != XCImage.SpriteWidth;    ++w)
+			{
+				palid = bindata[++i];
+				if (palid != Palette.TransparentId) // <- this is the fix for Mono.
+				{
+					_graphics.FillRectangle(
+										SpriteBrushes[palid],
+										x + (int)(w * Globals.Scale),
+										y + (int)(h * Globals.Scale),
+										_d, _d);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Draws a tilepart's sprite w/ DrawImage().
+		/// </summary>
+		/// <param name="sprite"></param>
+		/// <param name="rect">destination rectangle</param>
+		private void DrawSprite(Image sprite, Rectangle rect)
+		{
+			if (_spriteShadeEnabled)
+				_graphics.DrawImage(
+								sprite,
+								rect,
+								0, 0, XCImage.SpriteWidth, XCImage.SpriteHeight40,
+								GraphicsUnit.Pixel,
+								_spriteAttributes);
+			else
+				_graphics.DrawImage(sprite, rect);
+		}
+#else
 		/// <summary>
 		/// Draws a tilepart's sprite w/ LockBits().
 		/// </summary>
@@ -1330,53 +1370,32 @@ namespace MapView
 			}
 //			_b.UnlockBits(data);
 		}
-#else
-		/// <summary>
-		/// Draws a tilepart's sprite w/ FillRectangle().
-		/// </summary>
-		/// <param name="bindata">binary data of XCImage (list of palette-ids)</param>
-		/// <param name="x">x-pixel start</param>
-		/// <param name="y">y-pixel start</param>
-		private void DrawSprite(IList<byte> bindata, int x, int y)
-		{
-			int palid;
-
-			int i = -1, w,h;
-			for (h = 0; h != XCImage.SpriteHeight40; ++h)
-			for (w = 0; w != XCImage.SpriteWidth;    ++w)
-			{
-				palid = bindata[++i];
-				if (palid != Palette.TransparentId) // <- this is the fix for Mono.
-				{
-					_graphics.FillRectangle(
-										SpriteBrushes[palid],
-										x + (int)(w * Globals.Scale),
-										y + (int)(h * Globals.Scale),
-										_d, _d);
-				}
-			}
-		}
 #endif
 
+#if !LOCKBITS
 		/// <summary>
-		/// Draws a tilepart's sprite w/ DrawImage().
+		/// Draws a red lozenge around any selected Tiles if the option to draw
+		/// selected tiles in grayscale is FALSE.
 		/// </summary>
-		/// <param name="sprite"></param>
-		/// <param name="rect">destination rectangle</param>
-		private void DrawSprite(Image sprite, Rectangle rect)
+		/// <param name="dragRect"></param>
+		private void DrawSelectionBorder(Rectangle dragRect)
 		{
-			if (_spriteShadeEnabled)
-				_graphics.DrawImage(
-								sprite,
-								rect,
-								0, 0, XCImage.SpriteWidth, XCImage.SpriteHeight40,
-								GraphicsUnit.Pixel,
-								_spriteAttributes);
-			else
-				_graphics.DrawImage(sprite, rect);
-		}
+			var top    = GetScreenCoordinates(new Point(dragRect.X,     dragRect.Y));
+			var right  = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Y));
+			var bottom = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Bottom));
+			var left   = GetScreenCoordinates(new Point(dragRect.Left,  dragRect.Bottom));
 
-#if LOCKBITS
+			top.X    += HalfWidth;
+			right.X  += HalfWidth;
+			bottom.X += HalfWidth;
+			left.X   += HalfWidth;
+
+			_graphics.DrawLine(_penSelection, top,    right);
+			_graphics.DrawLine(_penSelection, right,  bottom);
+			_graphics.DrawLine(_penSelection, bottom, left);
+			_graphics.DrawLine(_penSelection, left,   top);
+		}
+#else
 		/// <summary>
 		/// Draws a red lozenge around any selected Tiles if the option to draw
 		/// selected tiles in grayscale is FALSE.
@@ -1399,29 +1418,6 @@ namespace MapView
 			graphics.DrawLine(_penSelection, right,  bottom);
 			graphics.DrawLine(_penSelection, bottom, left);
 			graphics.DrawLine(_penSelection, left,   top);
-		}
-#else
-		/// <summary>
-		/// Draws a red lozenge around any selected Tiles if the option to draw
-		/// selected tiles in grayscale is FALSE.
-		/// </summary>
-		/// <param name="dragRect"></param>
-		private void DrawSelectionBorder(Rectangle dragRect)
-		{
-			var top    = GetScreenCoordinates(new Point(dragRect.X,     dragRect.Y));
-			var right  = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Y));
-			var bottom = GetScreenCoordinates(new Point(dragRect.Right, dragRect.Bottom));
-			var left   = GetScreenCoordinates(new Point(dragRect.Left,  dragRect.Bottom));
-
-			top.X    += HalfWidth;
-			right.X  += HalfWidth;
-			bottom.X += HalfWidth;
-			left.X   += HalfWidth;
-
-			_graphics.DrawLine(_penSelection, top,    right);
-			_graphics.DrawLine(_penSelection, right,  bottom);
-			_graphics.DrawLine(_penSelection, bottom, left);
-			_graphics.DrawLine(_penSelection, left,   top);
 		}
 #endif
 		#endregion
