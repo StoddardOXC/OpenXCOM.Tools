@@ -117,8 +117,7 @@ namespace XCom
 						   + "#              ROUTES, but that terrains - PCK/TAB/MCD files - are referenced by" + Environment.NewLine
 						   + "#              the basepath that is set by the Configurator and have to be in a"  + Environment.NewLine
 						   + "#              subdir labeled TERRAIN of that path.");
-
-			   sw.WriteLine("");
+				sw.WriteLine("");
 				sw.WriteLine("tilesets:");
 
 
