@@ -8,11 +8,13 @@
 # 'group'    - a header for the categories, is arbitrary except that the first
 #              letters designate the game-type and must be either 'ufo' or
 #              'tftd' (case insensitive, with or without a following space).
-# 'basepath' - the path to the parent directory of the tileset's files (default:
-#              the resource directory(s) that was/were specified when MapView
-#              was installed/configured). Note that Maps are expected to be in a
-#              subdir called MAPS, Routes in a subdir called ROUTES, and
-#              terrains - PCK/TAB/MCD files - in a subdir called TERRAIN.
+# 'basepath' - the path to the parent directory of the tileset's Map and Route
+#              files (default: the resource directory(s) that was/were specified
+#              when MapView was installed/configured). Note that Maps are
+#              expected to be in a subdir called MAPS, Routes in a subdir called
+#              ROUTES, but that terrains - PCK/TAB/MCD files - are referenced by
+#              the basepath that is set by the Configurator and have to be in a
+#              subdir labeled TERRAIN of that path.
 
 tilesets:
 

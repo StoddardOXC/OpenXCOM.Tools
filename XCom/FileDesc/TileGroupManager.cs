@@ -110,12 +110,15 @@ namespace XCom
 				sw.WriteLine("# 'group'    - a header for the categories, is arbitrary except that the first"   + Environment.NewLine
 						   + "#              letters designate the game-type and must be either 'ufo' or"       + Environment.NewLine
 						   + "#              'tftd' (case insensitive, with or without a following space).");
-				sw.WriteLine("# 'basepath' - the path to the parent directory of the tileset's files (default:" + Environment.NewLine
-						   + "#              the resource directory(s) that was/were specified when MapView"    + Environment.NewLine
-						   + "#              was installed/configured). Note that Maps are expected to be in a" + Environment.NewLine
-						   + "#              subdir called MAPS, Routes in a subdir called ROUTES, and"         + Environment.NewLine
-						   + "#              terrains - PCK/TAB/MCD files - in a subdir called TERRAIN.");
-				sw.WriteLine("");
+				sw.WriteLine("# 'basepath' - the path to the parent directory of the tileset's Map and Route"   + Environment.NewLine
+						   + "#              files (default: the resource directory(s) that was/were specified" + Environment.NewLine
+						   + "#              when MapView was installed/configured). Note that Maps are"        + Environment.NewLine
+						   + "#              expected to be in a subdir called MAPS, Routes in a subdir called" + Environment.NewLine
+						   + "#              ROUTES, but that terrains - PCK/TAB/MCD files - are referenced by" + Environment.NewLine
+						   + "#              the basepath that is set by the Configurator and have to be in a"  + Environment.NewLine
+						   + "#              subdir labeled TERRAIN of that path.");
+
+			   sw.WriteLine("");
 				sw.WriteLine("tilesets:");
 
 
