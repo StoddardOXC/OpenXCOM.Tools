@@ -1180,6 +1180,7 @@ namespace MapView
 
 						if (MaptreeChanged)
 						{
+//							MaptreeChanged = !ResourceInfo.TileGroupInfo.SaveTileGroups(); // <- that could cause endless recursion.
 							ResourceInfo.TileGroupInfo.SaveTileGroups();
 							MaptreeChanged = false;
 						}

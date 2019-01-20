@@ -14,7 +14,8 @@ namespace XCom
 	/// identified by its tileset-label. This allows multiple tilesets (ie. with
 	/// the same label) to be configured differently according to Category and
 	/// Group. (not really. Because they'll usually be in the same directory on
-	/// the hardrive and the OS won't allow duplicate filenames in one directory.)
+	/// the hardrive and the OS won't allow duplicate labels in one directory.)
+	/// @note Is disallowed in MapTreeTilesetInputBox regardless.
 	/// </summary>
 	public sealed class Descriptor // *snap*
 	{

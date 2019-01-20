@@ -194,15 +194,15 @@ namespace MapView
 
 					TilesetOriginal = String.Copy(Tileset);
 
-					var tileset = TileGroup.Categories[Category][Tileset];
+					var descriptor = TileGroup.Categories[Category][Tileset];
 
 					int records = 0;
 
 					TerrainsOriginal = new List<string>();
-					foreach (string terrain in tileset.Terrains)
+					foreach (string terrain in descriptor.Terrains)
 					{
 						TerrainsOriginal.Add(String.Copy(terrain));
-						records += tileset.GetRecordCount(terrain);
+						records += descriptor.GetRecordCount(terrain);
 					}
 					lblMcdRecords.Text = records + " MCD Records";
 
@@ -211,7 +211,7 @@ namespace MapView
 					else
 						lblMcdRecords.ForeColor = Color.Tan;
 
-					BasePath = tileset.BasePath;
+					BasePath = descriptor.BasePath;
 					break;
 				}
 
