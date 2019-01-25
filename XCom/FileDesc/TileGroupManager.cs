@@ -131,8 +131,8 @@ namespace XCom
 					sw.WriteLine("");
 					sw.WriteLine(PrePad + labelGroup + Padder(labelGroup.Length + PrePadLength));
 
-					var oGroup = TileGroups[labelGroup] as TileGroupChild;	// <- fuck inheritance btw. It's not been used properly and is
-					foreach (var labelCategory in oGroup.Categories.Keys)	// largely irrelevant and needlessly confusing in this codebase.
+					var group = TileGroups[labelGroup] as TileGroupChild;	// <- fuck inheritance btw. It's not been used properly and is
+					foreach (var labelCategory in group.Categories.Keys)	// largely irrelevant and needlessly confusing in this codebase.
 					{
 						//LogFile.WriteLine(". . saving Category= " + labelCategory);
 
@@ -142,7 +142,7 @@ namespace XCom
 						blankline = false;
 						sw.WriteLine(PrePad + labelCategory + Padder(labelCategory.Length + PrePadLength));
 
-						var category = oGroup.Categories[labelCategory];
+						var category = group.Categories[labelCategory];
 						foreach (var labelTileset in category.Keys)
 						{
 							//LogFile.WriteLine(". . saving Tileset= " + labelTileset);
@@ -152,14 +152,22 @@ namespace XCom
 							sw.WriteLine("  - type: " + descriptor.Label); // =labelTileset
 							sw.WriteLine("    terrains:");
 
-							foreach (string terrain in descriptor.Terrains)
-								sw.WriteLine("      - " + terrain);
+							for (int i = 0; i != descriptor.Terrains.Count; ++i)
+							{
+								var terrain = descriptor.Terrains[i]; // Dictionary<int id, Tuple<string terrain, string path>>
+								string terr = terrain.Item1;
+								string path = terrain.Item2;
+								if (!String.IsNullOrEmpty(path))
+									terr += ": " + path;
+
+								sw.WriteLine("      - " + terr);
+							}
 
 							sw.WriteLine("    category: " + labelCategory);
 							sw.WriteLine("    group: " + labelGroup);
 
 							string keyResourcePath = String.Empty;
-							switch (oGroup.GroupType)
+							switch (group.GroupType)
 							{
 								case GameType.Ufo:
 									keyResourcePath = SharedSpace.ResourceDirectoryUfo;

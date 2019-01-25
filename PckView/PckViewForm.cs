@@ -980,7 +980,7 @@ namespace PckView
 				if (sfd.ShowDialog() == DialogResult.OK)
 				{
 					string pfePck = sfd.FileName;
-					string pfeTab = pfePck.Substring(0, pfePck.Length - 4) + SpriteCollection.TabExt;
+					string pfeTab = pfePck.Substring(0, pfePck.Length - 4) + GlobalsXC.TabExt;
 
 					using (var bwPck = new BinaryWriter(File.Create(pfePck))) // blank files are ok.
 					using (var bwTab = new BinaryWriter(File.Create(pfeTab)))
@@ -1077,7 +1077,7 @@ namespace PckView
 													((SpriteCollection)_pnlView.Spriteset).TabOffset))
 					{
 						if (!revertReady) // load the SavedAs files ->
-							LoadSpriteset(Path.Combine(dir, file + SpriteCollection.PckExt));
+							LoadSpriteset(Path.Combine(dir, file + GlobalsXC.PckExt));
 
 						SpritesChanged = true;	// NOTE: is used by MapView's TileView to flag the Map to reload.
 					}							// btw, reload MapView's Map in either case; the new terrain may also be in its Map's terrainset ...
@@ -1091,8 +1091,8 @@ namespace PckView
 						}
 						else
 						{
-							File.Delete(Path.Combine(dir, file + SpriteCollection.PckExt));
-							File.Delete(Path.Combine(dir, file + SpriteCollection.TabExt));
+							File.Delete(Path.Combine(dir, file + GlobalsXC.PckExt));
+							File.Delete(Path.Combine(dir, file + GlobalsXC.TabExt));
 						}
 					}
 				}
@@ -1466,7 +1466,7 @@ namespace PckView
 			SpritesetDirectory = Path.GetDirectoryName(pfePck);
 			SpritesetLabel     = Path.GetFileNameWithoutExtension(pfePck);
 
-			string pfeTab = pfePck.Substring(0, pfePck.Length - 4) + SpriteCollection.TabExt;
+			string pfeTab = pfePck.Substring(0, pfePck.Length - 4) + GlobalsXC.TabExt;
 
 			if (File.Exists(pfeTab))	// TODO: This check needs to be bypassed to open PCK-files that don't have a corresponding TAB-file.
 			{							// Ie. single-image Bigobs in the UFOGRAPH directory.
@@ -1573,8 +1573,8 @@ namespace PckView
 		{
 			Directory.CreateDirectory(SpritesetDirectory); // in case user deleted the dir.
 
-			_pfePck = Path.Combine(SpritesetDirectory, SpritesetLabel + SpriteCollection.PckExt);
-			_pfeTab = Path.Combine(SpritesetDirectory, SpritesetLabel + SpriteCollection.TabExt);
+			_pfePck = Path.Combine(SpritesetDirectory, SpritesetLabel + GlobalsXC.PckExt);
+			_pfeTab = Path.Combine(SpritesetDirectory, SpritesetLabel + GlobalsXC.TabExt);
 
 			_pfePckOld =
 			_pfeTabOld = String.Empty;
@@ -1585,7 +1585,7 @@ namespace PckView
 			{
 				Directory.CreateDirectory(dirBackup);
 
-				_pfePckOld = Path.Combine(dirBackup, SpritesetLabel + SpriteCollection.PckExt);
+				_pfePckOld = Path.Combine(dirBackup, SpritesetLabel + GlobalsXC.PckExt);
 				File.Copy(_pfePck, _pfePckOld, true);
 			}
 
@@ -1593,7 +1593,7 @@ namespace PckView
 			{
 				Directory.CreateDirectory(dirBackup);
 
-				_pfeTabOld = Path.Combine(dirBackup, SpritesetLabel + SpriteCollection.TabExt);
+				_pfeTabOld = Path.Combine(dirBackup, SpritesetLabel + GlobalsXC.TabExt);
 				File.Copy(_pfeTab, _pfeTabOld, true);
 			}
 		}

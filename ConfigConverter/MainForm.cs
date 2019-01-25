@@ -346,14 +346,14 @@ namespace ConfigConverter
 
 			internal Tileset(
 					string label,
-					string grup,
+					string group,
 					string category,
 					List<string> terrains)
 				:
 					this()
 			{
 				Label    = label;
-				Group    = grup;
+				Group    = group;
 				Category = category;
 				Terrains = terrains;
 			}

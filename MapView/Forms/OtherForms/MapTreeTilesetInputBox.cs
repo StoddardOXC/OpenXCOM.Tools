@@ -95,25 +95,31 @@ namespace MapView
 		/// 'EditTileset' to check if the terrains have changed when user clicks
 		/// Accept.
 		/// </summary>
-		private List<string> TerrainsOriginal
+		private Dictionary<int, Tuple<string,string>> TerrainsOriginal
 		{ get; set; }
 
 		private string _basepath;
 		/// <summary>
-		/// Gets/Sets the basepath. Calls ListTerrains() which also sets the
-		/// Descriptor.
+		/// Gets/Sets the basepath of the Tileset. Set calls ListTerrains()
+		/// which also sets the Descriptor.
 		/// </summary>
-		private string BasePath
+		private string BasepathTileset
 		{
 			get { return _basepath; }
 			set
 			{
 				_basepath = value;
-				lblPathCurrent.Text = Path.Combine(_basepath, MapFileChild.MapsDir);
+				lblPathCurrent.Text = Path.Combine(_basepath, GlobalsXC.MapsDir);
 
 				ListTerrains();
 			}
 		}
+
+		/// <summary>
+		/// The basepath that the user has set with the Configurator.
+		/// </summary>
+		private string BasepathConfig
+		{ get; set; }
 
 		private Descriptor Descriptor
 		{ get; set; }
@@ -121,10 +127,23 @@ namespace MapView
 		private TileGroup TileGroup
 		{ get; set; }
 
+		private Dictionary<int, Tuple<string,string>> _tilesetTerrains = new Dictionary<int, Tuple<string,string>>();
+		private Dictionary<int, Tuple<string,string>> TilesetTerrains
+		{
+			get { return _tilesetTerrains; }
+			set { _tilesetTerrains = value; }
+		}
+
+		private string LastTerrainDir
+		{ get; set; }
+
 		private bool Inited
 		{ get; set; }
 
 		private char[] Invalid
+		{ get; set; }
+
+		private bool IsOriginalDescriptor
 		{ get; set; }
 		#endregion Properties
 
@@ -175,10 +194,18 @@ namespace MapView
 			Invalid = invalid.ToArray();
 			// TODO: should disallow filenames like 'CON' and 'PRN' etc. also
 
-			SetPasteButtonStuffer();
+			SetPasteButtonText();
 
+			lbTerrainsAllocated.DisplayMember = "Terrain";
+			lbTerrainsAvailable.DisplayMember = "Terrain";
 
 			TileGroup = ResourceInfo.TileGroupInfo.TileGroups[Group] as TileGroup;
+
+			string keydir = (TileGroup.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
+															  : SharedSpace.ResourceDirectoryTftd;
+			BasepathConfig = SharedSpace.Instance.GetShare(keydir);
+			//LogFile.WriteLine("BasepathConfig= " + BasepathConfig);
+			rb_ConfigBasepath.Checked = true;
 
 			switch (InputBoxType = boxType)
 			{
@@ -198,11 +225,13 @@ namespace MapView
 
 					int records = 0;
 
-					TerrainsOriginal = new List<string>();
-					foreach (string terrain in descriptor.Terrains)
+					TerrainsOriginal = new Dictionary<int, Tuple<string,string>>();
+					for (int i = 0; i != descriptor.Terrains.Count; ++i)
 					{
-						TerrainsOriginal.Add(String.Copy(terrain));
-						records += descriptor.GetRecordCount(terrain);
+						TerrainsOriginal[i] = new Tuple<string,string>(
+														String.Copy(descriptor.Terrains[i].Item1),
+														String.Copy(descriptor.Terrains[i].Item2));
+						records += descriptor.GetRecordCount(i);
 					}
 					lblMcdRecords.Text = records + " MCD Records";
 
@@ -211,7 +240,7 @@ namespace MapView
 					else
 						lblMcdRecords.ForeColor = Color.Tan;
 
-					BasePath = descriptor.BasePath;
+					BasepathTileset = descriptor.BasePath;
 					break;
 				}
 
@@ -227,6 +256,8 @@ namespace MapView
 					btnTerrainCopy .Enabled =
 					btnTerrainPaste.Enabled = false;
 
+					rb_TilesetBasepath.Enabled = false;
+
 					string keyBaseDir = null;
 					switch (TileGroup.GroupType)
 					{
@@ -237,7 +268,7 @@ namespace MapView
 							keyBaseDir = SharedSpace.ResourceDirectoryTftd;
 							break;
 					}
-					BasePath = SharedSpace.Instance.GetShare(keyBaseDir);
+					BasepathTileset = SharedSpace.Instance.GetShare(keyBaseDir);
 					break;
 			}
 			FileAddType = AddType.MapNone;
@@ -272,14 +303,15 @@ namespace MapView
 		/// <param name="e"></param>
 		protected override void OnFormClosing(FormClosingEventArgs e)
 		{
-			if (DialogResult != DialogResult.OK)
+			if (DialogResult != DialogResult.OK
+				&& IsOriginalDescriptor)
 			{
 				if (Descriptor.Terrains.Count == 0)
 				{
 					e.Cancel = true;
 					ShowErrorDialog("The Map must have at least one terrain allocated.");
 				}
-				else if (!Descriptor.Terrains.SequenceEqual(TerrainsOriginal))
+				else if (IsTerrainsChanged(TerrainsOriginal, Descriptor.Terrains))
 				{
 					DialogResult = DialogResult.OK;
 				}
@@ -299,15 +331,15 @@ namespace MapView
 		{
 			using (var fbd = new FolderBrowserDialog())
 			{
-				fbd.SelectedPath = BasePath;
+				fbd.SelectedPath = BasepathTileset;
 				fbd.Description = String.Format(
-							System.Globalization.CultureInfo.CurrentCulture,
-							"Browse to a resource folder. A valid resource folder"
-								+ " has the subfolders MAPS and ROUTES.");
+											System.Globalization.CultureInfo.CurrentCulture,
+											"Browse to a BASEPATH folder. A valid basepath folder"
+												+ " has the subfolders MAPS and ROUTES.");
 
 				if (fbd.ShowDialog() == DialogResult.OK)
 				{
-					BasePath = fbd.SelectedPath;
+					BasepathTileset = fbd.SelectedPath;
 					OnTilesetLabelChanged(null, EventArgs.Empty);
 				}
 			}
@@ -323,10 +355,10 @@ namespace MapView
 			using (var ofd = new OpenFileDialog())
 			{
 				ofd.Filter = "Map Files (*.map)|*.map|All Files (*.*)|*.*";
-				ofd.Title  = "Select a Map File";
-				ofd.InitialDirectory = Path.Combine(BasePath, MapFileChild.MapsDir);
+				ofd.Title  = "Select a Map file";
+				ofd.InitialDirectory = Path.Combine(BasepathTileset, GlobalsXC.MapsDir);
 				if (!Directory.Exists(ofd.InitialDirectory))
-					ofd.InitialDirectory = BasePath;
+					ofd.InitialDirectory = BasepathTileset;
 
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
@@ -334,7 +366,7 @@ namespace MapView
 
 					string basepath = Path.GetDirectoryName(pfeMap);
 					int pos = basepath.LastIndexOf(Path.DirectorySeparatorChar.ToString(), StringComparison.OrdinalIgnoreCase);
-					BasePath = (pos != -1) ? basepath.Substring(0, pos)
+					BasepathTileset = (pos != -1) ? basepath.Substring(0, pos)
 										   : basepath;
 
 					Tileset = Path.GetFileNameWithoutExtension(pfeMap);
@@ -352,10 +384,7 @@ namespace MapView
 		/// <param name="e"></param>
 		private void OnTilesetLabelChanged(object sender, EventArgs e)
 		{
-			//LogFile.WriteLine("");
-			//LogFile.WriteLine("OnTilesetLabelChanged");
-
-			if (Inited) // do not run until text has been initialized.
+			if (Inited) // do not run until the textbox has been initialized.
 			{
 				if (!ValidateCharacters(Tileset))
 				{
@@ -364,43 +393,38 @@ namespace MapView
 					Tileset = InvalidateCharacters(Tileset); // recurse function after removing invalid chars.
 					tbTileset.SelectionStart = tbTileset.TextLength;
 				}
-				else
+				else if (InputBoxType == BoxType.AddTileset)
 				{
-					switch (InputBoxType)
+					ListTerrains();
+
+					if (String.IsNullOrEmpty(Tileset))
 					{
-						case BoxType.AddTileset:
-							ListTerrains();
+						btnCreateMap.Enabled = false;
 
-							if (String.IsNullOrEmpty(Tileset))
-							{
-								btnCreateMap.Enabled = false;
+						lblAddType.Text = "Descriptor invalid";
+						FileAddType = AddType.MapNone;
+					}
+					else if (Descriptor == null || Descriptor.Label != Tileset)
+					{
+						btnCreateMap.Enabled = true;
 
-								lblAddType.Text = "Descriptor invalid";
-								FileAddType = AddType.MapNone;
-							}
-							else if (Descriptor == null || Descriptor.Label != Tileset)
-							{
-								btnCreateMap.Enabled = true;
+						lblAddType.Text = "Create";
+						FileAddType = AddType.MapNone;
+					}
+					else
+					{
+						btnCreateMap.Enabled = false;
 
-								lblAddType.Text = "Create";
-								FileAddType = AddType.MapNone;
-							}
-							else // (Descriptor != null && Descriptor.Label == Tileset)
-							{
-								btnCreateMap.Enabled = false;
-
-								if (MapFileExists(Tileset))
-								{
-									lblAddType.Text = "Add using existing Map file";
-									FileAddType = AddType.MapExists;
-								}
-								else
-								{
-									lblAddType.Text = "Add by creating a new Map file";
-									FileAddType = AddType.MapCreate;
-								}
-							}
-							break;
+						if (MapfileExists(Tileset))
+						{
+							lblAddType.Text = "Add using existing Map file";
+							FileAddType = AddType.MapExists;
+						}
+						else
+						{
+							lblAddType.Text = "Add by creating a new Map file";
+							FileAddType = AddType.MapCreate;
+						}
 					}
 				}
 			}
@@ -414,8 +438,7 @@ namespace MapView
 		/// </summary>
 		private void ListTerrains()
 		{
-			//LogFile.WriteLine("");
-			//LogFile.WriteLine("ListTerrains");
+			lbl_AllocatedInfo.Text = String.Empty;
 
 			btnMoveUp   .Enabled =
 			btnMoveDown .Enabled =
@@ -426,13 +449,16 @@ namespace MapView
 			lbTerrainsAvailable.Items.Clear();
 
 
+			IsOriginalDescriptor = false;
+
 			switch (InputBoxType)
 			{
 				case BoxType.EditTileset:
 					if (Tileset == TilesetOriginal
-						|| (!IsTilesetInGroups(Tileset) && !MapFileExists(Tileset)))
+						|| (!IsTilesetInGroups(Tileset) && !MapfileExists(Tileset))) // spellcast: ConfuseOpponent(OBJECT_SELF)
 					{
 						Descriptor = TileGroup.Categories[Category][TilesetOriginal];
+						IsOriginalDescriptor = true; // is Original or is Original w/ modified label
 					}
 					else
 						Descriptor = null;
@@ -445,17 +471,19 @@ namespace MapView
 					}
 					break;
 			}
-			//LogFile.WriteLine(". Descriptor= " + ((Descriptor != null) ? Descriptor.Label : "NULL"));
+
 
 			int records = 0;
 
 			if (Descriptor != null)
 			{
-				foreach (string terrain in Descriptor.Terrains)
+				lbTerrainsAllocated.BeginUpdate();
+				for (int i = 0; i != Descriptor.Terrains.Count; ++i)
 				{
-					lbTerrainsAllocated.Items.Add(terrain);
-					records += Descriptor.GetRecordCount(terrain);
+					lbTerrainsAllocated.Items.Add(new tle(Descriptor.Terrains[i]));
+					records += Descriptor.GetRecordCount(i);
 				}
+				lbTerrainsAllocated.EndUpdate();
 			}
 			lblMcdRecords.Text = records + " MCD Records";
 
@@ -468,27 +496,49 @@ namespace MapView
 			btnTerrainPaste.Enabled = (Descriptor != null);
 
 
-//			string dirTerrain = Path.Combine(BasePath, Descriptor.PathTerrain);
-			string dirTerrain = (TileGroup.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
-																	 : SharedSpace.ResourceDirectoryTftd;
-			dirTerrain = Path.Combine(SharedSpace.Instance.GetShare(dirTerrain), Descriptor.PathTerrain);
+			// Get the text of 'tbBasepath' (to reflect the currently selected radio-button)
+			string dirTerrain = tbTerrainPath.Text;
+			//LogFile.WriteLine("dirTerrain= " + dirTerrain);
 
 			if (Directory.Exists(dirTerrain))
 			{
-				string terrain = String.Empty;
-				string[] terrains = Directory.GetFiles(
-													dirTerrain,
-													"*.pck", // TODO: is GetFiles() case-in/sensitive
-													SearchOption.TopDirectoryOnly);
-				for (int i = 0; i != terrains.Length; ++i)
+				var terrains = Directory.GetFiles(
+												dirTerrain,
+												Globals.ALLFILES,
+												SearchOption.TopDirectoryOnly)
+											.Where(file => file.EndsWith(
+																	GlobalsXC.PckExt,
+																	StringComparison.OrdinalIgnoreCase));
+				if (terrains.Any())
 				{
-					terrain = Path.GetFileNameWithoutExtension(terrains[i]).ToUpperInvariant();
-
-					if ((Descriptor == null || !Descriptor.Terrains.Contains(terrain))
-						&& terrain != "BLANKS")
+					string basepath;
+					if (rb_CustomPath.Checked) // get terrainlist from a custom basepath
 					{
-						lbTerrainsAvailable.Items.Add(terrain);
+						basepath = dirTerrain;
 					}
+					else if (rb_TilesetBasepath.Checked && Descriptor != null) // get terrainlist from the Descriptor's basepath
+					{
+						basepath = GlobalsXC.BASEPATH;
+					}
+					else //if (rb_ConfigBasepath.Checked) // get terrainlist from the Configurator's basepath
+					{
+						basepath = String.Empty;
+					}
+
+					lbTerrainsAvailable.BeginUpdate();
+
+					string terr;
+					foreach (var terrain in terrains)
+					{
+						terr = Path.GetFileNameWithoutExtension(terrain);
+
+						if ((Descriptor == null || !IsTerrainInDescriptor(terr, basepath))
+							&& !terr.Equals("BLANKS", StringComparison.OrdinalIgnoreCase))
+						{
+							lbTerrainsAvailable.Items.Add(new tle(new Tuple<string,string>(terr, basepath)));
+						}
+					}
+					lbTerrainsAvailable.EndUpdate();
 				}
 			}
 		}
@@ -504,20 +554,15 @@ namespace MapView
 		/// <param name="e"></param>
 		private void OnCreateDescriptorClick(object sender, EventArgs e)
 		{
-			//LogFile.WriteLine("");
-			//LogFile.WriteLine("OnCreateDescriptorClick");
-
 			if (!IsTilesetInGroups(Tileset))
 			{
-				//LogFile.WriteLine(". descriptor Instantiated= " + Tileset);
-
 				Descriptor = new Descriptor(		// be careful with that; it isn't being deleted if user clicks Cancel
 										Tileset,	// or chooses instead to create yet another descriptor.
-										new List<string>(),
-										BasePath,
+										new Dictionary<int, Tuple<string, string>>(), //new List<string>()
+										BasepathTileset,
 										TileGroup.Pal);
 
-				if (MapFileExists(Tileset))
+				if (MapfileExists(Tileset))
 				{
 					lblAddType.Text = "Add using existing Map file";
 					FileAddType = AddType.MapExists;
@@ -537,6 +582,8 @@ namespace MapView
 				lblTerrainChanges.Visible =
 				lblTilesetCurrent.Visible =
 				lblMcdRecords    .Visible = true;
+
+				rb_TilesetBasepath.Enabled = true;
 			}
 			else
 				ShowErrorDialog("The label is already assigned to a different tileset.");
@@ -558,121 +605,85 @@ namespace MapView
 		/// <param name="e"></param>
 		private void OnAcceptClick(object sender, EventArgs e)
 		{
-			//LogFile.WriteLine("");
-			//LogFile.WriteLine("OnAcceptClick");
-			//LogFile.WriteLine(". Tileset= " + Tileset);
-
 			switch (InputBoxType)
 			{
 				case BoxType.EditTileset:
-					//LogFile.WriteLine(". . MODE:EditTileset");
-
 					if (String.IsNullOrEmpty(Tileset))
 					{
-						//LogFile.WriteLine(". The Map label cannot be blank.");
 						ShowErrorDialog("The Map label cannot be blank.");
-
 						tbTileset.Select();
 					}
 					else if (lbTerrainsAllocated.Items.Count == 0)
 					{
-						//LogFile.WriteLine(". The Map must have at least one terrain allocated.");
 						ShowErrorDialog("The Map must have at least one terrain allocated.");
 					}
 					else
 					{
-						//foreach (string t in TerrainsOriginal)
-						//	LogFile.WriteLine(". terrain original= " + t);
-						//foreach (string t in Descriptor.Terrains)
-						//	LogFile.WriteLine(". terrain= " + t);
-
 						if (Tileset == TilesetOriginal) // label didn't change; check if terrains changed ->
 						{
-							//LogFile.WriteLine(". . label did *not* change");
-
-							if (Descriptor.Terrains.SequenceEqual(TerrainsOriginal))
+							if (!IsTerrainsChanged(TerrainsOriginal, Descriptor.Terrains))
 							{
-								//LogFile.WriteLine(". . . No changes were made.");
 								ShowInfoDialog("No changes were made.");
 							}
 							else
-							{
-								//LogFile.WriteLine(". . . DialogResult OK");
 								DialogResult = DialogResult.OK;
-							}
 
 							// NOTE: a Save of Map-file is *not* required here.
 						}
 						else // label changed; rewrite the descriptor ->
 						{
-							//LogFile.WriteLine(". . change label");
-
 							// NOTE: user cannot edit a Map-label to be another already existing file.
 							// There are other ways to do that: either let the user delete the target-
 							// Map-file from his/her disk, or better click Edit on *that* tileset.
 							// NOTE: however, if while editing a tileset the user browses to another
 							// tileset and edits that tileset's terrains, the changes are effective.
 
-							if (MapFileExists(Tileset))
+							if (MapfileExists(Tileset))
 							{
-								//LogFile.WriteLine(". The Map file already exists on disk.");
+								// TODO: Ask user if he/she wants to overwrite the Map-file.
 								ShowErrorDialog("The Map file already exists on disk. The Tileset Editor is"
 												+ " not sophisticated enough to deal with this eventuality."
 												+ " Either edit that Map directly if it's already in the Maptree,"
 												+ " or use Add Tileset to make it editable, or as a last"
 												+ " resort delete it from your disk."
 												+ Environment.NewLine + Environment.NewLine
-												+ GetFullPathMap(Tileset));
-												// TODO: Ask user if he/she wants to overwrite the Map-file.
+												+ GetFullpathMapfile(Tileset));
+							}
+							else if (IsTilesetInGroups(Tileset))
+							{
+								ShowErrorDialog("The tileset already exists in the Maptree."
+											+ Environment.NewLine + Environment.NewLine
+											+ Tileset
+											+ Environment.NewLine + Environment.NewLine
+											+ "Options are to edit that one, delete that one,"
+											+ " or choose a different label for this one.");
 							}
 							else
 							{
-								if (IsTilesetInGroups(Tileset))
-								{
-									//LogFile.WriteLine(". The tileset already exists in the Maptree.");
-									ShowErrorDialog("The tileset already exists in the Maptree."
-												+ Environment.NewLine + Environment.NewLine
-												+ Tileset
-												+ Environment.NewLine + Environment.NewLine
-												+ "Options are to edit that one, delete that one,"
-												+ " or choose a different label for this one.");
-								}
-								else
-								{
-									//LogFile.WriteLine(". . . tileset Created");
+								string pfeMap    = GetFullpathMapfile(Tileset);
+								string pfeMapPre = GetFullpathMapfile(TilesetOriginal);
 
-									string pfeMap    = GetFullPathMap(Tileset);
-									string pfeMapPre = GetFullPathMap(TilesetOriginal);
+								File.Move(pfeMapPre, pfeMap);	// NOTE: This has to happen now because once the MapTree node
+																// is selected it will try to load the .MAP file etc.
 
-									//LogFile.WriteLine(". . . . fileMapPre= " + pfeMapPre);
-									//LogFile.WriteLine(". . . . fileMap= " + pfeMap);
+								if (File.Exists(pfeMap))		// NOTE: do *not* alter the descriptor if File.Move() went bork.
+								{								// This is likely redundant: File.Move() should throw.
+									string pfeRoutes    = GetFullpathRouteFile(Tileset);
+									string pfeRoutesPre = GetFullpathRouteFile(TilesetOriginal);
 
-									File.Move(pfeMapPre, pfeMap);	// NOTE: This has to happen now because once the MapTree node
-																	// is selected it will try to load the .MAP file etc.
+									File.Move(pfeRoutesPre, pfeRoutes);
 
-									if (File.Exists(pfeMap))		// NOTE: do *not* alter the descriptor if File.Move() went bork.
-									{								// This is likely redundant: File.Move() should throw.
-										string pfeRoutes    = GetFullPathRoutes(Tileset);
-										string pfeRoutesPre = GetFullPathRoutes(TilesetOriginal);
+									Descriptor = new Descriptor(
+															Tileset,
+															TileGroup.Categories[Category][TilesetOriginal].Terrains,
+															BasepathTileset,
+															TileGroup.Pal);
+									TileGroup.AddTileset(Descriptor, Category);			// NOTE: This could be done on return to XCMainWindow.OnEditTilesetClick()
+																						// but then 'Descriptor' would have to be internal.
+									TileGroup.DeleteTileset(TilesetOriginal, Category);	// NOTE: This could be done on return to XCMainWindow.OnEditTilesetClick()
+																						// but then 'TilesetOriginal' would have to be internal.
 
-										//LogFile.WriteLine(". . . . fileRoutesPre= " + pfeRoutesPre);
-										//LogFile.WriteLine(". . . . fileRoutes= " + pfeRoutes);
-
-										File.Move(pfeRoutesPre, pfeRoutes);
-
-										var category = TileGroup.Categories[Category];
-										Descriptor = new Descriptor(
-																Tileset,
-																category[TilesetOriginal].Terrains,
-																BasePath,
-																TileGroup.Pal);
-										TileGroup.AddTileset(Descriptor, Category);			// NOTE: This could be done on return to XCMainWindow.OnEditTilesetClick()
-																							// but then 'Descriptor' would have to be internal.
-										TileGroup.DeleteTileset(TilesetOriginal, Category);	// NOTE: This could be done on return to XCMainWindow.OnEditTilesetClick()
-																							// but then 'TilesetOriginal' would have to be internal.
-
-										DialogResult = DialogResult.OK;
-									}
+									DialogResult = DialogResult.OK; // reload the Tileset (in MainView).
 								}
 							}
 						}
@@ -680,18 +691,13 @@ namespace MapView
 					break;
 
 				case BoxType.AddTileset:
-					//LogFile.WriteLine(". . MODE:AddTileset");
-
-					if (String.IsNullOrEmpty(Tileset))								// NOTE: The tileset-label should already have been
-					{																// checked for validity by here before the Create button.
-						//LogFile.WriteLine(". The Map label cannot be blank.");	// But these handle the case when user immediately clicks the Ok button.
-						ShowErrorDialog("The Map label cannot be blank.");			// ... TODO: so disable the Ok button, unless a descriptor is valid
-
-						tbTileset.Select();
+					if (String.IsNullOrEmpty(Tileset))						// NOTE: The tileset-label should already have been
+					{														// checked for validity by here before the Create button.
+						ShowErrorDialog("The Map label cannot be blank.");	// But these handle the case when user immediately clicks the Ok button.
+						tbTileset.Select();									// TODO: So disable the Ok button, unless a descriptor is valid.
 					}
 					else if (lbTerrainsAllocated.Items.Count == 0)
 					{
-						//LogFile.WriteLine(". The Map must have at least one terrain allocated.");
 						ShowErrorDialog("The Map must have at least one terrain allocated.");
 					}
 					else
@@ -699,20 +705,13 @@ namespace MapView
 						switch (FileAddType)
 						{
 							case AddType.MapExists:
-								//LogFile.WriteLine(". . Map file EXISTS");
-
 								TileGroup.AddTileset(Descriptor, Category);
 								DialogResult = DialogResult.OK;
 								break;
 
 							case AddType.MapCreate:
-								//LogFile.WriteLine(". . Map file does NOT exist - Create new Map file");
-
-								string pfeMap = GetFullPathMap(Tileset);
-								//LogFile.WriteLine(". . . fileMap= " + pfeMap);
-
-								string pfeRoutes = GetFullPathRoutes(Tileset);
-								//LogFile.WriteLine(". . . fileRoutes= " + pfeRoutes);
+								string pfeMap    = GetFullpathMapfile(Tileset);
+								string pfeRoutes = GetFullpathRouteFile(Tileset);
 
 								Directory.CreateDirectory(Path.GetDirectoryName(pfeRoutes));
 								using (var fs = File.Create(pfeRoutes)) // create a blank Route-file and release its handle.
@@ -723,15 +722,13 @@ namespace MapView
 								{										// NOTE: This has to happen now because once the MapTree node
 									MapFileChild.CreateMap(				// is selected it will try to load the .MAP file etc.
 														fs,
-														10, 10, 1); // <- default new Map size
+														10,10,1); // <- default new Map size
 								}
 
 								if (File.Exists(pfeMap) && File.Exists(pfeRoutes)) // NOTE: The descriptor has already been created with the Create descriptor button.
 								{
-									//LogFile.WriteLine(". tileset Created");
-
 									TileGroup.AddTileset(Descriptor, Category);
-									DialogResult = DialogResult.OK;
+									DialogResult = DialogResult.OK; // load the Tileset (in MainView).
 								}
 								break;
 						}
@@ -744,7 +741,12 @@ namespace MapView
 		{
 			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
 
-			Descriptor.Terrains.Add(lbTerrainsAvailable.SelectedItem as String);
+			var it = lbTerrainsAvailable.SelectedItem as tle;
+			var terrain = new Tuple<string,string>(
+											String.Copy(it.Terrain),
+											String.Copy(it.Basepath));
+			Descriptor.Terrains[Descriptor.Terrains.Count] = terrain;
+
 			ListTerrains();
 		}
 
@@ -752,7 +754,13 @@ namespace MapView
 		{
 			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
 
-			Descriptor.Terrains.Remove(lbTerrainsAllocated.SelectedItem as String);
+			int id = lbTerrainsAllocated.SelectedIndex;
+			for (int i = id; i != Descriptor.Terrains.Count - 1; ++i)
+			{
+				Descriptor.Terrains[i] = Descriptor.Terrains[i + 1];
+			}
+			Descriptor.Terrains.Remove(Descriptor.Terrains.Count - 1);
+
 			ListTerrains();
 		}
 
@@ -764,7 +772,7 @@ namespace MapView
 
 			for (int id = 1; id != terrains.Count; ++id)
 			{
-				if (terrains[id] == lbTerrainsAllocated.SelectedItem as String)
+/*				if (terrains[id] == lbTerrainsAllocated.SelectedItem as String)
 				{
 					string t = terrains[id - 1];
 					terrains[id - 1] = terrains[id];
@@ -779,7 +787,7 @@ namespace MapView
 
 					lbTerrainsAllocated.SelectedItem = terrains[id - 1];
 					break;
-				}
+				} */
 			}
 		}
 
@@ -791,7 +799,7 @@ namespace MapView
 
 			for (int id = 0; id != terrains.Count - 1; ++id)
 			{
-				if (terrains[id] == lbTerrainsAllocated.SelectedItem as String)
+/*				if (terrains[id] == lbTerrainsAllocated.SelectedItem as String)
 				{
 					string t = terrains[id + 1];
 					terrains[id + 1] = terrains[id];
@@ -806,18 +814,20 @@ namespace MapView
 
 					lbTerrainsAllocated.SelectedItem = terrains[id + 1];
 					break;
-				}
+				} */
 			}
 		}
 
 		private void OnTerrainCopyClick(object sender, EventArgs e)
 		{
-			XCMainWindow.Instance.TilesetTerrains.Clear();
+			TilesetTerrains.Clear();
 
-			foreach (var terrain in Descriptor.Terrains)
-				XCMainWindow.Instance.TilesetTerrains.Add(terrain);
+			for (int i = 0; i != Descriptor.Terrains.Count; ++i)
+			{
+				TilesetTerrains[i] = Descriptor.Terrains[i];
+			}
 
-			SetPasteButtonStuffer();
+			SetPasteButtonText();
 //			btnTerrainPaste.Enabled = true;
 		}
 
@@ -827,55 +837,133 @@ namespace MapView
 
 			Descriptor.Terrains.Clear();
 
-			var terrains = XCMainWindow.Instance.TilesetTerrains;
-			foreach (var terrain in terrains)
-				Descriptor.Terrains.Add(terrain);
+			for (int i = 0; i != TilesetTerrains.Count; ++i)
+			{
+				Descriptor.Terrains[i] = TilesetTerrains[i];
+			}
 
 			ListTerrains();
 		}
 
-		private void SetPasteButtonStuffer()
+		private void SetPasteButtonText()
 		{
-			btnTerrainPaste.Text = (XCMainWindow.Instance.TilesetTerrains.Count != 0) ? "Paste"
-																					  : "Clear";
+			btnTerrainPaste.Text = (TilesetTerrains.Count != 0) ? "Paste"
+																: "Clear";
 			string tipPaste = String.Empty;
-			bool first = true;
-			foreach (var terrain in XCMainWindow.Instance.TilesetTerrains)
+
+			for (int i = 0; i != TilesetTerrains.Count; ++i)
 			{
-				if (first)
-					first = false;
-				else
+				if (!String.IsNullOrEmpty(tipPaste))
 					tipPaste += Environment.NewLine;
 
-				tipPaste += terrain.ToLowerInvariant();
+				tipPaste += TilesetTerrains[i].Item1.ToLowerInvariant();
 			}
 			toolTip1.SetToolTip(btnTerrainPaste, tipPaste);
 		}
 
+		/// <summary>
+		/// @note Does not fire when a selected item is removed; the index does
+		/// not change. Read: it should. But it doesn't.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void OnAllocatedIndexChanged(object sender, EventArgs e)
 		{
-			if (lbTerrainsAllocated.SelectedIndex != -1)
+			int id = lbTerrainsAllocated.SelectedIndex;
+			if (id != -1)
 			{
-				//LogFile.WriteLine("OnAllocatedIndexChanged");
-				//LogFile.WriteLine(". descriptor= " + ((Descriptor != null) ? Descriptor.Label : "NULL"));
+				string basepath = ((tle)lbTerrainsAllocated.Items[id]).Basepath;
+				if (String.IsNullOrEmpty(basepath))
+				{
+					lbl_AllocatedInfo.Text = "in Configurator basepath";
+				}
+				else if (basepath == GlobalsXC.BASEPATH)
+				{
+					lbl_AllocatedInfo.Text = "in Tileset basepath";
+				}
+				else
+					lbl_AllocatedInfo.Text = basepath;
 
 				btnMoveRight.Enabled = true;
 
 				if (Descriptor != null && Descriptor.Terrains.Count > 1)
 				{
-					btnMoveUp  .Enabled = (lbTerrainsAllocated.SelectedIndex != 0);
-					btnMoveDown.Enabled = (lbTerrainsAllocated.SelectedIndex != Descriptor.Terrains.Count - 1);
+					btnMoveUp  .Enabled = (id != 0);
+					btnMoveDown.Enabled = (id != Descriptor.Terrains.Count - 1);
 				}
 			}
 		}
 
 		private void OnAvailableIndexChanged(object sender, EventArgs e)
 		{
-			//LogFile.WriteLine("OnAvailableIndexChanged");
-			//LogFile.WriteLine(". descriptor= " + ((Descriptor != null) ? Descriptor.Label : "NULL"));
+			btnMoveLeft.Enabled = lbTerrainsAvailable.SelectedIndex != -1
+							   && Descriptor != null;
+		}
 
-			btnMoveLeft.Enabled = (lbTerrainsAvailable.SelectedIndex != -1)
-							   && (Descriptor != null);
+
+		/// <summary>
+		/// Handles changes to the Terrains-basepath radio-buttons.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnRadioTerrainChanged(object sender, EventArgs e)
+		{
+			if (sender == rb_CustomPath)
+			{
+				if (String.IsNullOrEmpty(LastTerrainDir))
+					LastTerrainDir = Path.Combine(BasepathConfig, GlobalsXC.TerrainDir);
+
+				tbTerrainPath.Text = LastTerrainDir;
+				tbTerrainPath.ReadOnly = false;
+
+				btnFindBasepath.Visible = true;
+			}
+			else if (sender == rb_TilesetBasepath)
+			{
+				tbTerrainPath.Text = Path.Combine(Descriptor.BasePath, GlobalsXC.TerrainDir);
+				tbTerrainPath.ReadOnly = true;
+
+				btnFindBasepath.Visible = false;
+			}
+			else //if (sender == rb_ConfigBasepath)
+			{
+				tbTerrainPath.Text = Path.Combine(BasepathConfig, GlobalsXC.TerrainDir);
+				tbTerrainPath.ReadOnly = true;
+
+				btnFindBasepath.Visible = false;
+			}
+
+			ListTerrains();	// -> have to do that so that user can switch a terrain's
+		}					// stored path between the Config and Tileset basepaths.
+
+		private void OnTerrainBasepathChanged(object sender, EventArgs e)
+		{
+			ListTerrains();
+		}
+
+		/// <summary>
+		/// Opens a find directory dialog for Terrains.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnFindTerrainClick(object sender, EventArgs e)
+		{
+			using (var fbd = new FolderBrowserDialog())
+			{
+				fbd.SelectedPath = LastTerrainDir;
+				fbd.Description = String.Format(
+											System.Globalization.CultureInfo.CurrentCulture,
+											"Browse to a TERRAIN folder.");
+
+				if (fbd.ShowDialog() == DialogResult.OK)
+				{
+					// TODO: Check that a subfolder is labeled "TERRAIN".
+					//LogFile.WriteLine("fbd.SelectedPath= " + fbd.SelectedPath);
+
+					LastTerrainDir = fbd.SelectedPath;
+					tbTerrainPath.Text = fbd.SelectedPath;
+				}
+			}
 		}
 		#endregion Eventcalls
 
@@ -911,21 +999,21 @@ namespace MapView
 		/// </summary>
 		/// <param name="labelMap"></param>
 		/// <returns></returns>
-		private string GetFullPathMap(string labelMap)
+		private string GetFullpathMapfile(string labelMap)
 		{
-			string dirMaps = Path.Combine(BasePath, MapFileChild.MapsDir);
-			return Path.Combine(dirMaps, labelMap + MapFileChild.MapExt);
+			string dirMaps = Path.Combine(BasepathTileset, GlobalsXC.MapsDir);
+			return Path.Combine(dirMaps, labelMap + GlobalsXC.MapExt);
 		}
 
 		/// <summary>
-		/// Gets the fullpath for a Routes-file.
+		/// Gets the fullpath for a Route-file.
 		/// </summary>
 		/// <param name="labelRoutes"></param>
 		/// <returns></returns>
-		private string GetFullPathRoutes(string labelRoutes)
+		private string GetFullpathRouteFile(string labelRoutes)
 		{
-			string dirRoutes = Path.Combine(BasePath, RouteNodeCollection.RoutesDir);
-			return Path.Combine(dirRoutes, labelRoutes + RouteNodeCollection.RouteExt);
+			string dirRoutes = Path.Combine(BasepathTileset, GlobalsXC.RoutesDir);
+			return Path.Combine(dirRoutes, labelRoutes + GlobalsXC.RouteExt);
 		}
 
 		/// <summary>
@@ -934,31 +1022,64 @@ namespace MapView
 		/// </summary>
 		/// <param name="labelMap">the name w/out extension of a Map-file to check for</param>
 		/// <returns></returns>
-		private bool MapFileExists(string labelMap)
+		private bool MapfileExists(string labelMap)
 		{
-			//LogFile.WriteLine("MapFileExists");
-
 			string pfeMap = null;
 			if (!String.IsNullOrEmpty(labelMap))
 			{
-				pfeMap = GetFullPathMap(labelMap);
-				//LogFile.WriteLine(". pfeMap= " + pfeMap);
+				pfeMap = GetFullpathMapfile(labelMap);
 			}
-
-			//LogFile.WriteLine(". ret= " + (pfeMap != null && File.Exists(pfeMap)));
 			return (pfeMap != null && File.Exists(pfeMap));
 		}
 
 		private static bool IsTilesetInGroups(string labelMap)
 		{
-			//LogFile.WriteLine("IsDescriptorInGroups");
-
 			foreach (var tileGroup in ResourceInfo.TileGroupInfo.TileGroups)
 			foreach (var category in tileGroup.Value.Categories)
 			foreach (var descriptor in category.Value.Values)
 			{
 				if (descriptor.Label == labelMap)
 					return true;
+			}
+			return false;
+		}
+
+		private static bool IsTerrainsChanged(
+				IDictionary<int, Tuple<string, string>> a,
+				IDictionary<int, Tuple<string, string>> b)
+		{
+			if (a.Count != b.Count)
+				return true;
+
+			for (int i = 0; i != a.Count; ++i)
+			{
+				if (   a[i].Item1 != b[i].Item1
+					|| a[i].Item2 != b[i].Item2)
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if a specified terrain is listed in the Allocated listbox and
+		/// therefore should be bypassed by the Available listbox.
+		/// </summary>
+		/// <param name="terrain">terrain-file w/out extension</param>
+		/// <param name="dirTerrain">pass in a blank string if Config-basepath
+		/// is checked or "basepath" if Tileset-basepath is checked; else pass
+		/// in the basepath of the TERRAIN directory</param>
+		/// <returns></returns>
+		private bool IsTerrainInDescriptor(string terrain, string dirTerrain)
+		{
+			for (int i = 0; i != Descriptor.Terrains.Count; ++i)
+			{
+				if (   Descriptor.Terrains[i].Item1 == terrain
+					&& Descriptor.Terrains[i].Item2 == dirTerrain)
+				{
+					return true;
+				}
 			}
 			return false;
 		}
@@ -995,6 +1116,7 @@ namespace MapView
 						0);
 		}
 		#endregion Methods
+	}
 
 
 //		/// <summary>
@@ -1018,8 +1140,6 @@ namespace MapView
 //				OnCreateDescriptorClick(null, EventArgs.Empty);
 //			}
 //		}
-	}
-}
 
 // was OnCreateDescriptorClick() checks ->>
 //			if (String.IsNullOrEmpty(Tileset)) // TODO: this should be checked before getting here.
@@ -1048,7 +1168,7 @@ namespace MapView
 //				ShowErrorDialog("The Tileset label already exists.");
 //			}
 //			else
-//			{
+//			{}
 
 //		// https://stackoverflow.com/questions/62771/how-do-i-check-if-a-given-string-is-a-legal-valid-file-name-under-windows#answer-62888
 //		You may use any character in the current code page (Unicode/ANSI above 127), except:
@@ -1073,3 +1193,36 @@ namespace MapView
 //
 //		Naming Files, Paths, and Namespaces
 //		https://msdn.microsoft.com/en-us/library/aa365247(VS.85).aspx
+
+
+	/// <summary>
+	/// An object for parsing out a terrain-string to show in the terrain-
+	/// listboxes while retaining a reference to its terrain-tuple.
+	/// </summary>
+	internal sealed class tle // TerrainListEntry
+	{
+		internal string Terrain
+		{ get; private set; }
+
+		internal string Basepath
+		{ get; private set; }
+
+		internal tle(Tuple<string,string> terrain)
+		{
+			Terrain  = terrain.Item1;
+			Basepath = terrain.Item2;
+		}
+
+		/// <summary>
+		/// Required for
+		/// lbTerrainsAllocated.DisplayMember = "Terrain";
+		/// lbTerrainsAvailable.DisplayMember = "Terrain";
+		/// to work correctly.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return Terrain;
+		}
+	}
+}

@@ -11,6 +11,8 @@ namespace MapView
 		#region Fields (static)
 		internal const double ScaleMinimum = 0.25;
 		internal const double ScaleMaximum = 3.00;
+
+		internal const string ALLFILES = "*.*";
 		#endregion
 
 

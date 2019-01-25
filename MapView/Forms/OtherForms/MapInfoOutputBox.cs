@@ -20,13 +20,13 @@ namespace MapView
 		}
 
 
-		internal void Analyze(MapFileChild mapFile)
+		internal void Analyze(MapFileChild file)
 		{
-			groupInfo.Text = "Map: " + mapFile.Descriptor.Label;
+			groupInfo.Text = "Map: " + file.Descriptor.Label;
 
-			lbl2Dimensions.Text = mapFile.MapSize.Cols + ","
-								+ mapFile.MapSize.Rows + ","
-								+ mapFile.MapSize.Levs;
+			lbl2Dimensions.Text = file.MapSize.Cols + ","
+								+ file.MapSize.Rows + ","
+								+ file.MapSize.Levs;
 
 			lbl2Tilesets.Text = String.Empty;
 
@@ -34,17 +34,17 @@ namespace MapView
 			int spritesTotal = 0;
 
 			bool first = true;
-			foreach (string terrain in mapFile.Terrains)
+			for (int i = 0; i != file.Terrains.Count; ++i)
 			{
 				if (first)
 					first = false;
 				else
 					lbl2Tilesets.Text += ";";
 
-				lbl2Tilesets.Text += terrain;
+				lbl2Tilesets.Text += file.Terrains[i].Item1;
 
-				spritesTotal += mapFile.Descriptor.GetSpriteCount(terrain);
-				recordsTotal += mapFile.Descriptor.GetRecordCount(terrain);
+				spritesTotal += file.Descriptor.GetSpriteCount(i);
+				recordsTotal += file.Descriptor.GetRecordCount(i);
 			}
 
 			var width = TextRenderer.MeasureText(lbl2Tilesets.Text, lbl2Tilesets.Font).Width;
@@ -59,14 +59,14 @@ namespace MapView
 			var recordsTable = new Hashtable();
 			var spritesTable = new Hashtable();
 
-			pBar.Maximum = mapFile.MapSize.Cols * mapFile.MapSize.Rows * mapFile.MapSize.Levs;
+			pBar.Maximum = file.MapSize.Cols * file.MapSize.Rows * file.MapSize.Levs;
 			pBar.Value = 0;
 
-			for (int col = 0; col != mapFile.MapSize.Cols; ++col)
-			for (int row = 0; row != mapFile.MapSize.Rows; ++row)
-			for (int lev = 0; lev != mapFile.MapSize.Levs; ++lev)
+			for (int col = 0; col != file.MapSize.Cols; ++col)
+			for (int row = 0; row != file.MapSize.Rows; ++row)
+			for (int lev = 0; lev != file.MapSize.Levs; ++lev)
 			{
-				var tile = mapFile[row, col, lev] as XCMapTile;
+				var tile = file[row, col, lev] as XCMapTile;
 				if (!tile.Vacant)
 				{
 					if (tile.Ground != null)

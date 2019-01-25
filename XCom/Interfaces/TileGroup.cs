@@ -10,6 +10,7 @@ namespace XCom.Interfaces
 		Ufo,
 		Tftd
 	}
+	// TODO: Replace all the if(Palette==Ufo.Palette) stuff with GameType.
 
 
 	public class TileGroup

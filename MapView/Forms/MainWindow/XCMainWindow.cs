@@ -71,13 +71,6 @@ namespace MapView
 			set { _optionsManager["MainWindow"] = value; }
 		}
 
-		private List<string> _tilesetTerrains = new List<string>();
-		internal List<string> TilesetTerrains
-		{
-			get { return _tilesetTerrains; }
-			set { _tilesetTerrains = value; }
-		}
-
 		internal bool MaptreeChanged
 		{ private get; set; }
 
@@ -108,12 +101,12 @@ namespace MapView
 
 			// TODO: further optimize this loading sequence ....
 
-			var share = SharedSpace.Instance;
+			var shared = SharedSpace.Instance;
 
-			share.SetShare(
+			shared.SetShare(
 						SharedSpace.ApplicationDirectory,
 						dirApplication);
-			share.SetShare(
+			shared.SetShare(
 						SharedSpace.SettingsDirectory,
 						dirSettings);
 
@@ -121,16 +114,16 @@ namespace MapView
 
 
 			var pathOptions = new PathInfo(dirSettings, PathInfo.ConfigOptions);
-			share.SetShare(PathInfo.ShareOptions, pathOptions);
+			shared.SetShare(PathInfo.ShareOptions, pathOptions);
 
 			var pathResources = new PathInfo(dirSettings, PathInfo.ConfigResources);
-			share.SetShare(PathInfo.ShareResources, pathResources);
+			shared.SetShare(PathInfo.ShareResources, pathResources);
 
 			var pathTilesets = new PathInfo(dirSettings, PathInfo.ConfigTilesets);
-			share.SetShare(PathInfo.ShareTilesets, pathTilesets);
+			shared.SetShare(PathInfo.ShareTilesets, pathTilesets);
 
 			var pathViewers = new PathInfo(dirSettings, PathInfo.ConfigViewers);
-			share.SetShare(PathInfo.ShareViewers, pathViewers);
+			shared.SetShare(PathInfo.ShareViewers, pathViewers);
 
 			LogFile.WriteLine("PathInfo cached.");
 
@@ -299,7 +292,7 @@ namespace MapView
 					val = (!val.Equals(PathInfo.NotConfigured)) ? val
 																: null;
 
-					share.SetShare(key, val);
+					shared.SetShare(key, val);
 				}
 			}
 
@@ -309,7 +302,7 @@ namespace MapView
 			// TODO: give user the option to choose which cursor-spriteset to use.
 			var cuboid = ResourceInfo.LoadSpriteset(
 												SharedSpace.CursorFilePrefix,
-												share.GetShare(SharedSpace.ResourceDirectoryUfo),
+												shared.GetShare(SharedSpace.ResourceDirectoryUfo),
 												2,
 												Palette.UfoBattle);
 			if (cuboid != null)
@@ -323,7 +316,7 @@ namespace MapView
 			// NOTE: The TFTD cursorsprite takes precedence over the UFO cursorsprite.
 			cuboid = ResourceInfo.LoadSpriteset(
 											SharedSpace.CursorFilePrefix,
-											share.GetShare(SharedSpace.ResourceDirectoryTftd),
+											shared.GetShare(SharedSpace.ResourceDirectoryTftd),
 											4,
 											Palette.TftdBattle);
 			if (cuboid != null)
@@ -1049,10 +1042,10 @@ namespace MapView
 			{														// instantiated without a 'Descriptor'.
 				var sfd = new SaveFileDialog();
 
-				sfd.FileName = _mainViewUnderlay.MapBase.Descriptor.Label + MapFileChild.MapExt;
+				sfd.FileName = _mainViewUnderlay.MapBase.Descriptor.Label + GlobalsXC.MapExt;
 				sfd.Filter = "Map files (*.MAP)|*.MAP|All files (*.*)|*.*";
 				sfd.Title = "Save Map and subordinate Route file as ...";
-				sfd.InitialDirectory = Path.Combine(_mainViewUnderlay.MapBase.Descriptor.BasePath, MapFileChild.MapsDir);
+				sfd.InitialDirectory = Path.Combine(_mainViewUnderlay.MapBase.Descriptor.BasePath, GlobalsXC.MapsDir);
 
 				if (sfd.ShowDialog() == DialogResult.OK)
 				{
@@ -1071,8 +1064,8 @@ namespace MapView
 							basepath += Path.DirectorySeparatorChar.ToString();											// account for awkward path at the root dir.
 																														// NOTE: But that's probly not valid for
 																														// things like mounted or network drives.
-						string dirMaps   = Path.Combine(basepath, MapFileChild.MapsDir);
-						string dirRoutes = Path.Combine(basepath, RouteNodeCollection.RoutesDir);
+						string dirMaps   = Path.Combine(basepath, GlobalsXC.MapsDir);
+						string dirRoutes = Path.Combine(basepath, GlobalsXC.RoutesDir);
 						//LogFile.WriteLine("dirMaps= " + dirMaps);
 						//LogFile.WriteLine("dirRoutes= " + dirRoutes);
 

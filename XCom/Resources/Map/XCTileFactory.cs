@@ -8,8 +8,6 @@ namespace XCom.Resources.Map
 	public static class XCTileFactory
 	{
 		#region Fields (static)
-		private const string McdExt = ".MCD";
-
 		private const int Length = 62; // there are 62 bytes in each MCD record.
 		#endregion
 
@@ -29,12 +27,12 @@ namespace XCom.Resources.Map
 		{
 			if (spriteset != null)
 			{
-				string pfeMcd = Path.Combine(dirTerrain, terrain + McdExt);
+				string pfeMcd = Path.Combine(dirTerrain, terrain + GlobalsXC.McdExt);
 
 				if (!File.Exists(pfeMcd))
 				{
 					MessageBox.Show(
-								"Can't find file for terrain data."
+								"Can't find file for terrain data[1]."
 									+ Environment.NewLine + Environment.NewLine
 									+ pfeMcd,
 								"Error",
@@ -79,8 +77,8 @@ namespace XCom.Resources.Map
 		/// but at present an McdRecordCollection is retained only by a
 		/// currently loaded Tileset .... That's to say there is no general
 		/// cache of all available terrains; even a Map's Descriptor retains
-		/// only the allocated terrains as strings in a list-object.
-		/// See ResourceInfo - where the sprites of a terrain *are* cached.
+		/// only the allocated terrains as tuples in a dictionary-object.
+		/// See ResourceInfo - where the *sprites* of a terrain *are* cached.
 		/// </summary>
 		/// <param name="terrain">the terrain file w/out extension</param>
 		/// <param name="dirTerrain">path to the directory of the terrain file</param>
@@ -89,7 +87,7 @@ namespace XCom.Resources.Map
 				string terrain,
 				string dirTerrain)
 		{
-			string pfeMcd = Path.Combine(dirTerrain, terrain + McdExt);
+			string pfeMcd = Path.Combine(dirTerrain, terrain + GlobalsXC.McdExt);
 
 			if (File.Exists(pfeMcd))
 			{
@@ -98,7 +96,7 @@ namespace XCom.Resources.Map
 			}
 
 			MessageBox.Show(
-						"Can't find file for terrain data."
+						"Can't find file for terrain data[2]."
 							+ Environment.NewLine + Environment.NewLine
 							+ pfeMcd,
 						"Error",

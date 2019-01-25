@@ -25,10 +25,10 @@ namespace XCom
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("MapFileService.LoadTileset descriptor= " + descriptor);
 
-			string dirMap = Path.Combine(descriptor.BasePath, MapFileChild.MapsDir);
+			string dirMap = Path.Combine(descriptor.BasePath, GlobalsXC.MapsDir);
 			string pfeMap = Path.Combine(
 									dirMap,
-									descriptor.Label + MapFileChild.MapExt);
+									descriptor.Label + GlobalsXC.MapExt);
 			//LogFile.WriteLine(". pfeMap= " + pfeMap);
 
 			if (File.Exists(pfeMap))
@@ -37,35 +37,37 @@ namespace XCom
 
 				var parts = new List<TilepartBase>();
 
-				foreach (string terrain in descriptor.Terrains) // push together the tileparts of all allocated terrains
+				for (int i = 0; i != descriptor.Terrains.Count; ++i) // push together the tileparts of all allocated terrains
 				{
-					var MCD = descriptor.GetTerrainRecords(terrain);
+					var MCD = descriptor.GetTerrainRecords(i);
 					foreach (Tilepart part in MCD)
 						parts.Add(part);
 				}
 
 				if (parts.Count != 0)
 				{
-					if (parts.Count > 256)
+					if (parts.Count > 256) // issue warning ->
 					{
 						string text = String.Empty;
 
 						int lengthTotal = 0;
-						foreach (string terrain in descriptor.Terrains) // do it again ...
+						for (int i = 0; i != descriptor.Terrains.Count; ++i) // do it again ...
 						{
+							string terrain = descriptor.Terrains[i].Item1;
 							if (terrain.Length > lengthTotal)
 								lengthTotal = terrain.Length;
 						}
 
-						foreach (string terrain in descriptor.Terrains) // do it again ...
+						for (int i = 0; i != descriptor.Terrains.Count; ++i) // do it again ...
 						{
+							string terrain = descriptor.Terrains[i].Item1;
 							string st = terrain;
 
 							int length = terrain.Length;
 							while (length++ != lengthTotal)
 								st += " ";
 
-							int records = descriptor.GetRecordCount(terrain);
+							int records = descriptor.GetRecordCount(i);
 							text += st + " - " + records + Environment.NewLine;
 						}
 						text += Environment.NewLine + "total - " + parts.Count;

@@ -5,7 +5,7 @@ using System.IO;
 namespace DSShared
 {
 	/// <summary>
-	/// Class to help pass around file paths.
+	/// Class to help pass around (/settings) file-paths.
 	/// </summary>
 	public class PathInfo
 	{

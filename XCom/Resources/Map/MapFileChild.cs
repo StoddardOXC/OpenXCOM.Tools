@@ -15,17 +15,11 @@ namespace XCom
 		:
 			MapFileBase
 	{
-		#region Fields (static)
-		public const string MapExt  = ".MAP";
-		public const string MapsDir = "MAPS";
-		#endregion
-
-
 		#region Properties
 		private string FullPath
 		{ get; set; }
 
-		public List<string> Terrains
+		public Dictionary<int, Tuple<string,string>> Terrains
 		{ get; private set; }
 
 		public RouteNodeCollection Routes
@@ -47,10 +41,10 @@ namespace XCom
 			:
 				base(descriptor, parts)
 		{
-			string dirMap = Path.Combine(Descriptor.BasePath, MapsDir);
+			string dirMap = Path.Combine(Descriptor.BasePath, GlobalsXC.MapsDir);
 			FullPath = Path.Combine(
 								dirMap,
-								Descriptor.Label + MapExt);
+								Descriptor.Label + GlobalsXC.MapExt);
 
 			Terrains = Descriptor.Terrains;
 
@@ -243,17 +237,17 @@ namespace XCom
 		{
 			int id = -1;
 
-			foreach (var tile1 in Parts)
+			foreach (var part1 in Parts)
 			{
-				if (tile1.TerrainId == 0)
+				if (part1.TerrainId == 0)
 					++id;
 
-				if (tile1 == part)
+				if (part1 == part)
 					break;
 			}
 
 			if (id != -1 && id < Terrains.Count)
-				return Terrains[id];
+				return Terrains[id].Item1;
 
 			return null;
 		}
@@ -320,7 +314,7 @@ namespace XCom
 		/// <param name="pf">the path+file to save as</param>
 		public override void SaveMap(string pf)
 		{
-			string pfe = pf + MapExt;
+			string pfe = pf + GlobalsXC.MapExt;
 			Directory.CreateDirectory(Path.GetDirectoryName(pfe));
 			SaveMapData(pfe);
 		}

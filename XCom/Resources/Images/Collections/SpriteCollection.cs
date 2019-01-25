@@ -13,12 +13,6 @@ namespace XCom
 		:
 			SpriteCollectionBase
 	{
-		#region Fields (static)
-		public const string PckExt = ".PCK";
-		public const string TabExt = ".TAB";
-		#endregion
-
-
 		#region Properties
 		public int TabOffset
 		{ get; private set; }
@@ -210,8 +204,8 @@ namespace XCom
 				int tabOffsetLength)
 		{
 			//LogFile.WriteLine("SpriteCollection.SaveSpriteset");
-			string pfePck = Path.Combine(dir, file + PckExt);
-			string pfeTab = Path.Combine(dir, file + TabExt);
+			string pfePck = Path.Combine(dir, file + GlobalsXC.PckExt);
+			string pfeTab = Path.Combine(dir, file + GlobalsXC.TabExt);
 
 			using (var bwPck = new BinaryWriter(File.Create(pfePck)))
 			using (var bwTab = new BinaryWriter(File.Create(pfeTab)))

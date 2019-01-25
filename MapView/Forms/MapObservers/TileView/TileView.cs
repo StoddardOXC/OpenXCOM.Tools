@@ -456,13 +456,13 @@ namespace MapView.Forms.MapObservers.TileViews
 //				string dirTerrain = Path.Combine(MapBase.Descriptor.BasePath, Descriptor.PathTerrain);
 				string dirTerrain = (MapBase.Descriptor.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
 																				  : SharedSpace.ResourceDirectoryTftd;
-				dirTerrain = Path.Combine(SharedSpace.Instance.GetShare(dirTerrain), Descriptor.PathTerrain);
+				dirTerrain = Path.Combine(SharedSpace.Instance.GetShare(dirTerrain), GlobalsXC.TerrainDir);
 				string pfePck = Path.Combine(
 										dirTerrain,
-										terrain + SpriteCollection.PckExt);
+										terrain + GlobalsXC.PckExt);
 				string pfeTab = Path.Combine(
 										dirTerrain,
-										terrain + SpriteCollection.TabExt);
+										terrain + GlobalsXC.TabExt);
 
 				if (!File.Exists(pfePck))
 				{

@@ -19,13 +19,8 @@ namespace XCom
 	/// </summary>
 	public sealed class Descriptor // *snap*
 	{
-		#region Fields (static)
-		public const string PathTerrain = "TERRAIN";
-		#endregion
-
-
 		#region Fields
-		private readonly string _dirTerrain;
+		private readonly string _dirTerrainConfig; // the Configurator's terrain-path for UFO or TFTD - depends on Palette.
 		#endregion
 
 
@@ -36,8 +31,16 @@ namespace XCom
 		public string BasePath
 		{ get; private set; }
 
-		public List<string> Terrains
-		{ get; set; }
+		private Dictionary<int, Tuple<string,string>> _terrains = new Dictionary<int, Tuple<string, string>>();
+		/// <summary>
+		/// A dictionary of this tileset's terrains as IDs that keys another
+		/// dictionary that contains terrain-strings that key their path-strings.
+		/// </summary>
+		public Dictionary<int, Tuple<string,string>> Terrains
+		{
+			get { return _terrains; }
+			set { _terrains = value; }
+		}
 
 		public Palette Pal
 		{ get; private set; }
@@ -54,7 +57,7 @@ namespace XCom
 		/// <param name="palette"></param>
 		public Descriptor(
 				string tileset,
-				List<string> terrains,
+				Dictionary<int, Tuple<string,string>> terrains,
 				string basepath,
 				Palette palette)
 		{
@@ -66,63 +69,75 @@ namespace XCom
 			BasePath = basepath;
 			Pal      = palette;
 
-			_dirTerrain = (Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
-													 : SharedSpace.ResourceDirectoryTftd;
-			_dirTerrain = Path.Combine(SharedSpace.Instance.GetShare(_dirTerrain), PathTerrain);
+			_dirTerrainConfig = (Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
+														   : SharedSpace.ResourceDirectoryTftd;
+			_dirTerrainConfig = Path.Combine(SharedSpace.Instance.GetShare(_dirTerrainConfig), GlobalsXC.TerrainDir);
 		}
 		#endregion
 
 
 		#region Methods
+		private string GetTerrainDirectory(string path)
+		{
+			if (String.IsNullOrEmpty(path))								// use Configurator's basepath
+				return _dirTerrainConfig;
+
+			if (path == GlobalsXC.BASEPATH)								// use this Tileset's basepath
+				return Path.Combine(BasePath, GlobalsXC.TerrainDir);
+
+			return path;												// use the path specified.
+		}
+
 		/// <summary>
 		/// Gets the MCD-records for a given terrain in this Descriptor.
 		/// </summary>
-		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="id">the position of the terrain in this tileset's terrain-list</param>
 		/// <returns>an McdRecordCollection containing all the parts for the Terrain</returns>
-		public McdRecordCollection GetTerrainRecords(string terrain)
+		public McdRecordCollection GetTerrainRecords(int id)
 		{
-			//LogFile.WriteLine("Descriptor.GetTerrainRecords");
+			var terrain = Terrains[id];
+			string terr = terrain.Item1;
+			string path = terrain.Item2;
+
+			path = GetTerrainDirectory(path);
 
 			var tiles = XCTileFactory.CreateTileparts(
-													terrain,
-													_dirTerrain,
-													GetTerrainSpriteset(terrain));
-			return new McdRecordCollection(tiles);
-		}
-
-		/// <summary>
+													terr, path,
+													ResourceInfo.LoadSpriteset(terr, path, 2, Pal));	// NOTE: That loads the sprites in addition to
+			return new McdRecordCollection(tiles);														// getting the MCD-records. here just because it can be
+		}																								// concealed inside a function called GetTerrainRecords()
+																										// that returns an McdRecordCollection that's why.
+		/// <summary>																					// Pretty clever huh - Dr.No look out!!science!!
 		/// Gets the count of MCD-records in an MCD-file.
 		/// </summary>
-		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="id">the position of the terrain in this tileset's terrain-list</param>
 		/// <returns>count of MCD-records or 0 on fail</returns>
-		public int GetRecordCount(string terrain)
+		public int GetRecordCount(int id)
 		{
-			return XCTileFactory.GetRecordCount(terrain, _dirTerrain);
-		}
+			var terrain = Terrains[id];
+			string terr = terrain.Item1;
+			string path = terrain.Item2;
 
-		/// <summary>
-		/// Gets the spriteset for a given terrain in this Descriptor.
-		/// </summary>
-		/// <param name="terrain">the terrain file w/out extension</param>
-		/// <returns>a SpriteCollection containing all the sprites for the Terrain</returns>
-		public SpriteCollection GetTerrainSpriteset(string terrain)
-		{
-			//LogFile.WriteLine("Descriptor.GetTerrainSpriteset");
+			path = GetTerrainDirectory(path);
 
-			// NOTE: both UFO and TFTD use 2-byte Tab-offsetLengths for 32x40 terrain pcks
-			// (TFTD unitsprites use 4-byte Tab-offsetLengths although Bigobs 32x48 uses 2-byte)
-			return ResourceInfo.LoadSpriteset(terrain, _dirTerrain, 2, Pal);
+			return XCTileFactory.GetRecordCount(terr, path);
 		}
 
 		/// <summary>
 		/// Gets the count of sprites in a given Terrain.
 		/// @note Used only by MapInfoOutputBox.Analyze()
 		/// </summary>
-		/// <param name="terrain">the terrain file w/out extension</param>
+		/// <param name="id">the position of the terrain in this tileset's terrain-list</param>
 		/// <returns>count of sprites</returns>
-		public int GetSpriteCount(string terrain)
+		public int GetSpriteCount(int id)
 		{
-			return ResourceInfo.GetSpritesetCount(terrain, _dirTerrain, Pal);
+			var terrain = Terrains[id];
+			string terr = terrain.Item1;
+			string path = terrain.Item2;
+
+			path = GetTerrainDirectory(path);
+
+			return ResourceInfo.GetSpritesetCount(terr, path, Pal);
 		}
 		#endregion
 

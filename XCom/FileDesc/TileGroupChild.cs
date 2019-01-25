@@ -12,7 +12,7 @@ namespace XCom
 	{
 		#region cTors
 		/// <summary>
-		/// cTor. Load from YAML.
+		/// cTor[1]. Load from YAML.
 		/// </summary>
 		internal TileGroupChild(string labelGroup, List<Tileset> tilesets)
 			:
@@ -73,7 +73,7 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// cTor for editing the label of the TileGroup.
+		/// cTor[2] for editing the label of the TileGroup.
 		/// </summary>
 		/// <param name="labelGroup"></param>
 		internal TileGroupChild(string labelGroup)

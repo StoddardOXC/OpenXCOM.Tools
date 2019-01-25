@@ -40,12 +40,14 @@ namespace XCom
 		/// Loads a given spriteset for UFO or TFTD. This could go in Descriptor
 		/// except the XCOM cursor-sprites load w/out a descriptor. So do the
 		/// 'ExtraSprites'.
+		/// @note Both UFO and TFTD use 2-byte Tab-offsetLengths for 32x40 terrain pcks
+		/// (TFTD unitsprites use 4-byte Tab-offsetLengths although Bigobs 32x48 uses 2-byte)
 		/// </summary>
 		/// <param name="terrain">the terrain file w/out extension</param>
 		/// <param name="dirTerrain">path to the directory of the terrain file</param>
 		/// <param name="offsetLength"></param>
 		/// <param name="pal"></param>
-		/// <returns></returns>
+		/// <returns>a SpriteCollection containing all the sprites for a given Terrain</returns>
 		public static SpriteCollection LoadSpriteset(
 				string terrain,
 				string dirTerrain,
@@ -63,8 +65,8 @@ namespace XCom
 				var pfSpriteset = Path.Combine(dirTerrain, terrain);
 				//LogFile.WriteLine(". pfSpriteset= " + pfSpriteset);
 
-				string pfePck = pfSpriteset + SpriteCollection.PckExt;
-				string pfeTab = pfSpriteset + SpriteCollection.TabExt;
+				string pfePck = pfSpriteset + GlobalsXC.PckExt;
+				string pfeTab = pfSpriteset + GlobalsXC.TabExt;
 
 				if (File.Exists(pfePck) && File.Exists(pfeTab))
 				{

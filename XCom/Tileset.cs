@@ -25,7 +25,7 @@ namespace XCom
 		internal string Category
 		{ get; private set; }
 
-		internal List<string> Terrains
+		internal Dictionary<int, Tuple<string,string>> Terrains
 		{ get; private set; }
 
 		internal string BasePath
@@ -38,19 +38,19 @@ namespace XCom
 		/// cTor.
 		/// </summary>
 		/// <param name="label"></param>
-		/// <param name="gruop"></param>
+		/// <param name="group"></param>
 		/// <param name="category"></param>
 		/// <param name="terrains"></param>
 		/// <param name="basepath"></param>
 		internal Tileset(
 				string label,
-				string gruop, // sic.
+				string group, // sic.
 				string category,
-				List<string> terrains,
+				Dictionary<int, Tuple<string,string>> terrains,
 				string basepath)
 		{
 			Label    = label;
-			Group    = gruop;
+			Group    = group;
 			Category = category;
 			Terrains = terrains;
 			BasePath = basepath;

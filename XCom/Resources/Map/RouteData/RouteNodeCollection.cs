@@ -136,9 +136,6 @@ namespace XCom
 
 
 		#region Fields (static)
-		public const string RouteExt  = ".RMP";
-		public const string RoutesDir = "ROUTES";
-
 		private const string RankInvalid = "INVALID";
 
 		public static readonly object[] NodeRankUfo =
@@ -224,8 +221,8 @@ namespace XCom
 		{
 			_nodes = new List<RouteNode>();
 
-			FullPath = Path.Combine(basepath, RoutesDir);
-			FullPath = Path.Combine(FullPath, routes + RouteExt);
+			FullPath = Path.Combine(basepath, GlobalsXC.RoutesDir);
+			FullPath = Path.Combine(FullPath, routes + GlobalsXC.RouteExt);
 
 			if (File.Exists(FullPath))
 			{
@@ -308,7 +305,7 @@ namespace XCom
 		/// <param name="pf">the path+file to save as</param>
 		internal void SaveRoutes(string pf)
 		{
-			string pfe = pf + RouteExt;
+			string pfe = pf + GlobalsXC.RouteExt;
 			Directory.CreateDirectory(Path.GetDirectoryName(pfe));
 			SaveNodes(pfe);
 		}

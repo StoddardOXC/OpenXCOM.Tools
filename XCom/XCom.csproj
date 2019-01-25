@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalsXC.cs" />
     <Compile Include="ProgressBarForm.cs" />
     <Compile Include="Resources\Images\Collections\SpriteCollection.cs">
       <SubType>Code</SubType>
