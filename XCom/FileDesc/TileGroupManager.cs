@@ -105,7 +105,7 @@ namespace XCom
 				sw.WriteLine("#");
 				sw.WriteLine("# 'tilesets' - a list that contains all the blocks.");
 				sw.WriteLine("# 'type'     - the label of MAP/RMP files for the block.");
-				sw.WriteLine("# 'terrains' - the label(s) of MCD/PCK/TAB files for the block.");
+				sw.WriteLine("# 'terrains' - the label(s) of PCK/TAB/MCD files for the block.");
 				sw.WriteLine("# 'category' - a header for the tileset, is arbitrary here.");
 				sw.WriteLine("# 'group'    - a header for the categories, is arbitrary except that the first"   + Environment.NewLine
 						   + "#              letters designate the game-type and must be either 'ufo' or"       + Environment.NewLine
@@ -118,7 +118,7 @@ namespace XCom
 						   + "#              the basepath that is set by the Configurator and have to be in a"  + Environment.NewLine
 						   + "#              subdir labeled TERRAIN of that path.");
 				sw.WriteLine("");
-				sw.WriteLine("tilesets:");
+				sw.WriteLine(GlobalsXC.TILESETS + ":");
 
 
 				bool blankline;
@@ -149,8 +149,8 @@ namespace XCom
 
 							var descriptor = category[labelTileset];
 
-							sw.WriteLine("  - type: " + descriptor.Label); // =labelTileset
-							sw.WriteLine("    terrains:");
+							sw.WriteLine("  - " + GlobalsXC.TYPE + ": " + descriptor.Label); // =labelTileset
+							sw.WriteLine("    " + GlobalsXC.TERRAINS + ":");
 
 							for (int i = 0; i != descriptor.Terrains.Count; ++i)
 							{
@@ -163,8 +163,8 @@ namespace XCom
 								sw.WriteLine("      - " + terr);
 							}
 
-							sw.WriteLine("    category: " + labelCategory);
-							sw.WriteLine("    group: " + labelGroup);
+							sw.WriteLine("    " + GlobalsXC.CATEGORY + ": " + labelCategory);
+							sw.WriteLine("    " + GlobalsXC.GROUP + ": " + labelGroup);
 
 							string keyResourcePath = String.Empty;
 							switch (group.GroupType)
@@ -179,7 +179,7 @@ namespace XCom
 							}
 							string basepath = descriptor.BasePath;
 							if (basepath != SharedSpace.Instance.GetShare(keyResourcePath))
-								sw.WriteLine("    basepath: " + basepath);
+								sw.WriteLine("    " + GlobalsXC.BASEPATH + ": " + basepath);
 						}
 					}
 				}

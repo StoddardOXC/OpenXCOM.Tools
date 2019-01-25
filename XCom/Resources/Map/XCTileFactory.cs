@@ -32,7 +32,7 @@ namespace XCom.Resources.Map
 				if (!File.Exists(pfeMcd))
 				{
 					MessageBox.Show(
-								"Can't find file for terrain data[1]."
+								"Can't find file for terrain data."
 									+ Environment.NewLine + Environment.NewLine
 									+ pfeMcd,
 								"Error",
@@ -96,7 +96,7 @@ namespace XCom.Resources.Map
 			}
 
 			MessageBox.Show(
-						"Can't find file for terrain data[2]."
+						"Can't find file for terrain data."
 							+ Environment.NewLine + Environment.NewLine
 							+ pfeMcd,
 						"Error",

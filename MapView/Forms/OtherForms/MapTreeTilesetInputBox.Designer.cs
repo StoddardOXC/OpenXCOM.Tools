@@ -263,7 +263,7 @@
 			this.tbTerrainPath.Size = new System.Drawing.Size(415, 19);
 			this.tbTerrainPath.TabIndex = 6;
 			this.tbTerrainPath.Text = "tbTerrainPath";
-			this.tbTerrainPath.TextChanged += new System.EventHandler(this.OnTerrainBasepathChanged);
+			this.tbTerrainPath.TextChanged += new System.EventHandler(this.OnTerrainPathChanged);
 			// 
 			// rb_CustomPath
 			// 

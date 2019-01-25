@@ -236,7 +236,7 @@ namespace ConfigConverter
 				sw.WriteLine("#");
 				sw.WriteLine("# 'tilesets' - a list that contains all the blocks.");
 				sw.WriteLine("# 'type'     - the label of MAP/RMP files for the block.");
-				sw.WriteLine("# 'terrains' - the label(s) of MCD/PCK/TAB files for the block.");
+				sw.WriteLine("# 'terrains' - the label(s) of PCK/TAB/MCD files for the block.");
 				sw.WriteLine("# 'category' - a header for the tileset, is arbitrary here.");
 				sw.WriteLine("# 'group'    - a header for the categories, is arbitrary except that the first"   + Environment.NewLine
 						   + "#              letters designate the game-type and must be either 'ufo' or"       + Environment.NewLine

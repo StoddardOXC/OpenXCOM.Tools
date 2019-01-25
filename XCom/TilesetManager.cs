@@ -17,17 +17,6 @@ namespace XCom
 	/// </summary>
 	public sealed class TilesetManager
 	{
-		#region Fields (static)
-		// const-strings that appear in MapTilesets.yml
-		private const string TILESETS = "tilesets";
-		private const string GROUP    = "group";
-		private const string CATEGORY = "category";
-		private const string TYPE     = "type";
-		private const string TERRAINS = "terrains";
-		private const string BASEPATH = "basepath";
-		#endregion
-
-
 		#region Fields & Properties
 		private List<Tileset> _tilesets = new List<Tileset>();
 		internal List<Tileset> Tilesets
@@ -103,7 +92,7 @@ namespace XCom
 				//LogFile.WriteLine(". node.Key(ScalarNode)= " + (YamlScalarNode)node.Key); // "tilesets"
 
 
-				var nodeTilesets = nodeRoot.Children[new YamlScalarNode(TILESETS)] as YamlSequenceNode;
+				var nodeTilesets = nodeRoot.Children[new YamlScalarNode(GlobalsXC.TILESETS)] as YamlSequenceNode;
 				foreach (YamlMappingNode nodeTileset in nodeTilesets) // iterate over all the tilesets
 				{
 					//LogFile.WriteLine(". . nodeTilesets= " + nodeTilesets); // lists all data in the tileset
@@ -113,7 +102,7 @@ namespace XCom
 
 
 					// get the Group of the tileset
-					nodeGroup = nodeTileset.Children[new YamlScalarNode(GROUP)].ToString();
+					nodeGroup = nodeTileset.Children[new YamlScalarNode(GlobalsXC.GROUP)].ToString();
 					//LogFile.WriteLine(". . group= " + nodeGroup); // eg. "ufoShips"
 
 					if (   (isUfoConfigured  && nodeGroup.StartsWith("ufo",  StringComparison.OrdinalIgnoreCase))
@@ -124,21 +113,20 @@ namespace XCom
 
 
 						// get the Category of the tileset ->
-						nodeCategory = nodeTileset.Children[new YamlScalarNode(CATEGORY)].ToString();
+						nodeCategory = nodeTileset.Children[new YamlScalarNode(GlobalsXC.CATEGORY)].ToString();
 						//LogFile.WriteLine(". . category= " + nodeCategory); // eg. "Ufo"
 
 
 						// get the Label of the tileset ->
-						nodeLabel = nodeTileset.Children[new YamlScalarNode(TYPE)].ToString();
+						nodeLabel = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TYPE)].ToString();
 						nodeLabel = nodeLabel.ToUpperInvariant();
 						//LogFile.WriteLine("\n. . type= " + nodeLabel); // eg. "UFO_110"
 
 
 						// get the Terrains of the tileset ->
-//						var terrainList = new List<string>();
 						terrains = new Dictionary<int, Tuple<string,string>>();
 
-						nodeTerrains = nodeTileset.Children[new YamlScalarNode(TERRAINS)] as YamlSequenceNode;
+						nodeTerrains = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TERRAINS)] as YamlSequenceNode;
 						for (int i = 0; i != nodeTerrains.Children.Count; ++i)
 						{
 							terr = null;
@@ -176,7 +164,7 @@ namespace XCom
 
 						// get the BasePath of the tileset ->
 						nodeBasepath = String.Empty;
-						var basepath = new YamlScalarNode(BASEPATH);
+						var basepath = new YamlScalarNode(GlobalsXC.BASEPATH);
 						if (nodeTileset.Children.ContainsKey(basepath))
 						{
 							nodeBasepath = nodeTileset.Children[basepath].ToString();
@@ -189,7 +177,7 @@ namespace XCom
 												nodeLabel,
 												nodeGroup,
 												nodeCategory,
-												terrains, //terrainList
+												terrains,
 												nodeBasepath);
 						Tilesets.Add(tileset);
 
