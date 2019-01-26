@@ -152,8 +152,6 @@ namespace XCom
 								}
 							}
 
-							terr = terr.ToUpperInvariant();
-
 							//LogFile.WriteLine(". terr= " + terr);
 							//LogFile.WriteLine(". path= " + path);
 

@@ -27,31 +27,22 @@ namespace XCom.Services
 				int levelPre;
 				int levelPost;
 
-				for (int
-						lev = 0;
-						lev != levs && lev < sizePre.Levs;
-						++lev)
-					for (int
-							row = 0;
-							row != rows && row < sizePre.Rows;
-							++row)
-						for (int
-								col = 0;
-								col != cols && col < sizePre.Cols;
-								++col)
-						{
-							if (ceiling)
-							{
-								levelPost = levs         - lev - 1;
-								levelPre  = sizePre.Levs - lev - 1;
-							}
-							else
-							{
-								levelPost =
-								levelPre  = lev;
-							}
-							tileListPost[row, col, levelPost] = tileListPre[row, col, levelPre];
-						}
+				for (int lev = 0; lev != levs && lev < sizePre.Levs; ++lev)
+				for (int row = 0; row != rows && row < sizePre.Rows; ++row)
+				for (int col = 0; col != cols && col < sizePre.Cols; ++col)
+				{
+					if (ceiling)
+					{
+						levelPost = levs         - lev - 1;
+						levelPre  = sizePre.Levs - lev - 1;
+					}
+					else
+					{
+						levelPost =
+						levelPre  = lev;
+					}
+					tileListPost[row, col, levelPost] = tileListPre[row, col, levelPre];
+				}
 
 				return tileListPost;
 			}

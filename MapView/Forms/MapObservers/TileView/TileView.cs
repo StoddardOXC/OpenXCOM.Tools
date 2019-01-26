@@ -453,6 +453,9 @@ namespace MapView.Forms.MapObservers.TileViews
 			string terrain = GetTerrainLabel();
 			if (!String.IsNullOrEmpty(terrain))
 			{
+				// TODO: Find which spriteset the currently selected sprite is
+				// in and load that set (specifically).
+
 //				string dirTerrain = Path.Combine(MapBase.Descriptor.BasePath, Descriptor.PathTerrain);
 				string dirTerrain = (MapBase.Descriptor.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
 																				  : SharedSpace.ResourceDirectoryTftd;
