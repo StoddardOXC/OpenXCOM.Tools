@@ -445,6 +445,8 @@ namespace MapView
 			btnMoveRight.Enabled =
 			btnMoveLeft .Enabled = false;
 
+			lbTerrainsAllocated.BeginUpdate();
+			lbTerrainsAvailable.BeginUpdate();
 			lbTerrainsAllocated.Items.Clear();
 			lbTerrainsAvailable.Items.Clear();
 
@@ -477,13 +479,11 @@ namespace MapView
 
 			if (Descriptor != null)
 			{
-				lbTerrainsAllocated.BeginUpdate();
 				for (int i = 0; i != Descriptor.Terrains.Count; ++i)
 				{
 					lbTerrainsAllocated.Items.Add(new tle(Descriptor.Terrains[i]));
 					records += Descriptor.GetRecordCount(i);
 				}
-				lbTerrainsAllocated.EndUpdate();
 			}
 			lblMcdRecords.Text = records + " MCD Records";
 
@@ -525,8 +525,6 @@ namespace MapView
 						basepath = String.Empty;
 					}
 
-					lbTerrainsAvailable.BeginUpdate();
-
 					string terr;
 					foreach (var terrain in terrains)
 					{
@@ -538,9 +536,10 @@ namespace MapView
 							lbTerrainsAvailable.Items.Add(new tle(new Tuple<string,string>(terr, basepath)));
 						}
 					}
-					lbTerrainsAvailable.EndUpdate();
 				}
 			}
+			lbTerrainsAllocated.EndUpdate();
+			lbTerrainsAvailable.EndUpdate();
 		}
 
 		/// <summary>
@@ -737,22 +736,38 @@ namespace MapView
 			}
 		}
 
+
 		private void OnTerrainLeftClick(object sender, EventArgs e)
 		{
 			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+
+			int sel = lbTerrainsAvailable.SelectedIndex;
 
 			var it = lbTerrainsAvailable.SelectedItem as tle;
 			var terrain = new Tuple<string,string>(
 											String.Copy(it.Terrain),
 											String.Copy(it.Basepath));
-			Descriptor.Terrains[Descriptor.Terrains.Count] = terrain;
+
+			int id = Descriptor.Terrains.Count;
+			Descriptor.Terrains[id] = terrain;
 
 			ListTerrains();
+
+			int count = lbTerrainsAvailable.Items.Count;
+			if (sel == count)
+				sel = count - 1;
+
+			lbTerrainsAvailable.SelectedIndex = sel;
+			lbTerrainsAvailable.Select();
+
+			lbTerrainsAllocated.SelectedIndex = id;
 		}
 
 		private void OnTerrainRightClick(object sender, EventArgs e)
 		{
 			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+
+			int sel = lbTerrainsAvailable.SelectedIndex;
 
 			int id = lbTerrainsAllocated.SelectedIndex;
 			for (int i = id; i != Descriptor.Terrains.Count - 1; ++i)
@@ -762,6 +777,9 @@ namespace MapView
 			Descriptor.Terrains.Remove(Descriptor.Terrains.Count - 1);
 
 			ListTerrains();
+
+			lbTerrainsAvailable.SelectedIndex = sel;
+			lbTerrainsAvailable.Select();
 		}
 
 		private void OnTerrainUpClick(object sender, EventArgs e)
@@ -796,6 +814,7 @@ namespace MapView
 			lbTerrainsAllocated.EndUpdate();
 
 			lbTerrainsAllocated.SelectedIndex = id_;
+			lbTerrainsAllocated.Select();
 		}
 
 		private void OnTerrainCopyClick(object sender, EventArgs e)
@@ -804,11 +823,13 @@ namespace MapView
 
 			for (int i = 0; i != Descriptor.Terrains.Count; ++i)
 			{
-				CopiedTerrains[i] = Descriptor.Terrains[i];
+				CopiedTerrains[i] = CloneTerrain(Descriptor.Terrains[i]);
 			}
 
 			SetPasteButtonText();
 //			btnTerrainPaste.Enabled = true;
+
+			lbTerrainsAvailable.Select();
 		}
 
 		private void OnTerrainPasteClick(object sender, EventArgs e)
@@ -819,10 +840,12 @@ namespace MapView
 
 			for (int i = 0; i != CopiedTerrains.Count; ++i)
 			{
-				Descriptor.Terrains[i] = CopiedTerrains[i];
+				Descriptor.Terrains[i] = CloneTerrain(CopiedTerrains[i]);
 			}
 
 			ListTerrains();
+
+			lbTerrainsAvailable.Select();
 		}
 
 		private void SetPasteButtonText()
@@ -917,6 +940,8 @@ namespace MapView
 
 			ListTerrains();					// -> have to do that so that user can switch a terrain's path-type even if
 			_bypassListTerrains = false;	// their paths are identical (ie. when 'tbTerrainPath.Text' does not change).
+
+			lbTerrainsAvailable.Select();
 		}
 
 		private bool _bypassListTerrains;
@@ -950,6 +975,8 @@ namespace MapView
 					tbTerrainPath.Text = fbd.SelectedPath;
 				}
 			}
+
+			lbTerrainsAvailable.Select();
 		}
 		#endregion Eventcalls
 
@@ -1069,6 +1096,19 @@ namespace MapView
 			}
 			return false;
 		}
+
+		/// <summary>
+		/// Deep clones a given terrain-tuple. jic.
+		/// </summary>
+		/// <param name="terrain">a terrain-tuple</param>
+		/// <returns>deep clone of the terrain-tuple</returns>
+		private Tuple<string,string> CloneTerrain(Tuple<string,string> terrain)
+		{
+			return new Tuple<string,string>(
+										String.Copy(terrain.Item1),
+										String.Copy(terrain.Item2));
+		}
+
 
 		/// <summary>
 		/// Wrapper for MessageBox.Show().

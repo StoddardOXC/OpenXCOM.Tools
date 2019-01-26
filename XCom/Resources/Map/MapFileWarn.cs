@@ -5,18 +5,18 @@ using System.Windows.Forms;
 
 namespace XCom
 {
-	internal sealed class MapFileError
+	internal sealed class MapFileWarn
 		:
 			Form
 	{
 		#region Fields & Properties
-		private static MapFileError _instance;
-		internal static MapFileError Instance
+		private static MapFileWarn _instance;
+		internal static MapFileWarn Instance
 		{
 			get
 			{
 				if (_instance == null)
-					_instance = new MapFileError();
+					_instance = new MapFileWarn();
 				return _instance;
 			}
 		}
@@ -27,7 +27,7 @@ namespace XCom
 		/// <summary>
 		/// cTor.
 		/// </summary>
-		private MapFileError()
+		private MapFileWarn()
 		{
 			InitializeComponent();
 
@@ -59,7 +59,7 @@ namespace XCom
 		#region Methods
 		internal void SetText(string label, string text)
 		{
-			Text = "MapFileError - " + label;
+			Text = "MapFileWarn - " + label;
 			rtb_text.Text = text;
 		}
 		#endregion
@@ -130,7 +130,7 @@ namespace XCom
 			this.rtb_text.TabIndex = 2;
 			this.rtb_text.Text = "text";
 			// 
-			// MapFileError
+			// MapFileWarn
 			// 
 			this.AcceptButton = this.btn_ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
@@ -142,12 +142,12 @@ namespace XCom
 			this.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.Name = "MapFileError";
+			this.Name = "MapFileWarn";
 			this.ShowIcon = false;
 			this.ShowInTaskbar = false;
 			this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-			this.Text = "MapFileError";
+			this.Text = "Mapfile Warning";
 			this.TopMost = true;
 			this.ResumeLayout(false);
 

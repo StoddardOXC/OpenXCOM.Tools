@@ -72,8 +72,8 @@ namespace XCom
 						}
 						text += Environment.NewLine + "total - " + parts.Count;
 
-						MapFileError.Instance.Show();
-						MapFileError.Instance.SetText(descriptor.Label, text);
+						MapFileWarn.Instance.Show();
+						MapFileWarn.Instance.SetText(descriptor.Label, text);
 					}
 
 					var RMP = new RouteNodeCollection(descriptor.Label, descriptor.BasePath);

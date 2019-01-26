@@ -113,7 +113,7 @@
     <Compile Include="Resources\Images\Types\XCImage.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Resources\Map\MapFileError.cs" />
+    <Compile Include="Resources\Map\MapFileWarn.cs" />
     <Compile Include="Resources\Map\McdRecordFactory.cs" />
     <Compile Include="Resources\Map\RouteData\Link.cs" />
     <Compile Include="Resources\Map\RouteData\RouteNode.cs" />
@@ -213,8 +213,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>ConsoleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Map\MapFileError.resx">
-      <DependentUpon>MapFileError.cs</DependentUpon>
+    <EmbeddedResource Include="Resources\Map\MapFileWarn.resx">
+      <DependentUpon>MapFileWarn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="_Embedded\tftd-battle.pal" />
     <EmbeddedResource Include="_Embedded\tftd-geo.pal" />
