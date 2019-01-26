@@ -144,7 +144,7 @@ namespace MapView.Forms.MapObservers.TileViews
 				ViewerFormsManager.TopView     .Control   .SelectQuadrant(SelectedTilepart.Record.PartType);
 				ViewerFormsManager.TopRouteView.ControlTop.SelectQuadrant(SelectedTilepart.Record.PartType);
 
-				f.Text = BuildTitleString(SelectedTilepart.TerrainsetId, SelectedTilepart.TerrainId);
+				f.Text = BuildTitleString(SelectedTilepart.SetId, SelectedTilepart.TerId);
 				record = SelectedTilepart.Record;
 			}
 			else
@@ -167,7 +167,7 @@ namespace MapView.Forms.MapObservers.TileViews
 
 			if (part != null)
 			{
-				f.Text = BuildTitleString(part.TerrainsetId, part.TerrainId);
+				f.Text = BuildTitleString(part.SetId, part.TerId);
 				record = part.Record;
 			}
 			else
@@ -385,11 +385,11 @@ namespace MapView.Forms.MapObservers.TileViews
 
 					McdRecord record = null;
 
-					var tile = SelectedTilepart;
-					if (tile != null)
+					var part = SelectedTilepart;
+					if (part != null)
 					{
-						f.Text = BuildTitleString(tile.TerrainsetId, tile.TerrainId);
-						record = tile.Record;
+						f.Text = BuildTitleString(part.SetId, part.TerId);
+						record = part.Record;
 					}
 					else
 						f.Text = "TileView";

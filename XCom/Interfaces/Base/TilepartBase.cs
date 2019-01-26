@@ -34,14 +34,14 @@ namespace XCom.Interfaces.Base
 		/// <summary>
 		/// The ID of this tilepart that's unique to its terrain/MCD-record.
 		/// </summary>
-		public int TerrainId
+		public int TerId
 		{ get; private set; }
 
 		/// <summary>
 		/// The ID of this tilepart that's unique to the Map across all
 		/// allocated terrains.
 		/// </summary>
-		public int TerrainsetId
+		public int SetId
 		{ get; set; }
 
 
@@ -51,8 +51,8 @@ namespace XCom.Interfaces.Base
 		/// <param name="id"></param>
 		internal TilepartBase(int id)
 		{
-			TerrainId = id;
-			TerrainsetId = -1;
+			TerId = id;
+			SetId = -1;
 		}
 	}
 }

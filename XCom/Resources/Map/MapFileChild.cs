@@ -53,7 +53,7 @@ namespace XCom
 			if (File.Exists(FullPath))
 			{
 				for (int i = 0; i != parts.Count; ++i)
-					parts[i].TerrainsetId = i;
+					parts[i].SetId = i;
 
 				ReadMapFile(parts);
 				SetupRouteNodes(routes);
@@ -111,7 +111,7 @@ namespace XCom
 
 		private bool _bypass;
 
-		private const int OffsetId = 2;
+		private const int IdOffset = 2; // #0 and #1 are reserved for the 2 BLANKS tiles.
 
 		/// <summary>
 		/// Creates a tile with its four parts.
@@ -136,7 +136,7 @@ namespace XCom
 				if (quad3 > high) high = quad3;
 				if (quad4 > high) high = quad4;
 
-				if (high - OffsetId >= parts.Count)
+				if (high - IdOffset >= parts.Count)
 				{
 					_bypass    =
 					MapChanged = true;
@@ -154,18 +154,18 @@ namespace XCom
 				}
 			}
 
-			if (quad1 < 0 || quad1 - OffsetId >= parts.Count) quad1 = 0; // TODO: if any quads are < 0 MapChanged should be flagged.
-			if (quad2 < 0 || quad2 - OffsetId >= parts.Count) quad2 = 0;
-			if (quad3 < 0 || quad3 - OffsetId >= parts.Count) quad3 = 0;
-			if (quad4 < 0 || quad4 - OffsetId >= parts.Count) quad4 = 0;
+			if (quad1 < 0 || quad1 - IdOffset >= parts.Count) quad1 = 0; // TODO: if any quads are < 0 MapChanged should be flagged.
+			if (quad2 < 0 || quad2 - IdOffset >= parts.Count) quad2 = 0;
+			if (quad3 < 0 || quad3 - IdOffset >= parts.Count) quad3 = 0;
+			if (quad4 < 0 || quad4 - IdOffset >= parts.Count) quad4 = 0;
 
-			var floor     = (quad1 > 1) ? (Tilepart)parts[quad1 - OffsetId]
+			var floor     = (quad1 > 1) ? (Tilepart)parts[quad1 - IdOffset]
 										: null;
-			var westwall  = (quad2 > 1) ? (Tilepart)parts[quad2 - OffsetId]
+			var westwall  = (quad2 > 1) ? (Tilepart)parts[quad2 - IdOffset]
 										: null;
-			var northwall = (quad3 > 1) ? (Tilepart)parts[quad3 - OffsetId]
+			var northwall = (quad3 > 1) ? (Tilepart)parts[quad3 - IdOffset]
 										: null;
-			var content   = (quad4 > 1) ? (Tilepart)parts[quad4 - OffsetId]
+			var content   = (quad4 > 1) ? (Tilepart)parts[quad4 - IdOffset]
 										: null;
 
 			return new XCMapTile(
@@ -236,10 +236,9 @@ namespace XCom
 		public string GetTerrainLabel(TilepartBase part)
 		{
 			int id = -1;
-
 			foreach (var part1 in Parts)
 			{
-				if (part1.TerrainId == 0)
+				if (part1.TerId == 0)
 					++id;
 
 				if (part1 == part)
@@ -331,31 +330,33 @@ namespace XCom
 				fs.WriteByte((byte)MapSize.Cols); // - says this header is "height, width and depth (in that order)"
 				fs.WriteByte((byte)MapSize.Levs);
 
+				int id;
+
 				for (int lev = 0; lev != MapSize.Levs; ++lev)
 				for (int row = 0; row != MapSize.Rows; ++row)
 				for (int col = 0; col != MapSize.Cols; ++col)
 				{
 					var tile = this[row, col, lev] as XCMapTile;
 
-					if (tile.Ground == null)
+					if (tile.Ground == null || (id = tile.Ground.SetId + IdOffset) > byte.MaxValue)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.Ground.TerrainsetId + 2)); // why "+2" -> reserved for the 2 Blank tiles.
+						fs.WriteByte((byte)id);
 
-					if (tile.West == null)
+					if (tile.West == null || (id = tile.West.SetId + IdOffset) > byte.MaxValue)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.West.TerrainsetId + 2));
+						fs.WriteByte((byte)id);
 
-					if (tile.North == null)
+					if (tile.North == null || (id = tile.North.SetId + IdOffset) > byte.MaxValue)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.North.TerrainsetId + 2));
+						fs.WriteByte((byte)id);
 
-					if (tile.Content == null)
+					if (tile.Content == null || (id = tile.Content.SetId + IdOffset) > byte.MaxValue)
 						fs.WriteByte(0);
 					else
-						fs.WriteByte((byte)(tile.Content.TerrainsetId + 2));
+						fs.WriteByte((byte)id);
 				}
 			}
 		}
@@ -420,7 +421,7 @@ namespace XCom
 
 				if (levs != MapSize.Levs && ceiling) // adjust route-nodes ->
 				{
-					int delta = levs - MapSize.Levs;	// NOTE: map levels are reversed
+					int delta = levs - MapSize.Levs;	// NOTE: map levels are inverted
 					foreach (RouteNode node in Routes)	// so adding levels to the ceiling needs to push the existing nodes down.
 						node.Lev += delta;
 				}
