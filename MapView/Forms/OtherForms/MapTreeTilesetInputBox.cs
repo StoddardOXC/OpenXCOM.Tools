@@ -49,6 +49,16 @@ namespace MapView
 		#endregion Fields (static)
 
 
+		#region Properties (static)
+		private static Dictionary<int, Tuple<string,string>> _copiedTerrains = new Dictionary<int, Tuple<string,string>>();
+		private static Dictionary<int, Tuple<string,string>> CopiedTerrains
+		{
+			get { return _copiedTerrains; }
+			set { _copiedTerrains = value; }
+		}
+		#endregion Properties (static)
+
+
 		#region Properties
 		private BoxType InputBoxType
 		{ get; set; }
@@ -127,13 +137,6 @@ namespace MapView
 		private TileGroup TileGroup
 		{ get; set; }
 
-		private Dictionary<int, Tuple<string,string>> _copiedTerrains = new Dictionary<int, Tuple<string,string>>();
-		private Dictionary<int, Tuple<string,string>> CopiedTerrains
-		{
-			get { return _copiedTerrains; }
-			set { _copiedTerrains = value; }
-		}
-
 		private string LastTerrainDir
 		{ get; set; }
 
@@ -194,7 +197,7 @@ namespace MapView
 			Invalid = invalid.ToArray();
 			// TODO: should disallow filenames like 'CON' and 'PRN' etc. also
 
-			SetPasteButtonText();
+			SetPasteTip();
 
 			lbTerrainsAllocated.DisplayMember = "Terrain";
 			lbTerrainsAvailable.DisplayMember = "Terrain";
@@ -254,7 +257,8 @@ namespace MapView
 
 					btnCreateMap   .Enabled =
 					btnTerrainCopy .Enabled =
-					btnTerrainPaste.Enabled = false;
+					btnTerrainPaste.Enabled =
+					btnTerrainClear.Enabled = false;
 
 					rb_TilesetBasepath.Enabled = false;
 
@@ -492,8 +496,9 @@ namespace MapView
 			else
 				lblMcdRecords.ForeColor = Color.Tan;
 
-			btnTerrainCopy .Enabled =
-			btnTerrainPaste.Enabled = (Descriptor != null);
+			btnTerrainClear.Enabled =
+			btnTerrainCopy .Enabled = (Descriptor != null && Descriptor.Terrains.Count != 0);
+			btnTerrainPaste.Enabled = (Descriptor != null && CopiedTerrains.Count != 0);
 
 
 			// Get the text of 'tbBasepath' (to reflect the currently selected radio-button)
@@ -826,9 +831,8 @@ namespace MapView
 				CopiedTerrains[i] = CloneTerrain(Descriptor.Terrains[i]);
 			}
 
-			SetPasteButtonText();
-//			btnTerrainPaste.Enabled = true;
-
+			SetPasteTip();
+			btnTerrainPaste.Enabled = true;
 			lbTerrainsAvailable.Select();
 		}
 
@@ -844,16 +848,21 @@ namespace MapView
 			}
 
 			ListTerrains();
-
 			lbTerrainsAvailable.Select();
 		}
 
-		private void SetPasteButtonText()
+		private void OnTerrainClearClick(object sender, EventArgs e)
 		{
-			btnTerrainPaste.Text = (CopiedTerrains.Count != 0) ? "Paste"
-															   : "Clear";
-			string tipPaste = String.Empty;
+			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
 
+			Descriptor.Terrains.Clear();
+			ListTerrains();
+			lbTerrainsAvailable.Select();
+		}
+
+		private void SetPasteTip()
+		{
+			string tipPaste = String.Empty;
 			for (int i = 0; i != CopiedTerrains.Count; ++i)
 			{
 				if (!String.IsNullOrEmpty(tipPaste))

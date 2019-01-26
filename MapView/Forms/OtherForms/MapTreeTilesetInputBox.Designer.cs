@@ -350,8 +350,9 @@
 			this.btnTerrainClear.Name = "btnTerrainClear";
 			this.btnTerrainClear.Size = new System.Drawing.Size(45, 25);
 			this.btnTerrainClear.TabIndex = 6;
-			this.btnTerrainClear.Text = "fixme";
+			this.btnTerrainClear.Text = "Clear";
 			this.btnTerrainClear.UseVisualStyleBackColor = true;
+			this.btnTerrainClear.Click += new System.EventHandler(this.OnTerrainClearClick);
 			// 
 			// btnTerrainPaste
 			// 
@@ -360,7 +361,7 @@
 			this.btnTerrainPaste.Name = "btnTerrainPaste";
 			this.btnTerrainPaste.Size = new System.Drawing.Size(45, 25);
 			this.btnTerrainPaste.TabIndex = 5;
-			this.btnTerrainPaste.Text = "Clear";
+			this.btnTerrainPaste.Text = "Paste";
 			this.btnTerrainPaste.UseVisualStyleBackColor = true;
 			this.btnTerrainPaste.Click += new System.EventHandler(this.OnTerrainPasteClick);
 			// 
