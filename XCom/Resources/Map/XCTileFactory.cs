@@ -131,7 +131,7 @@ namespace XCom.Resources.Map
 										"In the MCD file {0}, the tile entry {1} has an invalid dead tile (id {2} of {3} records).",
 										file,
 										id,
-										record.Alt_MCD,
+										record.DieTile,
 										parts.Length);
 				MessageBox.Show(
 							warn,
