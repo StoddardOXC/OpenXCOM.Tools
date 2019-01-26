@@ -137,11 +137,11 @@ namespace MapView
 		{
 			if (part != null)
 			{
-				recordsTable[part.Record.MapId] = true;
+				recordsTable[part.Record.SetId] = true;
 
-				var sprites = part.Images;
+				var sprites = part.Anisprites;
 				foreach (PckImage sprite in sprites)
-					spritesTable[sprite.MapId] = true;
+					spritesTable[sprite.SetId] = true;
 			}
 		}
 

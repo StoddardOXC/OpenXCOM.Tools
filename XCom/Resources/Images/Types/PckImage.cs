@@ -35,7 +35,7 @@ namespace XCom
 		/// Tracks the id of an image across all loaded terrainsets. Used only
 		/// by 'MapInfoOutputBox'.
 		/// </summary>
-		private static int _idCanonical;
+		private static int _id;
 		#endregion
 
 
@@ -48,7 +48,7 @@ namespace XCom
 		/// <summary>
 		/// MapId is used only by 'MapInfoOutputBox'.
 		/// </summary>
-		public int MapId
+		public int SetId
 		{ get; private set; }
 		#endregion
 
@@ -77,7 +77,7 @@ namespace XCom
 			//LogFile.WriteLine("PckImage..cTor");
 
 			_spriteset = spriteset; // for ToString() only.
-			MapId = _idCanonical++; // for 'MapInfoOutputBox' only.
+			SetId = _id++; // for 'MapInfoOutputBox' only.
 
 			Pal = pal;
 

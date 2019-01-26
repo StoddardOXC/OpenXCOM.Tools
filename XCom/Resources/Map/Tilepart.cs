@@ -35,14 +35,11 @@ namespace XCom
 			:
 				base(id)
 		{
-//			if (spriteset != null && record != null)
-//			{
 			_spriteset = spriteset;
 			Record     = record;
 
-			Images = new XCImage[8]; // every tile-part contains refs to 8 sprites.
+			Anisprites = new XCImage[8]; // every tile-part contains refs to 8 sprites.
 			InitializeSprites();
-//			}
 		}
 		#endregion
 
@@ -74,18 +71,18 @@ namespace XCom
 			if (Record.UfoDoor || Record.HumanDoor)
 			{
 				for (int i = 0; i != 8; ++i)
-					Images[i] = _spriteset[Record.Image1];
+					Anisprites[i] = _spriteset[Record.Image1];
 			}
 			else
 			{
-				Images[0] = _spriteset[Record.Image1];
-				Images[1] = _spriteset[Record.Image2];
-				Images[2] = _spriteset[Record.Image3];
-				Images[3] = _spriteset[Record.Image4];
-				Images[4] = _spriteset[Record.Image5];
-				Images[5] = _spriteset[Record.Image6];
-				Images[6] = _spriteset[Record.Image7];
-				Images[7] = _spriteset[Record.Image8];
+				Anisprites[0] = _spriteset[Record.Image1];
+				Anisprites[1] = _spriteset[Record.Image2];
+				Anisprites[2] = _spriteset[Record.Image3];
+				Anisprites[3] = _spriteset[Record.Image4];
+				Anisprites[4] = _spriteset[Record.Image5];
+				Anisprites[5] = _spriteset[Record.Image6];
+				Anisprites[6] = _spriteset[Record.Image7];
+				Anisprites[7] = _spriteset[Record.Image8];
 			}
 		}
 
@@ -102,26 +99,26 @@ namespace XCom
 				{
 					if (Record.UfoDoor || Alternate == null)
 					{
-						Images[0] = _spriteset[Record.Image1];
-						Images[1] = _spriteset[Record.Image2];
-						Images[2] = _spriteset[Record.Image3];
-						Images[3] = _spriteset[Record.Image4];
-						Images[4] = _spriteset[Record.Image5];
-						Images[5] = _spriteset[Record.Image6];
-						Images[6] = _spriteset[Record.Image7];
-						Images[7] = _spriteset[Record.Image8];
+						Anisprites[0] = _spriteset[Record.Image1];
+						Anisprites[1] = _spriteset[Record.Image2];
+						Anisprites[2] = _spriteset[Record.Image3];
+						Anisprites[3] = _spriteset[Record.Image4];
+						Anisprites[4] = _spriteset[Record.Image5];
+						Anisprites[5] = _spriteset[Record.Image6];
+						Anisprites[6] = _spriteset[Record.Image7];
+						Anisprites[7] = _spriteset[Record.Image8];
 					}
 					else
 					{
 						byte alt = Alternate.Record.Image1;
 						for (int i = 4; i != 8; ++i)
-							Images[i] = _spriteset[alt];
+							Anisprites[i] = _spriteset[alt];
 					}
 				}
 				else
 				{
 					for (int i = 0; i != 8; ++i)
-						Images[i] = _spriteset[Record.Image1];
+						Anisprites[i] = _spriteset[Record.Image1];
 				}
 			}
 		}
@@ -132,7 +129,7 @@ namespace XCom
 			{
 				byte alt = Alternate.Record.Image1;
 				for (int i = 0; i != 8; ++i)
-					Images[i] = _spriteset[alt];
+					Anisprites[i] = _spriteset[alt];
 			}
 		}
 		#endregion

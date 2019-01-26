@@ -16,19 +16,19 @@ namespace XCom.Interfaces.Base
 		{ get; protected set; }
 
 		/// <summary>
-		/// Gets the image-array used to animate this tile.
+		/// Gets the sprite-array used to animate this tile.
 		/// </summary>
-		public XCImage[] Images
+		public XCImage[] Anisprites
 		{ get; set; }
 
 		/// <summary>
-		/// Gets an image at the specified animation frame.
+		/// Gets a sprite at the specified animation frame.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
 		public XCImage this[int id]
 		{
-			get { return Images[id]; }
+			get { return Anisprites[id]; }
 		}
 
 		/// <summary>

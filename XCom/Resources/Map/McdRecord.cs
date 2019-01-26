@@ -67,7 +67,7 @@ namespace XCom
 
 	public sealed class McdRecord
 	{
-		private static int _idCanonical;
+		private static int _id;
 
 
 		#region cTor
@@ -76,16 +76,16 @@ namespace XCom
 		/// </summary>
 		internal McdRecord()
 		{
-			MapId = _idCanonical++;
+			SetId = _id++;
 		}
 		#endregion
 
 
 		#region Properties
 		/// <summary>
-		/// MapId is used only by 'MapInfoOutputBox'.
+		/// SetId is used only by 'MapInfoOutputBox'.
 		/// </summary>
-		public int MapId
+		public int SetId
 		{ get; private set; }
 
 		public byte Image1 { get; set; }
