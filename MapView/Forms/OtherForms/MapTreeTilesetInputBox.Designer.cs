@@ -130,7 +130,7 @@
 			this.pnlBottom.Location = new System.Drawing.Point(0, 489);
 			this.pnlBottom.Name = "pnlBottom";
 			this.pnlBottom.Size = new System.Drawing.Size(612, 30);
-			this.pnlBottom.TabIndex = 1;
+			this.pnlBottom.TabIndex = 0;
 			// 
 			// lblAddType
 			// 
@@ -173,7 +173,7 @@
 			this.lbTerrainsAllocated.Location = new System.Drawing.Point(3, 110);
 			this.lbTerrainsAllocated.Name = "lbTerrainsAllocated";
 			this.lbTerrainsAllocated.Size = new System.Drawing.Size(267, 266);
-			this.lbTerrainsAllocated.TabIndex = 1;
+			this.lbTerrainsAllocated.TabIndex = 0;
 			this.lbTerrainsAllocated.SelectedIndexChanged += new System.EventHandler(this.OnAllocatedIndexChanged);
 			// 
 			// lbTerrainsAvailable
@@ -184,7 +184,7 @@
 			this.lbTerrainsAvailable.Location = new System.Drawing.Point(345, 110);
 			this.lbTerrainsAvailable.Name = "lbTerrainsAvailable";
 			this.lbTerrainsAvailable.Size = new System.Drawing.Size(264, 266);
-			this.lbTerrainsAvailable.TabIndex = 2;
+			this.lbTerrainsAvailable.TabIndex = 1;
 			this.lbTerrainsAvailable.SelectedIndexChanged += new System.EventHandler(this.OnAvailableIndexChanged);
 			// 
 			// pnlTerrainsHeader
@@ -212,7 +212,7 @@
 			this.lbl_ListAvailable.Location = new System.Drawing.Point(5, 15);
 			this.lbl_ListAvailable.Name = "lbl_ListAvailable";
 			this.lbl_ListAvailable.Size = new System.Drawing.Size(105, 20);
-			this.lbl_ListAvailable.TabIndex = 15;
+			this.lbl_ListAvailable.TabIndex = 1;
 			this.lbl_ListAvailable.Text = "Available terrains";
 			this.lbl_ListAvailable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -221,7 +221,7 @@
 			this.rb_CustomPath.Location = new System.Drawing.Point(435, 15);
 			this.rb_CustomPath.Name = "rb_CustomPath";
 			this.rb_CustomPath.Size = new System.Drawing.Size(110, 20);
-			this.rb_CustomPath.TabIndex = 14;
+			this.rb_CustomPath.TabIndex = 4;
 			this.rb_CustomPath.TabStop = true;
 			this.rb_CustomPath.Text = "in Custom path";
 			this.rb_CustomPath.UseVisualStyleBackColor = true;
@@ -232,7 +232,7 @@
 			this.rb_TilesetBasepath.Location = new System.Drawing.Point(295, 15);
 			this.rb_TilesetBasepath.Name = "rb_TilesetBasepath";
 			this.rb_TilesetBasepath.Size = new System.Drawing.Size(140, 20);
-			this.rb_TilesetBasepath.TabIndex = 13;
+			this.rb_TilesetBasepath.TabIndex = 3;
 			this.rb_TilesetBasepath.TabStop = true;
 			this.rb_TilesetBasepath.Text = "in Tileset basepath |";
 			this.rb_TilesetBasepath.UseVisualStyleBackColor = true;
@@ -243,7 +243,7 @@
 			this.rb_ConfigBasepath.Location = new System.Drawing.Point(120, 15);
 			this.rb_ConfigBasepath.Name = "rb_ConfigBasepath";
 			this.rb_ConfigBasepath.Size = new System.Drawing.Size(175, 20);
-			this.rb_ConfigBasepath.TabIndex = 12;
+			this.rb_ConfigBasepath.TabIndex = 2;
 			this.rb_ConfigBasepath.TabStop = true;
 			this.rb_ConfigBasepath.Text = "in Configurator basepath |";
 			this.rb_ConfigBasepath.UseVisualStyleBackColor = true;
@@ -256,7 +256,7 @@
 			this.lbl_AllocatedInfo.Location = new System.Drawing.Point(155, 65);
 			this.lbl_AllocatedInfo.Name = "lbl_AllocatedInfo";
 			this.lbl_AllocatedInfo.Size = new System.Drawing.Size(445, 15);
-			this.lbl_AllocatedInfo.TabIndex = 10;
+			this.lbl_AllocatedInfo.TabIndex = 9;
 			this.lbl_AllocatedInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lbl_PathAvailable
@@ -264,7 +264,7 @@
 			this.lbl_PathAvailable.Location = new System.Drawing.Point(5, 40);
 			this.lbl_PathAvailable.Name = "lbl_PathAvailable";
 			this.lbl_PathAvailable.Size = new System.Drawing.Size(140, 20);
-			this.lbl_PathAvailable.TabIndex = 9;
+			this.lbl_PathAvailable.TabIndex = 5;
 			this.lbl_PathAvailable.Text = "Path (available terrains)";
 			this.lbl_PathAvailable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
@@ -316,7 +316,7 @@
 			this.lblAllocated.Location = new System.Drawing.Point(205, 80);
 			this.lblAllocated.Name = "lblAllocated";
 			this.lblAllocated.Size = new System.Drawing.Size(55, 15);
-			this.lblAllocated.TabIndex = 1;
+			this.lblAllocated.TabIndex = 10;
 			this.lblAllocated.Text = "allocated";
 			this.lblAllocated.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
@@ -325,7 +325,7 @@
 			this.lblAvailable.Location = new System.Drawing.Point(345, 80);
 			this.lblAvailable.Name = "lblAvailable";
 			this.lblAvailable.Size = new System.Drawing.Size(55, 15);
-			this.lblAvailable.TabIndex = 2;
+			this.lblAvailable.TabIndex = 11;
 			this.lblAvailable.Text = "available";
 			// 
 			// pnlSpacer
@@ -527,7 +527,7 @@
 			this.lblMcdRecords.Location = new System.Drawing.Point(435, 30);
 			this.lblMcdRecords.Name = "lblMcdRecords";
 			this.lblMcdRecords.Size = new System.Drawing.Size(170, 15);
-			this.lblMcdRecords.TabIndex = 6;
+			this.lblMcdRecords.TabIndex = 5;
 			this.lblMcdRecords.Text = "lblMcdRecords";
 			this.lblMcdRecords.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
@@ -539,7 +539,7 @@
 			this.lblTilesetCurrent.Location = new System.Drawing.Point(435, 15);
 			this.lblTilesetCurrent.Name = "lblTilesetCurrent";
 			this.lblTilesetCurrent.Size = new System.Drawing.Size(170, 15);
-			this.lblTilesetCurrent.TabIndex = 5;
+			this.lblTilesetCurrent.TabIndex = 4;
 			this.lblTilesetCurrent.Text = "lblTilesetCurrent";
 			this.lblTilesetCurrent.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 

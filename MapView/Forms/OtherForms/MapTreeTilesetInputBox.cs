@@ -941,7 +941,7 @@ namespace MapView
 			ListTerrains();					// -> have to do that so that user can switch a terrain's path-type even if
 			_bypassListTerrains = false;	// their paths are identical (ie. when 'tbTerrainPath.Text' does not change).
 
-			lbTerrainsAvailable.Select();
+//			lbTerrainsAvailable.Select();
 		}
 
 		private bool _bypassListTerrains;
