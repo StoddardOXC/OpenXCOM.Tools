@@ -31,7 +31,6 @@ namespace XCom
 		{
 			InitializeComponent();
 
-
 //			Select(); // MainView will take focus.
 		}
 		#endregion
@@ -59,7 +58,7 @@ namespace XCom
 		#region Methods
 		internal void SetText(string label, string text)
 		{
-			Text = "MapFileWarn - " + label;
+			Text = "Mapfile Warning - " + label;
 			rtb_text.Text = text;
 		}
 		#endregion
@@ -98,7 +97,7 @@ namespace XCom
 			// 
 			this.btn_ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btn_ok.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btn_ok.Location = new System.Drawing.Point(220, 190);
+			this.btn_ok.Location = new System.Drawing.Point(220, 230);
 			this.btn_ok.Name = "btn_ok";
 			this.btn_ok.Size = new System.Drawing.Size(75, 23);
 			this.btn_ok.TabIndex = 0;
@@ -111,9 +110,10 @@ namespace XCom
 			this.lbl_info.ForeColor = System.Drawing.Color.MediumVioletRed;
 			this.lbl_info.Location = new System.Drawing.Point(10, 10);
 			this.lbl_info.Name = "lbl_info";
-			this.lbl_info.Size = new System.Drawing.Size(270, 15);
+			this.lbl_info.Size = new System.Drawing.Size(390, 55);
 			this.lbl_info.TabIndex = 1;
-			this.lbl_info.Text = "MCD records allocated by terrains exceeds 256.";
+			this.lbl_info.Text = "MCD records allocated by terrains exceeds 256.\r\n\r\nAny tileparts with an ID greate" +
+	"r than 256 will be replaced by a null-part if the Mapfile is saved.";
 			// 
 			// rtb_text
 			// 
@@ -124,7 +124,7 @@ namespace XCom
 			this.rtb_text.BorderStyle = System.Windows.Forms.BorderStyle.None;
 			this.rtb_text.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.rtb_text.ForeColor = System.Drawing.SystemColors.ControlText;
-			this.rtb_text.Location = new System.Drawing.Point(20, 30);
+			this.rtb_text.Location = new System.Drawing.Point(20, 70);
 			this.rtb_text.Name = "rtb_text";
 			this.rtb_text.Size = new System.Drawing.Size(380, 155);
 			this.rtb_text.TabIndex = 2;
@@ -135,7 +135,7 @@ namespace XCom
 			this.AcceptButton = this.btn_ok;
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
 			this.CancelButton = this.btn_ok;
-			this.ClientSize = new System.Drawing.Size(402, 219);
+			this.ClientSize = new System.Drawing.Size(402, 259);
 			this.Controls.Add(this.rtb_text);
 			this.Controls.Add(this.lbl_info);
 			this.Controls.Add(this.btn_ok);
