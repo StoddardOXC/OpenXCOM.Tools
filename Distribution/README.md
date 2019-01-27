@@ -4,6 +4,17 @@ note for Mono users: MapView needs to run once and then be restarted for its win
 
 Built against .NET 4.5.1
 
+2019 January 27<br>
+[MapView2_190127.7z](https://drive.google.com/file/d/1tw-WsS04Qq-ClBe2AFHOGluLHiw52jyC/view?usp=sharing)
+
+- IMPORTANT: Major change to Tileset configuration code. This is a good time to backup all resources (/MAPS, /ROUTES, /TERRAIN) as well as settings/MapResources.yml and settings/MapTilesets.yml. Your current configuration ought still work w/out any changes. But code has been added that supports terrains that are in different folders for a Map. This required general changes across the codebase -- so backup or risk Schrödinger's wrath.
+- add warning on startup if UFO/TFTD resource-paths have been disabled in MapResources.yml but there are groups configured for UFO/TFTD in MapTilesets.yml since saving the MapTree would delete those groups
+- fix potential inability to exit the TilesetEditor when a tileset has been created but user then wants to cancel it
+- case insensitive search for available terrain files
+- assign null-tileparts if MCD-records exceed 256 (on Save Mapfile)
+- etc
+
+
 2019 January 19<br>
 [MapView2_190119.7z](https://drive.google.com/file/d/1RjjDJjg8V35ORAIQISwlxG_Dj1DuRIyx/view?usp=sharing)
 
