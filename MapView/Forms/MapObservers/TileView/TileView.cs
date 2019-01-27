@@ -450,22 +450,17 @@ namespace MapView.Forms.MapObservers.TileViews
 		/// <param name="e"></param>
 		internal void OnPckEditorClick(object sender, EventArgs e)
 		{
-			string terrain = GetTerrainLabel();
-			if (!String.IsNullOrEmpty(terrain))
+			if (SelectedTilepart != null)
 			{
-				// TODO: Find which spriteset the currently selected sprite is
-				// in and load that set (specifically).
+				var terrain = ((MapFileChild)MapBase).GetTerrain(SelectedTilepart);
 
-//				string dirTerrain = Path.Combine(MapBase.Descriptor.BasePath, Descriptor.PathTerrain);
-				string dirTerrain = (MapBase.Descriptor.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
-																				  : SharedSpace.ResourceDirectoryTftd;
-				dirTerrain = Path.Combine(SharedSpace.Instance.GetShare(dirTerrain), GlobalsXC.TerrainDir);
-				string pfePck = Path.Combine(
-										dirTerrain,
-										terrain + GlobalsXC.PckExt);
-				string pfeTab = Path.Combine(
-										dirTerrain,
-										terrain + GlobalsXC.TabExt);
+				string terr = terrain.Item1;
+				string path = terrain.Item2;
+
+				path = MapBase.Descriptor.GetTerrainDirectory(path);
+
+				string pfePck = Path.Combine(path, terr + GlobalsXC.PckExt);
+				string pfeTab = Path.Combine(path, terr + GlobalsXC.TabExt);
 
 				if (!File.Exists(pfePck))
 				{
@@ -569,15 +564,15 @@ namespace MapView.Forms.MapObservers.TileViews
 		/// Builds and returns a string that's appropriate for the currently
 		/// selected tile.
 		/// </summary>
-		/// <param name="mapId"></param>
-		/// <param name="terrainId"></param>
+		/// <param name="setId">the ID in total-terrains</param>
+		/// <param name="terId">the ID in a terrain</param>
 		/// <returns></returns>
-		private string BuildTitleString(int mapId, int terrainId)
+		private string BuildTitleString(int setId, int terId)
 		{
 			return String.Format(
 							System.Globalization.CultureInfo.CurrentCulture,
 							"TileView - MapID {0}  TerrainID {1}  Terrain {2}",
-							mapId, terrainId, GetTerrainLabel() ?? "ERROR");
+							setId, terId, GetTerrainLabel() ?? "ERROR");
 		}
 
 		/// <summary>

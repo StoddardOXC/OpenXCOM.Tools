@@ -77,7 +77,7 @@ namespace XCom
 
 
 		#region Methods
-		private string GetTerrainDirectory(string path)
+		public string GetTerrainDirectory(string path)
 		{
 			if (String.IsNullOrEmpty(path))								// use Configurator's basepath
 				return _dirTerrainConfig;

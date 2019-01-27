@@ -251,6 +251,24 @@ namespace XCom
 			return null;
 		}
 
+		public Tuple<string,string> GetTerrain(TilepartBase part)
+		{
+			int id = -1;
+			foreach (var part_ in Parts)
+			{
+				if (part_.TerId == 0)
+					++id;
+
+				if (part_ == part)
+					break;
+			}
+
+			if (id != -1 && id < Terrains.Count)
+				return Terrains[id];
+
+			return null;
+		}
+
 		/// <summary>
 		/// Adds a route-node to the map-tile at a given location.
 		/// </summary>

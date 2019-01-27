@@ -522,7 +522,7 @@ namespace MapView
 					if (rb_CustomPath.Checked) // get terrainlist from a custom basepath
 					{
 						// delete TERRAIN from the end of 'tbTerrainPath.Text'
-						if (dirTerrain[dirTerrain.Length - 1] == Path.DirectorySeparatorChar)// TODO: Should check for AltDirectorySeparatorChar also.
+						if (dirTerrain[dirTerrain.Length - 1] == Path.DirectorySeparatorChar) // TODO: Should check for AltDirectorySeparatorChar also.
 						{
 							dirTerrain = dirTerrain.Substring(0, dirTerrain.Length - 1);
 						}
