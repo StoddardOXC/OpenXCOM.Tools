@@ -27,8 +27,8 @@ using System.Runtime.InteropServices;
 //	Build Number
 //	Revision
 //
-[assembly: AssemblyVersion ("2.7.1.0")]
-[assembly: AssemblyFileVersion ("2.7.1.0")]
+[assembly: AssemblyVersion ("2.7.5.0")]
+[assembly: AssemblyFileVersion ("2.7.5.0")]
 // satisfy FxCop:
 //[assembly: System.CLSCompliant(true)]
 // satisfy FxCop:
