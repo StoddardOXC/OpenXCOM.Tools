@@ -50,7 +50,9 @@ namespace MapView
 
 
 		#region Properties (static)
-		private static Dictionary<int, Tuple<string,string>> _copiedTerrains = new Dictionary<int, Tuple<string,string>>();
+		private static Dictionary<int, Tuple<string,string>> _copiedTerrains
+				 = new Dictionary<int, Tuple<string,string>>();
+
 		private static Dictionary<int, Tuple<string,string>> CopiedTerrains
 		{
 			get { return _copiedTerrains; }
@@ -232,8 +234,8 @@ namespace MapView
 					for (int i = 0; i != descriptor.Terrains.Count; ++i)
 					{
 						TerrainsOriginal[i] = new Tuple<string,string>(
-														String.Copy(descriptor.Terrains[i].Item1),
-														String.Copy(descriptor.Terrains[i].Item2));
+																String.Copy(descriptor.Terrains[i].Item1),
+																String.Copy(descriptor.Terrains[i].Item2));
 						records += descriptor.GetRecordCount(i);
 					}
 					lblMcdRecords.Text = records + " MCD Records";
@@ -338,7 +340,7 @@ namespace MapView
 				fbd.SelectedPath = BasepathTileset;
 				fbd.Description = String.Format(
 											System.Globalization.CultureInfo.CurrentCulture,
-											"Browse to a BASEPATH folder. A valid basepath folder"
+											"Browse to a BasePath folder. A valid BasePath folder"
 												+ " has the subfolders MAPS and ROUTES.");
 
 				if (fbd.ShowDialog() == DialogResult.OK)
@@ -519,7 +521,18 @@ namespace MapView
 					string basepath;
 					if (rb_CustomPath.Checked) // get terrainlist from a custom basepath
 					{
-						basepath = dirTerrain;
+						// delete TERRAIN from the end of 'tbTerrainPath.Text'
+						if (dirTerrain[dirTerrain.Length - 1] == Path.DirectorySeparatorChar)// TODO: Should check for AltDirectorySeparatorChar also.
+						{
+							dirTerrain = dirTerrain.Substring(0, dirTerrain.Length - 1);
+						}
+
+						if (dirTerrain.EndsWith(GlobalsXC.TerrainDir, StringComparison.Ordinal))
+						{
+							dirTerrain = dirTerrain.Substring(0, dirTerrain.Length - GlobalsXC.TerrainDir.Length - 1);
+						}
+
+						basepath = dirTerrain; // user-specified basepath
 					}
 					else if (rb_TilesetBasepath.Checked && Descriptor != null) // get terrainlist from the Descriptor's basepath
 					{
@@ -546,6 +559,7 @@ namespace MapView
 			lbTerrainsAllocated.EndUpdate();
 			lbTerrainsAvailable.EndUpdate();
 		}
+
 
 		/// <summary>
 		/// Creates a tileset as a valid Descriptor. This is allowed iff a
@@ -894,7 +908,7 @@ namespace MapView
 					lbl_AllocatedInfo.Text = "in Tileset basepath";
 				}
 				else
-					lbl_AllocatedInfo.Text = basepath;
+					lbl_AllocatedInfo.Text = basepath + Path.DirectorySeparatorChar + GlobalsXC.TerrainDir;
 
 				btnMoveRight.Enabled = true;
 
@@ -922,12 +936,14 @@ namespace MapView
 		{
 			_bypassListTerrains = true;
 
+			int sel = lbTerrainsAllocated.SelectedIndex;
+
 			if (sender == rb_CustomPath)
 			{
 				if (String.IsNullOrEmpty(LastTerrainDir))
-					LastTerrainDir = Path.Combine(BasepathConfig, GlobalsXC.TerrainDir);
+					LastTerrainDir = BasepathConfig;
 
-				tbTerrainPath.Text = LastTerrainDir;
+				tbTerrainPath.Text = Path.Combine(LastTerrainDir, GlobalsXC.TerrainDir);
 				tbTerrainPath.ReadOnly = false;
 
 				btnFindBasepath.Visible = true;
@@ -950,6 +966,7 @@ namespace MapView
 			ListTerrains();					// -> have to do that so that user can switch a terrain's path-type even if
 			_bypassListTerrains = false;	// their paths are identical (ie. when 'tbTerrainPath.Text' does not change).
 
+			lbTerrainsAllocated.SelectedIndex = sel;
 //			lbTerrainsAvailable.Select();
 		}
 
@@ -973,18 +990,23 @@ namespace MapView
 				fbd.SelectedPath = LastTerrainDir;
 				fbd.Description = String.Format(
 											System.Globalization.CultureInfo.CurrentCulture,
-											"Browse to a TERRAIN folder.");
+											"Browse to a BasePath folder. A valid BasePath folder"
+												+ " has the subfolder TERRAIN.");
 
 				if (fbd.ShowDialog() == DialogResult.OK)
 				{
-					// TODO: Check that a subfolder is labeled "TERRAIN".
-					//LogFile.WriteLine("fbd.SelectedPath= " + fbd.SelectedPath);
+					string path = fbd.SelectedPath;
 
-					LastTerrainDir = fbd.SelectedPath;
-					tbTerrainPath.Text = fbd.SelectedPath;
+					LastTerrainDir = path;
+
+					string pathTerrain = Path.Combine(path, GlobalsXC.TerrainDir);
+					tbTerrainPath.Text = pathTerrain;
+					if (!Directory.Exists(pathTerrain)) // check that a subfolder is labeled "TERRAIN"
+					{
+						ShowWarningDialog("The subfolder TERRAIN does not exist.");
+					}
 				}
 			}
-
 			lbTerrainsAvailable.Select();
 		}
 		#endregion Eventcalls
@@ -1131,6 +1153,22 @@ namespace MapView
 						"Error",
 						MessageBoxButtons.OK,
 						MessageBoxIcon.Error,
+						MessageBoxDefaultButton.Button1,
+						0);
+		}
+
+		/// <summary>
+		/// Wrapper for MessageBox.Show().
+		/// </summary>
+		/// <param name="warn">the warn string to show</param>
+		private void ShowWarningDialog(string warn)
+		{
+			MessageBox.Show(
+						this,
+						warn,
+						"Warning",
+						MessageBoxButtons.OK,
+						MessageBoxIcon.Warning,
 						MessageBoxDefaultButton.Button1,
 						0);
 		}

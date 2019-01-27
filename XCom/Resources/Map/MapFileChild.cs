@@ -338,22 +338,22 @@ namespace XCom
 				{
 					var tile = this[row, col, lev] as XCMapTile;
 
-					if (tile.Ground == null || (id = tile.Ground.SetId + IdOffset) > byte.MaxValue)
+					if (tile.Ground == null || (id = tile.Ground.SetId + IdOffset) > (int)byte.MaxValue)
 						fs.WriteByte(0);
 					else
 						fs.WriteByte((byte)id);
 
-					if (tile.West == null || (id = tile.West.SetId + IdOffset) > byte.MaxValue)
+					if (tile.West == null || (id = tile.West.SetId + IdOffset) > (int)byte.MaxValue)
 						fs.WriteByte(0);
 					else
 						fs.WriteByte((byte)id);
 
-					if (tile.North == null || (id = tile.North.SetId + IdOffset) > byte.MaxValue)
+					if (tile.North == null || (id = tile.North.SetId + IdOffset) > (int)byte.MaxValue)
 						fs.WriteByte(0);
 					else
 						fs.WriteByte((byte)id);
 
-					if (tile.Content == null || (id = tile.Content.SetId + IdOffset) > byte.MaxValue)
+					if (tile.Content == null || (id = tile.Content.SetId + IdOffset) > (int)byte.MaxValue)
 						fs.WriteByte(0);
 					else
 						fs.WriteByte((byte)id);

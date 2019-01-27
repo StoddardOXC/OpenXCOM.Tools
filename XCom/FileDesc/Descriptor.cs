@@ -85,7 +85,7 @@ namespace XCom
 			if (path == GlobalsXC.BASEPATH)								// use this Tileset's basepath
 				return Path.Combine(BasePath, GlobalsXC.TerrainDir);
 
-			return path;												// use the path specified.
+			return Path.Combine(path, GlobalsXC.TerrainDir);			// use the path specified.
 		}
 
 		/// <summary>

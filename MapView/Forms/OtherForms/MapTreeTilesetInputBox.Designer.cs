@@ -211,41 +211,41 @@
 			// 
 			this.lbl_ListAvailable.Location = new System.Drawing.Point(5, 15);
 			this.lbl_ListAvailable.Name = "lbl_ListAvailable";
-			this.lbl_ListAvailable.Size = new System.Drawing.Size(105, 20);
+			this.lbl_ListAvailable.Size = new System.Drawing.Size(115, 20);
 			this.lbl_ListAvailable.TabIndex = 1;
-			this.lbl_ListAvailable.Text = "Available terrains";
+			this.lbl_ListAvailable.Text = "Available terrains in";
 			this.lbl_ListAvailable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// rb_CustomPath
 			// 
 			this.rb_CustomPath.Location = new System.Drawing.Point(435, 15);
 			this.rb_CustomPath.Name = "rb_CustomPath";
-			this.rb_CustomPath.Size = new System.Drawing.Size(110, 20);
+			this.rb_CustomPath.Size = new System.Drawing.Size(95, 20);
 			this.rb_CustomPath.TabIndex = 4;
 			this.rb_CustomPath.TabStop = true;
-			this.rb_CustomPath.Text = "in Custom path";
+			this.rb_CustomPath.Text = "Custom path";
 			this.rb_CustomPath.UseVisualStyleBackColor = true;
 			this.rb_CustomPath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
 			// 
 			// rb_TilesetBasepath
 			// 
-			this.rb_TilesetBasepath.Location = new System.Drawing.Point(295, 15);
+			this.rb_TilesetBasepath.Location = new System.Drawing.Point(310, 15);
 			this.rb_TilesetBasepath.Name = "rb_TilesetBasepath";
-			this.rb_TilesetBasepath.Size = new System.Drawing.Size(140, 20);
+			this.rb_TilesetBasepath.Size = new System.Drawing.Size(125, 20);
 			this.rb_TilesetBasepath.TabIndex = 3;
 			this.rb_TilesetBasepath.TabStop = true;
-			this.rb_TilesetBasepath.Text = "in Tileset basepath |";
+			this.rb_TilesetBasepath.Text = "Tileset basepath |";
 			this.rb_TilesetBasepath.UseVisualStyleBackColor = true;
 			this.rb_TilesetBasepath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
 			// 
 			// rb_ConfigBasepath
 			// 
-			this.rb_ConfigBasepath.Location = new System.Drawing.Point(120, 15);
+			this.rb_ConfigBasepath.Location = new System.Drawing.Point(155, 15);
 			this.rb_ConfigBasepath.Name = "rb_ConfigBasepath";
-			this.rb_ConfigBasepath.Size = new System.Drawing.Size(175, 20);
+			this.rb_ConfigBasepath.Size = new System.Drawing.Size(160, 20);
 			this.rb_ConfigBasepath.TabIndex = 2;
 			this.rb_ConfigBasepath.TabStop = true;
-			this.rb_ConfigBasepath.Text = "in Configurator basepath |";
+			this.rb_ConfigBasepath.Text = "Configurator basepath |";
 			this.rb_ConfigBasepath.UseVisualStyleBackColor = true;
 			this.rb_ConfigBasepath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
 			// 
