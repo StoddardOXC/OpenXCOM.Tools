@@ -159,6 +159,26 @@ namespace MapView
 			}
 		}
 
+		private Pen _penGrid10 = new Pen(Color.Black, 2);							// initial pen for x10 grid-lines Option
+		public Color Grid10LineColor												// <- public for Reflection.
+		{
+			get { return _penGrid10.Color; }
+			set
+			{
+				_penGrid10.Color = value;
+				Refresh();
+			}
+		}
+		public int Grid10LineWidth													// <- public for Reflection.
+		{
+			get { return (int)_penGrid10.Width; }
+			set
+			{
+				_penGrid10.Width = value;
+				Refresh();
+			}
+		}
+
 		private bool _showGrid = true;												// initial val for show-grid Option
 		public bool ShowGrid														// <- public for Reflection.
 		{
@@ -1111,21 +1131,32 @@ namespace MapView
 			_graphics.FillPath(_brushLayer, _layerFill); // the grid-sheet
 
 			// draw the grid-lines ->
+			Pen pen;
 			for (int i = 0; i <= _rows; ++i)
+			{
+				if (i % 10 == 0) pen = _penGrid10;
+				else             pen = _penGrid;
+
 				_graphics.DrawLine(
-								_penGrid,
+								pen,
 								x - HalfWidth  * i,
 								y + HalfHeight * i,
 								x + (_cols - i) * HalfWidth,
 								y + (_cols + i) * HalfHeight);
+			}
 
 			for (int i = 0; i <= _cols; ++i)
+			{
+				if (i % 10 == 0) pen = _penGrid10;
+				else             pen = _penGrid;
+
 				_graphics.DrawLine(
-								_penGrid,
+								pen,
 								x + HalfWidth  * i,
 								y + HalfHeight * i,
 								x - x1 + HalfWidth  * i,
 								y + y1 + HalfHeight * i);
+			}
 		}
 #else
 		/// <summary>
@@ -1158,21 +1189,32 @@ namespace MapView
 			graphics.FillPath(_brushLayer, _layerFill); // the grid-sheet
 
 			// draw the grid-lines ->
+			Pen pen;
 			for (int i = 0; i <= _rows; ++i)
+			{
+				if (i % 10 == 0) pen = _penGrid10;
+				else             pen = _penGrid;
+
 				graphics.DrawLine(
 								_penGrid,
 								x - HalfWidth  * i,
 								y + HalfHeight * i,
 								x + (_cols - i) * HalfWidth,
 								y + (_cols + i) * HalfHeight);
+			}
 
 			for (int i = 0; i <= _cols; ++i)
+			{
+				if (i % 10 == 0) pen = _penGrid10;
+				else             pen = _penGrid;
+
 				graphics.DrawLine(
 								_penGrid,
 								x + HalfWidth  * i,
 								y + HalfHeight * i,
 								x - x1 + HalfWidth  * i,
 								y + y1 + HalfHeight * i);
+			}
 		}
 #endif
 

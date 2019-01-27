@@ -503,6 +503,8 @@ namespace MapView
 		private const string GridLayerOpacity    = "GridLayerOpacity";
 		private const string GridLineColor       = "GridLineColor";
 		private const string GridLineWidth       = "GridLineWidth";
+		private const string Grid10LineColor     = "Grid10LineColor";
+		private const string Grid10LineWidth     = "Grid10LineWidth";
 
 		private const string SelectionLineColor  = "SelectionLineColor";
 		private const string SelectionLineWidth  = "SelectionLineWidth";
@@ -664,6 +666,18 @@ namespace MapView
 							MapView,
 							null, MainViewUnderlay.Instance.MainViewOverlay);
 			Options.AddOption(
+							Grid10LineColor,
+							MainViewUnderlay.Instance.MainViewOverlay.Grid10LineColor,
+							"Color of every tenth line on the grid",
+							MapView,
+							null, MainViewUnderlay.Instance.MainViewOverlay);
+			Options.AddOption(
+							Grid10LineWidth,
+							MainViewUnderlay.Instance.MainViewOverlay.Grid10LineWidth,
+							"Width of every tenth grid line in pixels",
+							MapView,
+							null, MainViewUnderlay.Instance.MainViewOverlay);
+			Options.AddOption(
 							SelectionLineColor,
 							MainViewUnderlay.Instance.MainViewOverlay.SelectionLineColor,
 							"Color of the border of selected tiles",
@@ -800,6 +814,14 @@ namespace MapView
 
 				case GridLineWidth:
 					MainViewUnderlay.Instance.MainViewOverlay.GridLineWidth = (int)value;
+					break;
+
+				case Grid10LineColor:
+					MainViewUnderlay.Instance.MainViewOverlay.Grid10LineColor = (Color)value;
+					break;
+
+				case Grid10LineWidth:
+					MainViewUnderlay.Instance.MainViewOverlay.Grid10LineWidth = (int)value;
 					break;
 
 				case SpriteShade:
