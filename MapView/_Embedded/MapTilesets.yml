@@ -3,7 +3,15 @@
 #
 # 'tilesets' - a list that contains all the blocks.
 # 'type'     - the label of MAP/RMP files for the block.
-# 'terrains' - the label(s) of PCK/TAB/MCD files for the block.
+# 'terrains' - the label(s) of PCK/TAB/MCD files for the block. A terrain may be
+#              defined in one of three formats:
+#              - LABEL
+#              - LABEL: basepath
+#              - LABEL: <basepath>
+#              The first gets the terrain from the Configurator's basepath. The
+#              second gets the terrain from the current Map's basepath. The
+#              third gets the terrain from the specified basepath (don't use
+#              quotes). A terrain must be in a subdirectory labeled TERRAIN.
 # 'category' - a header for the tileset, is arbitrary here.
 # 'group'    - a header for the categories, is arbitrary except that the first
 #              letters designate the game-type and must be either 'ufo' or
@@ -13,8 +21,9 @@
 #              when MapView was installed/configured). Note that Maps are
 #              expected to be in a subdir called MAPS, Routes in a subdir called
 #              ROUTES, but that terrains - PCK/TAB/MCD files - are referenced by
-#              the basepath that is set by the Configurator and have to be in a
-#              subdir labeled TERRAIN of that path.
+#              default in the basepath that is set by the Configurator and have
+#              to be in a subdir labeled TERRAIN of that path. But see
+#              'terrains' above.
 
 tilesets:
 
