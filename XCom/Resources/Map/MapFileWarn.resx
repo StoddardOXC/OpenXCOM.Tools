@@ -117,11 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="lbl_InfoHeader.Text" xml:space="preserve">
-    <value>MCD records allocated by terrains exceeds 254.
-
-Any tileparts with an ID greater than 254 will be replaced by a null-part if the Mapfile is saved. Tilepart IDs are stored in 1 byte = 256. But the first two entries are reserved for the two BLANKS records.</value>
-  </data>
   <data name="lbl_InfoBody.Text" xml:space="preserve">
     <value>Any tileparts with an ID greater than 254 that have been placed on the Map will be replaced by a null-part if the Mapfile is saved. Tilepart IDs are stored in 1 byte = 256. But the first two entries are reserved for the two BLANKS records.</value>
   </data>

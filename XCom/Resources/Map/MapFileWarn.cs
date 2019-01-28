@@ -102,12 +102,12 @@ namespace XCom
 			this.lbl_InfoBody = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
-			// btn_ok
+			// btn_Ok
 			// 
 			this.btn_Ok.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btn_Ok.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.btn_Ok.Location = new System.Drawing.Point(220, 250);
-			this.btn_Ok.Name = "btn_ok";
+			this.btn_Ok.Name = "btn_Ok";
 			this.btn_Ok.Size = new System.Drawing.Size(75, 23);
 			this.btn_Ok.TabIndex = 0;
 			this.btn_Ok.Text = "&ok";
@@ -122,9 +122,9 @@ namespace XCom
 			this.lbl_InfoHeader.Name = "lbl_InfoHeader";
 			this.lbl_InfoHeader.Size = new System.Drawing.Size(390, 15);
 			this.lbl_InfoHeader.TabIndex = 1;
-			this.lbl_InfoHeader.Text = resources.GetString("lbl_InfoHeader.Text");
+			this.lbl_InfoHeader.Text = "MCD records allocated by terrains exceeds 254.";
 			// 
-			// rtb_text
+			// rtb_Text
 			// 
 			this.rtb_Text.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
 			| System.Windows.Forms.AnchorStyles.Left) 
@@ -134,7 +134,7 @@ namespace XCom
 			this.rtb_Text.Font = new System.Drawing.Font("Courier New", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.rtb_Text.ForeColor = System.Drawing.SystemColors.ControlText;
 			this.rtb_Text.Location = new System.Drawing.Point(20, 90);
-			this.rtb_Text.Name = "rtb_text";
+			this.rtb_Text.Name = "rtb_Text";
 			this.rtb_Text.Size = new System.Drawing.Size(380, 155);
 			this.rtb_Text.TabIndex = 2;
 			this.rtb_Text.Text = "text";
