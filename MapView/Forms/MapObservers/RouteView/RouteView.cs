@@ -353,9 +353,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 				{
 					MapFile.RoutesChanged = true;
 
-					((XCMapTile)((MapFileBase)MapFile)[_nodeMoved.Row, // clear the node from the previous tile
-													   _nodeMoved.Col,
-													   _nodeMoved.Lev]).Node = null;
+					((XCMapTile)MapFile[_nodeMoved.Row, // clear the node from the previous tile
+										_nodeMoved.Col,
+										_nodeMoved.Lev]).Node = null;
 
 					_nodeMoved.Col = (byte)args.Location.Col; // reassign the node's x/y/z values
 					_nodeMoved.Row = (byte)args.Location.Row; // these get saved w/ Routes.
@@ -371,7 +371,10 @@ namespace MapView.Forms.MapObservers.RouteViews
 					ViewerFormsManager.RouteView   .Control     .UpdateLinkDistances();
 					ViewerFormsManager.TopRouteView.ControlRoute.UpdateLinkDistances();
 				}
-/*				else
+				else if (args.Location.Col != _nodeMoved.Col
+					||   args.Location.Row != _nodeMoved.Row
+					||   args.Location.Lev != _nodeMoved.Lev)
+				{
 					MessageBox.Show(
 								this,
 								"Cannot move node onto another node.",
@@ -379,8 +382,8 @@ namespace MapView.Forms.MapObservers.RouteViews
 								MessageBoxButtons.OK,
 								MessageBoxIcon.Error,
 								MessageBoxDefaultButton.Button1,
-								0); */
-
+								0);
+				}
 				_nodeMoved = null;
 			}
 		}
