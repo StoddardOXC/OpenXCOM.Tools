@@ -444,7 +444,7 @@ namespace MapView
 		/// </summary>
 		private void ListTerrains()
 		{
-			lbl_AllocatedInfo.Text = String.Empty;
+			lbl_AllocatedPath.Text = String.Empty;
 
 			btnMoveUp   .Enabled =
 			btnMoveDown .Enabled =
@@ -519,7 +519,7 @@ namespace MapView
 				if (terrains.Any())
 				{
 					string basepath;
-					if (rb_CustomPath.Checked) // get terrainlist from a custom basepath
+					if (rb_CustomBasepath.Checked) // get terrainlist from a custom basepath
 					{
 						// delete TERRAIN from the end of 'tbTerrainPath.Text'
 						if (dirTerrain[dirTerrain.Length - 1] == Path.DirectorySeparatorChar) // TODO: Should check for AltDirectorySeparatorChar also.
@@ -901,14 +901,14 @@ namespace MapView
 				string basepath = ((tle)lbTerrainsAllocated.Items[id]).Basepath;
 				if (String.IsNullOrEmpty(basepath))
 				{
-					lbl_AllocatedInfo.Text = "in Configurator basepath";
+					lbl_AllocatedPath.Text = "in Configurator basepath";
 				}
 				else if (basepath == GlobalsXC.BASEPATH)
 				{
-					lbl_AllocatedInfo.Text = "in Tileset basepath";
+					lbl_AllocatedPath.Text = "in Tileset basepath";
 				}
 				else
-					lbl_AllocatedInfo.Text = basepath + Path.DirectorySeparatorChar + GlobalsXC.TerrainDir;
+					lbl_AllocatedPath.Text = basepath + Path.DirectorySeparatorChar + GlobalsXC.TerrainDir;
 
 				btnMoveRight.Enabled = true;
 
@@ -938,7 +938,7 @@ namespace MapView
 
 			int sel = lbTerrainsAllocated.SelectedIndex;
 
-			if (sender == rb_CustomPath)
+			if (sender == rb_CustomBasepath)
 			{
 				if (String.IsNullOrEmpty(LastTerrainDir))
 					LastTerrainDir = BasepathConfig;

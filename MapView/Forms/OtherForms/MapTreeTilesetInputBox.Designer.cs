@@ -40,10 +40,10 @@
 			this.lbTerrainsAvailable = new System.Windows.Forms.ListBox();
 			this.pnlTerrainsHeader = new System.Windows.Forms.Panel();
 			this.lbl_ListAvailable = new System.Windows.Forms.Label();
-			this.rb_CustomPath = new System.Windows.Forms.RadioButton();
+			this.rb_CustomBasepath = new System.Windows.Forms.RadioButton();
 			this.rb_TilesetBasepath = new System.Windows.Forms.RadioButton();
 			this.rb_ConfigBasepath = new System.Windows.Forms.RadioButton();
-			this.lbl_AllocatedInfo = new System.Windows.Forms.Label();
+			this.lbl_AllocatedPath = new System.Windows.Forms.Label();
 			this.lbl_PathAvailable = new System.Windows.Forms.Label();
 			this.lbl_PathAllocated = new System.Windows.Forms.Label();
 			this.btnFindBasepath = new System.Windows.Forms.Button();
@@ -190,10 +190,10 @@
 			// pnlTerrainsHeader
 			// 
 			this.pnlTerrainsHeader.Controls.Add(this.lbl_ListAvailable);
-			this.pnlTerrainsHeader.Controls.Add(this.rb_CustomPath);
+			this.pnlTerrainsHeader.Controls.Add(this.rb_CustomBasepath);
 			this.pnlTerrainsHeader.Controls.Add(this.rb_TilesetBasepath);
 			this.pnlTerrainsHeader.Controls.Add(this.rb_ConfigBasepath);
-			this.pnlTerrainsHeader.Controls.Add(this.lbl_AllocatedInfo);
+			this.pnlTerrainsHeader.Controls.Add(this.lbl_AllocatedPath);
 			this.pnlTerrainsHeader.Controls.Add(this.lbl_PathAvailable);
 			this.pnlTerrainsHeader.Controls.Add(this.lbl_PathAllocated);
 			this.pnlTerrainsHeader.Controls.Add(this.btnFindBasepath);
@@ -216,16 +216,16 @@
 			this.lbl_ListAvailable.Text = "Available terrains in";
 			this.lbl_ListAvailable.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// rb_CustomPath
+			// rb_CustomBasepath
 			// 
-			this.rb_CustomPath.Location = new System.Drawing.Point(435, 15);
-			this.rb_CustomPath.Name = "rb_CustomPath";
-			this.rb_CustomPath.Size = new System.Drawing.Size(95, 20);
-			this.rb_CustomPath.TabIndex = 4;
-			this.rb_CustomPath.TabStop = true;
-			this.rb_CustomPath.Text = "Custom path";
-			this.rb_CustomPath.UseVisualStyleBackColor = true;
-			this.rb_CustomPath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
+			this.rb_CustomBasepath.Location = new System.Drawing.Point(435, 15);
+			this.rb_CustomBasepath.Name = "rb_CustomBasepath";
+			this.rb_CustomBasepath.Size = new System.Drawing.Size(125, 20);
+			this.rb_CustomBasepath.TabIndex = 4;
+			this.rb_CustomBasepath.TabStop = true;
+			this.rb_CustomBasepath.Text = "Custom basepath";
+			this.rb_CustomBasepath.UseVisualStyleBackColor = true;
+			this.rb_CustomBasepath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
 			// 
 			// rb_TilesetBasepath
 			// 
@@ -249,15 +249,15 @@
 			this.rb_ConfigBasepath.UseVisualStyleBackColor = true;
 			this.rb_ConfigBasepath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
 			// 
-			// lbl_AllocatedInfo
+			// lbl_AllocatedPath
 			// 
-			this.lbl_AllocatedInfo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.lbl_AllocatedPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 			| System.Windows.Forms.AnchorStyles.Right)));
-			this.lbl_AllocatedInfo.Location = new System.Drawing.Point(155, 65);
-			this.lbl_AllocatedInfo.Name = "lbl_AllocatedInfo";
-			this.lbl_AllocatedInfo.Size = new System.Drawing.Size(445, 15);
-			this.lbl_AllocatedInfo.TabIndex = 9;
-			this.lbl_AllocatedInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.lbl_AllocatedPath.Location = new System.Drawing.Point(155, 65);
+			this.lbl_AllocatedPath.Name = "lbl_AllocatedPath";
+			this.lbl_AllocatedPath.Size = new System.Drawing.Size(445, 15);
+			this.lbl_AllocatedPath.TabIndex = 9;
+			this.lbl_AllocatedPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lbl_PathAvailable
 			// 
@@ -644,12 +644,12 @@
 		private System.Windows.Forms.Button btnTerrainPaste;
 		private System.Windows.Forms.Label lblMcdRecords;
 		private System.Windows.Forms.TextBox tbTerrainPath;
-		private System.Windows.Forms.RadioButton rb_CustomPath;
+		private System.Windows.Forms.RadioButton rb_CustomBasepath;
 		private System.Windows.Forms.RadioButton rb_TilesetBasepath;
 		private System.Windows.Forms.RadioButton rb_ConfigBasepath;
 		private System.Windows.Forms.Button btnFindBasepath;
 		private System.Windows.Forms.Label lbl_PathAllocated;
-		private System.Windows.Forms.Label lbl_AllocatedInfo;
+		private System.Windows.Forms.Label lbl_AllocatedPath;
 		private System.Windows.Forms.Label lbl_PathAvailable;
 		private System.Windows.Forms.Button btnTerrainClear;
 		private System.Windows.Forms.Label lbl_ListAvailable;
