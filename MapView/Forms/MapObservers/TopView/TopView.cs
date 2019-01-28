@@ -275,6 +275,8 @@ namespace MapView.Forms.MapObservers.TopViews
 
 		internal const string GridColor         = "GridColor";
 		private  const string GridWidth         = "GridWidth";
+		internal const string Grid10Color       = "Grid10Color";
+		private  const string Grid10Width       = "Grid10Width";
 
 //		internal const string TileMinHeight     = "TileMinHeight";
 
@@ -311,6 +313,10 @@ namespace MapView.Forms.MapObservers.TopViews
 			_topPens.Add(GridColor, penGrid);
 			_topPens.Add(GridWidth, penGrid);
 
+			var pen10Grid = new Pen(new SolidBrush(Color.Black), 2);
+			_topPens.Add(Grid10Color, pen10Grid);
+			_topPens.Add(Grid10Width, pen10Grid);
+
 			OptionChangedEventHandler bc = OnBrushChanged;
 			OptionChangedEventHandler pc = OnPenColorChanged;
 			OptionChangedEventHandler pw = OnPenWidthChanged;
@@ -331,6 +337,8 @@ namespace MapView.Forms.MapObservers.TopViews
 
 			Options.AddOption(GridColor,         Color.Black,                     "Color of the grid lines",                     Grid,     pc);
 			Options.AddOption(GridWidth,         1,                               "Width of the grid lines in pixels",           Grid,     pw);
+			Options.AddOption(Grid10Color,       Color.Black,                     "Color of every tenth grid line",              Grid,     pc);
+			Options.AddOption(Grid10Width,       2,                               "Width of every tenth grid line in pixels",    Grid,     pw);
 //			Options.AddOption(TileMinHeight,     _topViewPanel.TileLozengeHeight, "Minimum height of the grid tiles in pixels",  Grid,     dh);
 
 			QuadrantsPanel.Pens   =

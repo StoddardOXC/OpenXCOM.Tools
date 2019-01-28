@@ -262,21 +262,32 @@ namespace MapView.Forms.MapObservers.TopViews
 				}
 
 				// draw grid-lines ->
+				Pen pen;
 				for (int i = 0; i <= MapBase.MapSize.Rows; ++i) // draw horizontal grid-lines (ie. upperleft to lowerright)
+				{
+					if (i % 10 == 0) pen = TopPens[TopView.Grid10Color];
+					else             pen = TopPens[TopView.GridColor];
+
 					graphics.DrawLine(
-									TopPens[TopView.GridColor],
+									pen,
 									_originX - i * halfWidth,
 									OffsetY  + i * halfHeight,
 									_originX + (MapBase.MapSize.Cols - i) * halfWidth,
 									OffsetY  + (MapBase.MapSize.Cols + i) * halfHeight);
+				}
 
 				for (int i = 0; i <= MapBase.MapSize.Cols; ++i) // draw vertical grid-lines (ie. lowerleft to upperright)
+				{
+					if (i % 10 == 0) pen = TopPens[TopView.Grid10Color];
+					else             pen = TopPens[TopView.GridColor];
+
 					graphics.DrawLine(
-									TopPens[TopView.GridColor],
+									pen,
 									_originX + i * halfWidth,
 									OffsetY  + i * halfHeight,
 									_originX + i * halfWidth  - MapBase.MapSize.Rows * halfWidth,
 									OffsetY  + i * halfHeight + MapBase.MapSize.Rows * halfHeight);
+				}
 
 
 				// draw the selector lozenge ->
