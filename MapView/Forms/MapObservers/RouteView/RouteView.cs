@@ -371,7 +371,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 					ViewerFormsManager.RouteView   .Control     .UpdateLinkDistances();
 					ViewerFormsManager.TopRouteView.ControlRoute.UpdateLinkDistances();
 				}
-				else
+/*				else
 					MessageBox.Show(
 								this,
 								"Cannot move node onto another node.",
@@ -379,7 +379,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 								MessageBoxButtons.OK,
 								MessageBoxIcon.Error,
 								MessageBoxDefaultButton.Button1,
-								0);
+								0); */
 
 				_nodeMoved = null;
 			}
