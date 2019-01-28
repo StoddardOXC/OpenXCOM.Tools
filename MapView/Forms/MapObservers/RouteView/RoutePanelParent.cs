@@ -305,7 +305,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 													loc.X,
 													MapFile.Level);
 
-					RoutePanelMouseUpEvent(this, args);
+					RoutePanelMouseUpEvent(this, args); // fire RouteView.OnRoutePanelMouseUp()
 				}
 			}
 		}

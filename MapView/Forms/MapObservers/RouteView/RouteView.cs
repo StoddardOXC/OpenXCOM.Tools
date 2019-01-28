@@ -1565,6 +1565,41 @@ namespace MapView.Forms.MapObservers.RouteViews
 			pnlRoutes.Select();	// take focus off the stupid combobox. Tks. NOTE: It tends to
 		}						// stay "highlighted" but at least it's no longer "selected".
 
+
+		private void OnEditOpening(object sender, EventArgs e)
+		{
+			tsmi_LowerNode.Enabled = (NodeSelected != null && NodeSelected.Lev != MapFile.MapSize.Levs - 1);
+			tsmi_RaiseNode.Enabled = (NodeSelected != null && NodeSelected.Lev != 0);
+		}
+
+		private void OnRaiseNode(object sender, EventArgs e)
+		{
+			_nodeMoved = NodeSelected;
+
+			var args = new RoutePanelEventArgs();
+			args.MouseButton = MouseButtons.None;
+			args.Tile        = MapFile        [_nodeMoved.Row, _nodeMoved.Col, _nodeMoved.Lev - 1];
+			args.Location    = new MapLocation(_nodeMoved.Row, _nodeMoved.Col, _nodeMoved.Lev - 1);
+
+			OnRoutePanelMouseUp(null, args);
+
+			SelectNode(NodeSelected.Index);
+		}
+
+		private void OnLowerNode(object sender, EventArgs e)
+		{
+			_nodeMoved = NodeSelected;
+
+			var args = new RoutePanelEventArgs();
+			args.MouseButton = MouseButtons.None;
+			args.Tile        = MapFile        [_nodeMoved.Row, _nodeMoved.Col, _nodeMoved.Lev + 1];
+			args.Location    = new MapLocation(_nodeMoved.Row, _nodeMoved.Col, _nodeMoved.Lev + 1);
+
+			OnRoutePanelMouseUp(null, args);
+
+			SelectNode(NodeSelected.Index);
+		}
+
 		/// <summary>
 		/// Handler for menuitem that sets all NodeRanks to Civ/Scout.
 		/// </summary>

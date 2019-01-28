@@ -71,6 +71,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tsmiAllNodesRank0 = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiClearLinkData = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiUpdateAllLinkDistances = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.tsmi_RaiseNode = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmi_LowerNode = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsddbDebug = new System.Windows.Forms.ToolStripDropDownButton();
 			this.tsmiCheckNodeRanks = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiCheckOobNodes = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +93,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.labelAttack = new System.Windows.Forms.Label();
 			this.gbTileData = new System.Windows.Forms.GroupBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsMain.SuspendLayout();
 			this.gbLinkData.SuspendLayout();
 			this.pnlDataFields.SuspendLayout();
@@ -524,15 +528,20 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tsddbEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.tsddbEdit.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.tsmiOptions,
+			this.toolStripSeparator2,
 			this.tsmiAllNodesRank0,
 			this.tsmiClearLinkData,
-			this.tsmiUpdateAllLinkDistances});
+			this.tsmiUpdateAllLinkDistances,
+			this.toolStripSeparator1,
+			this.tsmi_RaiseNode,
+			this.tsmi_LowerNode});
 			this.tsddbEdit.Font = new System.Drawing.Font("Verdana", 7F);
 			this.tsddbEdit.Image = ((System.Drawing.Image)(resources.GetObject("tsddbEdit.Image")));
 			this.tsddbEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.tsddbEdit.Name = "tsddbEdit";
 			this.tsddbEdit.Size = new System.Drawing.Size(38, 22);
 			this.tsddbEdit.Text = "Edit";
+			this.tsddbEdit.DropDownOpening += new System.EventHandler(this.OnEditOpening);
 			// 
 			// tsmiOptions
 			// 
@@ -562,6 +571,25 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tsmiUpdateAllLinkDistances.Size = new System.Drawing.Size(210, 22);
 			this.tsmiUpdateAllLinkDistances.Text = "Update all Link distances";
 			this.tsmiUpdateAllLinkDistances.Click += new System.EventHandler(this.OnUpdateAllLinkDistances);
+			// 
+			// toolStripSeparator1
+			// 
+			this.toolStripSeparator1.Name = "toolStripSeparator1";
+			this.toolStripSeparator1.Size = new System.Drawing.Size(207, 6);
+			// 
+			// tsmi_RaiseNode
+			// 
+			this.tsmi_RaiseNode.Name = "tsmi_RaiseNode";
+			this.tsmi_RaiseNode.Size = new System.Drawing.Size(210, 22);
+			this.tsmi_RaiseNode.Text = "node up 1 level";
+			this.tsmi_RaiseNode.Click += new System.EventHandler(this.OnRaiseNode);
+			// 
+			// tsmi_LowerNode
+			// 
+			this.tsmi_LowerNode.Name = "tsmi_LowerNode";
+			this.tsmi_LowerNode.Size = new System.Drawing.Size(210, 22);
+			this.tsmi_LowerNode.Text = "node down 1 level";
+			this.tsmi_LowerNode.Click += new System.EventHandler(this.OnLowerNode);
 			// 
 			// tsddbDebug
 			// 
@@ -817,6 +845,11 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.UseAnimation = false;
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
+			// 
 			// RouteView
 			// 
 			this.Controls.Add(this.pnlRoutes);
@@ -901,5 +934,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 		private System.Windows.Forms.ToolStripMenuItem tsmiCheckOobNodes;
 		private System.Windows.Forms.ToolStripDropDownButton tsddbDebug;
 		private System.Windows.Forms.ToolStripMenuItem tsmiUpdateAllLinkDistances;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+		private System.Windows.Forms.ToolStripMenuItem tsmi_LowerNode;
+		private System.Windows.Forms.ToolStripMenuItem tsmi_RaiseNode;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 	}
 }
