@@ -66,16 +66,16 @@ namespace XCom
 //sequences will be deserialized as List<object>
 //scalars   will be deserialized as string
 
-			bool warned = false;
+//			bool warned = false;
 
-			bool isUfoConfigured  = !String.IsNullOrEmpty(SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryUfo));
-			bool isTftdConfigured = !String.IsNullOrEmpty(SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryTftd));
+//			bool isUfoConfigured  = !String.IsNullOrEmpty(SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryUfo));
+//			bool isTftdConfigured = !String.IsNullOrEmpty(SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryTftd));
 
 			string nodeGroup, nodeCategory, nodeLabel, terr, path, nodeBasepath;
 
 			YamlSequenceNode nodeTerrains;
-			YamlScalarNode  nodetry1;
-			YamlMappingNode nodetry2;
+			YamlScalarNode   nodetry1;
+			YamlMappingNode  nodetry2;
 
 			Tuple<string,string> terrain;
 			Dictionary<int, Tuple<string,string>> terrains;
@@ -105,87 +105,89 @@ namespace XCom
 					nodeGroup = nodeTileset.Children[new YamlScalarNode(GlobalsXC.GROUP)].ToString();
 					//LogFile.WriteLine(". . group= " + nodeGroup); // eg. "ufoShips"
 
-					if (   (isUfoConfigured  && nodeGroup.StartsWith("ufo",  StringComparison.OrdinalIgnoreCase))
-						|| (isTftdConfigured && nodeGroup.StartsWith("tftd", StringComparison.OrdinalIgnoreCase)))
+//					if (   (isUfoConfigured  && nodeGroup.StartsWith("ufo",  StringComparison.OrdinalIgnoreCase))
+//						|| (isTftdConfigured && nodeGroup.StartsWith("tftd", StringComparison.OrdinalIgnoreCase)))
+//					{
+					if (!Groups.Contains(nodeGroup))
+						Groups.Add(nodeGroup);
+
+
+					// get the Category of the tileset ->
+					nodeCategory = nodeTileset.Children[new YamlScalarNode(GlobalsXC.CATEGORY)].ToString();
+					//LogFile.WriteLine(". . category= " + nodeCategory); // eg. "Ufo"
+
+
+					// get the Label of the tileset ->
+					nodeLabel = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TYPE)].ToString();
+					nodeLabel = nodeLabel.ToUpperInvariant();
+					//LogFile.WriteLine("\n. . type= " + nodeLabel); // eg. "UFO_110"
+
+
+					// get the Terrains of the tileset ->
+					terrains = new Dictionary<int, Tuple<string,string>>();
+
+					nodeTerrains = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TERRAINS)] as YamlSequenceNode;
+					for (int i = 0; i != nodeTerrains.Children.Count; ++i)
 					{
-						if (!Groups.Contains(nodeGroup))
-							Groups.Add(nodeGroup);
+						terr = null;
+						path = null; // NOTE: 'path' will *not* be appended w/ "TERRAIN" here.
 
+						nodetry1 = nodeTerrains[i] as YamlScalarNode;
+						//LogFile.WriteLine(". . . nodetry1= " + nodetry1); // eg. "U_EXT02"
 
-						// get the Category of the tileset ->
-						nodeCategory = nodeTileset.Children[new YamlScalarNode(GlobalsXC.CATEGORY)].ToString();
-						//LogFile.WriteLine(". . category= " + nodeCategory); // eg. "Ufo"
-
-
-						// get the Label of the tileset ->
-						nodeLabel = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TYPE)].ToString();
-						nodeLabel = nodeLabel.ToUpperInvariant();
-						//LogFile.WriteLine("\n. . type= " + nodeLabel); // eg. "UFO_110"
-
-
-						// get the Terrains of the tileset ->
-						terrains = new Dictionary<int, Tuple<string,string>>();
-
-						nodeTerrains = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TERRAINS)] as YamlSequenceNode;
-						for (int i = 0; i != nodeTerrains.Children.Count; ++i)
+						if (nodetry1 != null) // ie. ':' not found. Use Configurator basepath ...
 						{
-							terr = null;
-							path = null; // NOTE: 'path' will *not* be appended w/ "TERRAIN" here.
+							terr = nodetry1.ToString();
+							path = String.Empty;
+						}
+						else // has ':' + path
+						{
+							nodetry2 = nodeTerrains[i] as YamlMappingNode;
+							//LogFile.WriteLine(". . . nodetry2= " + nodetry2); // eg. "{ { U_EXT02, basepath } }"
 
-							nodetry1 = nodeTerrains[i] as YamlScalarNode;
-							//LogFile.WriteLine(". . . nodetry1= " + nodetry1); // eg. "U_EXT02"
-
-							if (nodetry1 != null) // ie. ':' not found. Use Configurator basepath ...
+							foreach (var keyval in nodetry2.Children) // note: there's only one keyval in a terrain-node.
 							{
-								terr = nodetry1.ToString();
-								path = String.Empty;
+								terr = keyval.Key.ToString();
+								path = keyval.Value.ToString();
 							}
-							else // has ':' + path
-							{
-								nodetry2 = nodeTerrains[i] as YamlMappingNode;
-								//LogFile.WriteLine(". . . nodetry2= " + nodetry2); // eg. "{ { U_EXT02, basepath } }"
-
-								foreach (var keyval in nodetry2.Children) // note: there's only one keyval in a terrain-node.
-								{
-									terr = keyval.Key.ToString();
-									path = keyval.Value.ToString();
-								}
-							}
-
-							//LogFile.WriteLine(". terr= " + terr);
-							//LogFile.WriteLine(". path= " + path);
-
-							terrain = new Tuple<string,string>(terr, path);
-							terrains[i] = terrain;
 						}
 
+						//LogFile.WriteLine(". terr= " + terr);
+						//LogFile.WriteLine(". path= " + path);
 
-						// get the BasePath of the tileset ->
-						nodeBasepath = String.Empty;
-						var basepath = new YamlScalarNode(GlobalsXC.BASEPATH);
-						if (nodeTileset.Children.ContainsKey(basepath))
-						{
-							nodeBasepath = nodeTileset.Children[basepath].ToString();
-							//LogFile.WriteLine(". . basepath= " + nodeBasepath);
-						}
-						//else LogFile.WriteLine(". . basepath not found.");
-
-
-						var tileset = new Tileset(
-												nodeLabel,
-												nodeGroup,
-												nodeCategory,
-												terrains,
-												nodeBasepath);
-						Tilesets.Add(tileset);
-
-						progress.UpdateProgress();
+						terrain = new Tuple<string,string>(terr, path);
+						terrains[i] = terrain;
 					}
-					else if (!warned)
+
+
+					// get the BasePath of the tileset ->
+					nodeBasepath = String.Empty;
+					var basepath = new YamlScalarNode(GlobalsXC.BASEPATH);
+					if (nodeTileset.Children.ContainsKey(basepath))
+					{
+						nodeBasepath = nodeTileset.Children[basepath].ToString();
+						//LogFile.WriteLine(". . basepath= " + nodeBasepath);
+					}
+					//else LogFile.WriteLine(". . basepath not found.");
+
+
+					var tileset = new Tileset(
+											nodeLabel,
+											nodeGroup,
+											nodeCategory,
+											terrains,
+											nodeBasepath);
+					Tilesets.Add(tileset);
+
+					progress.UpdateProgress();
+//					}
+/*					else if (!warned)
 					{
 						warned = true;
 						MessageBox.Show(
-									"This warning can be ignored safely on your firstrun of MapView2."
+									"This warning can be ignored safely on your firstrun of MapView2"
+										+ " or if you are purposely regenerating the tileset configuration"
+										+ " file MapTilesets.yml."
 										+ Environment.NewLine + Environment.NewLine
 										+ "A group was found for which the Resource paths (UFO or TFTD) have not been"
 										+ " configured. SAVING THE MAPTREE WILL REMOVE SUCH GROUPS FROM MapTilesets.yml"
@@ -193,15 +195,15 @@ namespace XCom
 										+ " /settings subfolder."
 										+ Environment.NewLine + Environment.NewLine
 										+ "The default MapTilesets.yml (tileset configs) defines both UFO and"
-										+ " TFTD tilesets and can be regenerated with the Configurator later."
-										+ " But if you have defined any custom tilesets it's strongly advised"
-										+ " to backup that file.",
+										+ " TFTD tilesets and can be regenerated with the Configurator."
+										+ " But if you have any custom tilesets defined it's strongly advised"
+										+ " to close MapView and backup that file.",
 									"Warning",
 									MessageBoxButtons.OK,
 									MessageBoxIcon.Warning,
 									MessageBoxDefaultButton.Button1,
 									0);
-					}
+					} */
 				}
 			}
 			progress.Hide();

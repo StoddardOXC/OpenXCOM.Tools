@@ -371,6 +371,16 @@ namespace MapView.Forms.MapObservers.RouteViews
 					ViewerFormsManager.RouteView   .Control     .UpdateLinkDistances();
 					ViewerFormsManager.TopRouteView.ControlRoute.UpdateLinkDistances();
 				}
+				else
+					MessageBox.Show(
+								this,
+								"Cannot move node onto another node.",
+								"Err..",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error,
+								MessageBoxDefaultButton.Button1,
+								0);
+
 				_nodeMoved = null;
 			}
 		}

@@ -20,7 +20,7 @@ namespace XCom
 	public sealed class Descriptor // *snap*
 	{
 		#region Fields
-		private readonly string _dirTerrainConfig; // the Configurator's terrain-path for UFO or TFTD - depends on Palette.
+		private readonly string _dirTerr; // the Configurator's terrain-path for UFO or TFTD - depends on Palette.
 		#endregion
 
 
@@ -69,9 +69,11 @@ namespace XCom
 			BasePath = basepath;
 			Pal      = palette;
 
-			_dirTerrainConfig = (Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
-														   : SharedSpace.ResourceDirectoryTftd;
-			_dirTerrainConfig = Path.Combine(SharedSpace.Instance.GetShare(_dirTerrainConfig), GlobalsXC.TerrainDir);
+			_dirTerr = (Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
+												  : SharedSpace.ResourceDirectoryTftd;
+			_dirTerr = SharedSpace.Instance.GetShare(_dirTerr);
+			_dirTerr = (_dirTerr != null) ? _dirTerr = Path.Combine(_dirTerr, GlobalsXC.TerrainDir)
+										  : _dirTerr = String.Empty; // -> the Share can return null if resource-type is notconfigured.
 		}
 		#endregion
 
@@ -80,7 +82,7 @@ namespace XCom
 		public string GetTerrainDirectory(string path)
 		{
 			if (String.IsNullOrEmpty(path))								// use Configurator's basepath
-				return _dirTerrainConfig;
+				return _dirTerr;
 
 			if (path == GlobalsXC.BASEPATH)								// use this Tileset's basepath
 				return Path.Combine(BasePath, GlobalsXC.TerrainDir);

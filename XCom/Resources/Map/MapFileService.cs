@@ -30,10 +30,13 @@ namespace XCom
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("MapFileService.LoadTileset descriptor= " + descriptor);
 
-			string dirMap = Path.Combine(descriptor.BasePath, GlobalsXC.MapsDir);
-			string pfeMap = Path.Combine(
-									dirMap,
+			string pfeMap = descriptor.BasePath;
+			if (!String.IsNullOrEmpty(pfeMap)) // -> the BasePath can be null if resource-type is notconfigured.
+			{
+				pfeMap = Path.Combine(
+									Path.Combine(descriptor.BasePath, GlobalsXC.MapsDir),
 									descriptor.Label + GlobalsXC.MapExt);
+			}
 			//LogFile.WriteLine(". pfeMap= " + pfeMap);
 
 			if (File.Exists(pfeMap))

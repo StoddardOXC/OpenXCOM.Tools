@@ -83,6 +83,14 @@ namespace MapView
 				rbTilesetsTpl.Select();
 			}
 
+			string ufo = SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryUfo);
+			if (!String.IsNullOrEmpty(ufo))
+				Ufo = ufo;
+
+			string tftd = SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryTftd);
+			if (!String.IsNullOrEmpty(tftd))
+				Tftd = tftd;
+
 
 			// NOTE: Add your own personal XCOM resources-dir here if desired:
 /*			var dirsUfo = new List<string>();
