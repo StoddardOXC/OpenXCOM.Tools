@@ -1848,6 +1848,8 @@ namespace MapView.Forms.MapObservers.RouteViews
 
 		internal const string GridLineColor       = "GridLineColor";
 		private  const string GridLineWidth       = "GridLineWidth";
+		internal const string Grid10LineColor     = "Grid10LineColor";
+		private  const string Grid10LineWidth     = "Grid10LineWidth";
 
 		internal const string UnselectedNodeColor = "UnselectedNodeColor";
 		internal const string SelectedNodeColor   = "SelectedNodeColor";
@@ -1875,7 +1877,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			var sp = new OptionChangedEventHandler(OnShowPriorityChanged);
 			var so = new OptionChangedEventHandler(OnShowOverlayChanged);
 
-			var pen = new Pen(new SolidBrush(Color.OrangeRed), 2);
+			var pen = new Pen(Color.OrangeRed, 2);
 			pens[UnselectedLinkColor] = pen;
 			pens[UnselectedLinkWidth] = pen;
 			Options.AddOption(
@@ -1891,7 +1893,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 							Links,
 							pw);
 
-			pen = new Pen(new SolidBrush(Color.RoyalBlue), 2);
+			pen = new Pen(Color.RoyalBlue, 2);
 			pens[SelectedLinkColor] = pen;
 			pens[SelectedLinkWidth] = pen;
 			Options.AddOption(
@@ -1907,7 +1909,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 							Links,
 							pw);
 
-			pen = new Pen(new SolidBrush(Color.BurlyWood), 3);
+			pen = new Pen(Color.BurlyWood, 3);
 			pens[WallColor] = pen;
 			pens[WallWidth] = pen;
 			Options.AddOption(
@@ -1932,7 +1934,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 							View,
 							bc);
 
-			pen = new Pen(new SolidBrush(Color.Black), 1);
+			pen = new Pen(Color.Black, 1);
 			pens[GridLineColor] = pen;
 			pens[GridLineWidth] = pen;
 			Options.AddOption(
@@ -1945,6 +1947,22 @@ namespace MapView.Forms.MapObservers.RouteViews
 							GridLineWidth,
 							1,
 							"Width of grid lines",
+							View,
+							pw);
+
+			pen = new Pen(Color.Black, 2);
+			pens[Grid10LineColor] = pen;
+			pens[Grid10LineWidth] = pen;
+			Options.AddOption(
+							Grid10LineColor,
+							pen.Color,
+							"Color of every tenth grid line",
+							View,
+							pc);
+			Options.AddOption(
+							Grid10LineWidth,
+							2,
+							"Width of every tenth grid line",
 							View,
 							pw);
 

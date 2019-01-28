@@ -513,25 +513,32 @@ namespace MapView.Forms.MapObservers.RouteViews
 		/// </summary>
 		private void DrawGridLines()
 		{
-			var map = MapFile;
+			Pen pen;
+			for (int i = 0; i <= MapFile.MapSize.Rows; ++i)
+			{
+				if (i % 10 == 0) pen = RoutePens[RouteView.Grid10LineColor];
+				else             pen = RoutePens[RouteView.GridLineColor];
 
-			var penGrid = RoutePens[RouteView.GridLineColor];
-
-			for (int i = 0; i <= map.MapSize.Rows; ++i)
 				_graphics.DrawLine(
-								penGrid,
+								pen,
 								Origin.X - i * DrawAreaWidth,
 								Origin.Y + i * DrawAreaHeight,
-								Origin.X + ((map.MapSize.Cols - i) * DrawAreaWidth),
-								Origin.Y + ((map.MapSize.Cols + i) * DrawAreaHeight));
+								Origin.X + ((MapFile.MapSize.Cols - i) * DrawAreaWidth),
+								Origin.Y + ((MapFile.MapSize.Cols + i) * DrawAreaHeight));
+			}
 
-			for (int i = 0; i <= map.MapSize.Cols; ++i)
+			for (int i = 0; i <= MapFile.MapSize.Cols; ++i)
+			{
+				if (i % 10 == 0) pen = RoutePens[RouteView.Grid10LineColor];
+				else             pen = RoutePens[RouteView.GridLineColor];
+
 				_graphics.DrawLine(
-								penGrid,
+								pen,
 								Origin.X + i * DrawAreaWidth,
 								Origin.Y + i * DrawAreaHeight,
-							   (Origin.X + i * DrawAreaWidth)  - map.MapSize.Rows * DrawAreaWidth,
-							   (Origin.Y + i * DrawAreaHeight) + map.MapSize.Rows * DrawAreaHeight);
+							   (Origin.X + i * DrawAreaWidth)  - MapFile.MapSize.Rows * DrawAreaWidth,
+							   (Origin.Y + i * DrawAreaHeight) + MapFile.MapSize.Rows * DrawAreaHeight);
+			}
 		}
 
 		/// <summary>

@@ -293,27 +293,27 @@ namespace MapView.Forms.MapObservers.TopViews
 			_topBrushes.Add(ContentColor, new SolidBrush(Color.MediumSeaGreen));
 			_topBrushes.Add(SelectedTypeColor, QuadrantsPanel.SelectColor);
 
-			var penWest = new Pen(new SolidBrush(Color.Khaki), 4);
+			var penWest = new Pen(Color.Khaki, 4);
 			_topPens.Add(WestColor, penWest);
 			_topPens.Add(WestWidth, penWest);
 
-			var penNorth = new Pen(new SolidBrush(Color.Wheat), 4);
+			var penNorth = new Pen(Color.Wheat, 4);
 			_topPens.Add(NorthColor, penNorth);
 			_topPens.Add(NorthWidth, penNorth);
 
-			var penOver = new Pen(new SolidBrush(Color.Black), 2);
+			var penOver = new Pen(Color.Black, 2);
 			_topPens.Add(SelectorColor, penOver);
 			_topPens.Add(SelectorWidth, penOver);
 
-			var penSelected = new Pen(new SolidBrush(Color.RoyalBlue), 2);
+			var penSelected = new Pen(Color.RoyalBlue, 2);
 			_topPens.Add(SelectedColor, penSelected);
 			_topPens.Add(SelectedWidth, penSelected);
 
-			var penGrid = new Pen(new SolidBrush(Color.Black), 1);
+			var penGrid = new Pen(Color.Black, 1);
 			_topPens.Add(GridColor, penGrid);
 			_topPens.Add(GridWidth, penGrid);
 
-			var pen10Grid = new Pen(new SolidBrush(Color.Black), 2);
+			var pen10Grid = new Pen(Color.Black, 2);
 			_topPens.Add(Grid10Color, pen10Grid);
 			_topPens.Add(Grid10Width, pen10Grid);
 
