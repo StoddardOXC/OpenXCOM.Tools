@@ -13,6 +13,11 @@ namespace XCom
 	/// </summary>
 	public static class MapFileService
 	{
+		#region Fields
+		public const int MAX_MCDRECORDS = 254;
+		#endregion
+
+
 		#region Methods
 		/// <summary>
 		/// Loads a tileset. Called by XCMainWindow.LoadSelectedMap()
@@ -46,7 +51,7 @@ namespace XCom
 
 				if (parts.Count != 0)
 				{
-					if (parts.Count > 256) // issue warning ->
+					if (parts.Count > MAX_MCDRECORDS) // issue warning ->
 					{
 						string text = String.Empty;
 
