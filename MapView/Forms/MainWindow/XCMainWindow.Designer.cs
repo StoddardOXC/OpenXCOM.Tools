@@ -66,6 +66,7 @@ namespace MapView
 			this.tsslMapLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslDimensions = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tsslPosition = new System.Windows.Forms.ToolStripStatusLabel();
+			this.tsslSelectionSize = new System.Windows.Forms.ToolStripStatusLabel();
 			this.tscPanel = new System.Windows.Forms.ToolStripContainer();
 			this.tsTools = new System.Windows.Forms.ToolStrip();
 			this.tsbSelectionBox = new System.Windows.Forms.ToolStripButton();
@@ -324,7 +325,8 @@ namespace MapView
 			this.tsslScale,
 			this.tsslMapLabel,
 			this.tsslDimensions,
-			this.tsslPosition});
+			this.tsslPosition,
+			this.tsslSelectionSize});
 			this.ssMain.Location = new System.Drawing.Point(248, 432);
 			this.ssMain.Name = "ssMain";
 			this.ssMain.Size = new System.Drawing.Size(384, 22);
@@ -348,7 +350,7 @@ namespace MapView
 			| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.tsslMapLabel.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tsslMapLabel.Name = "tsslMapLabel";
-			this.tsslMapLabel.Size = new System.Drawing.Size(119, 17);
+			this.tsslMapLabel.Size = new System.Drawing.Size(64, 17);
 			this.tsslMapLabel.Spring = true;
 			// 
 			// tsslDimensions
@@ -368,6 +370,15 @@ namespace MapView
 			| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
 			this.tsslPosition.Name = "tsslPosition";
 			this.tsslPosition.Size = new System.Drawing.Size(100, 17);
+			// 
+			// tsslSelectionSize
+			// 
+			this.tsslSelectionSize.AutoSize = false;
+			this.tsslSelectionSize.BorderSides = ((System.Windows.Forms.ToolStripStatusLabelBorderSides)((((System.Windows.Forms.ToolStripStatusLabelBorderSides.Left | System.Windows.Forms.ToolStripStatusLabelBorderSides.Top) 
+			| System.Windows.Forms.ToolStripStatusLabelBorderSides.Right) 
+			| System.Windows.Forms.ToolStripStatusLabelBorderSides.Bottom)));
+			this.tsslSelectionSize.Name = "tsslSelectionSize";
+			this.tsslSelectionSize.Size = new System.Drawing.Size(62, 17);
 			// 
 			// tscPanel
 			// 
@@ -410,7 +421,7 @@ namespace MapView
 			this.tsTools.Name = "tsTools";
 			this.tsTools.Padding = new System.Windows.Forms.Padding(0);
 			this.tsTools.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-			this.tsTools.Size = new System.Drawing.Size(122, 25);
+			this.tsTools.Size = new System.Drawing.Size(107, 25);
 			this.tsTools.TabIndex = 3;
 			// 
 			// tsbSelectionBox
@@ -521,6 +532,7 @@ namespace MapView
 		private System.Windows.Forms.ToolStripStatusLabel tsslMapLabel;
 		private System.Windows.Forms.ToolStripStatusLabel tsslDimensions;
 		private System.Windows.Forms.ToolStripStatusLabel tsslPosition;
+		private System.Windows.Forms.ToolStripStatusLabel tsslSelectionSize;
 		#endregion
 	}
 }

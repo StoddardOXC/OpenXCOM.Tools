@@ -570,6 +570,7 @@ namespace MapView
 		/// <summary>
 		/// Sets drag-start and drag-end and fires a MouseDragEvent (path
 		/// selected lozenge).
+		/// @note Fires OnMouseDown and OnMouseMove in Main,Top,Route viewers.
 		/// </summary>
 		/// <param name="start"></param>
 		/// <param name="end"></param>
@@ -584,6 +585,14 @@ namespace MapView
 					MouseDragEvent();
 
 				RefreshViewers();
+
+				// update SelectionSize on statusbar
+				var a = GetAbsoluteDragStart();
+				var b = GetAbsoluteDragEnd();
+
+				XCMainWindow.Instance.StatusBarPrintSelectionSize(
+																b.X - a.X + 1,
+																b.Y - a.Y + 1);
 			}
 		}
 

@@ -1312,7 +1312,8 @@ namespace MapView
 						_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
 						tsslDimensions.Text = f.MapBase.MapSize.ToString();
-						tsslPosition.Text = String.Empty;
+						tsslPosition     .Text =
+						tsslSelectionSize.Text = String.Empty;
 
 						ViewerFormsManager.SetObservers(f.MapBase);
 
@@ -2399,7 +2400,8 @@ namespace MapView
 					tsslMapLabel.Text = descriptor.Label;
 					tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
 														  : "size: n/a";
-					tsslPosition.Text = String.Empty;
+					tsslPosition     .Text =
+					tsslSelectionSize.Text = String.Empty;
 
 					ViewerFormsManager.RouteView   .Control     .ClearSelectedInfo();
 					ViewerFormsManager.TopRouteView.ControlRoute.ClearSelectedInfo();
@@ -2564,6 +2566,14 @@ namespace MapView
 										System.Globalization.CultureInfo.CurrentCulture,
 										"scale {0:0.00}",
 										Globals.Scale);
+		}
+
+		internal void StatusBarPrintSelectionSize(int tx, int ty)
+		{
+			tsslSelectionSize.Text = String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"{0} x {1}",
+										tx, ty);
 		}
 		#endregion
 	}
