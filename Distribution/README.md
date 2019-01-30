@@ -4,6 +4,18 @@ note for Mono users: MapView needs to run once and then be restarted for its win
 
 Built against .NET 4.5.1
 
+2019 January 30<br>
+[MapView2_190130.7z](https://drive.google.com/file/d/1-g_sk4aPzMsEBZT2203hFUpHY57xTQ_i/view?usp=sharing)
+
+- see Important note @2019 January 27
+- MainView, TopView, RouteView Options to highlight every 10th gridline
+- add to RouteView Edit: node up 1 level/node down 1 level
+- a Mapfile save will not write an assigned tilepart if its value exceeds ID #253
+- load tileset-configs from MapTilesets.yml even if the game-type (UFO/TFTD) does not have its resources configured
+- maintain tileset-configs in MapTilesets.yml even if the game-type (UFO/TFTD) is not configured
+- flag RoutesChanged if routes changed when resizing a Map
+- ConfigConverter: ver.2, see its ReadMe.txt
+
 2019 January 27<br>
 [MapView2_190127.7z](https://drive.google.com/file/d/1tw-WsS04Qq-ClBe2AFHOGluLHiw52jyC/view?usp=sharing)
 
