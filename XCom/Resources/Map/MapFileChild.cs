@@ -438,11 +438,15 @@ namespace XCom
 			{
 				MapChanged = true;
 
-				if (levs != MapSize.Levs // adjust route-nodes ->
+				if (Routes.Any() // adjust route-nodes ->
+					&& levs != MapSize.Levs
 					&& zType == MapResizeService.MapResizeZtype.MRZT_TOP)
 				{
+					RoutesChanged = true;
+
 					int delta = (levs - MapSize.Levs);	// NOTE: map levels are inverted so adding or subtracting
-					foreach (RouteNode node in Routes)	// levels to the top needs to push any existing nodes down or up.
+														// levels to the top needs to push any existing nodes down or up.
+					foreach (RouteNode node in Routes)
 						node.Lev += delta;
 				}
 
