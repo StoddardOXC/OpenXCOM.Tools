@@ -9,6 +9,7 @@ Built against .NET 4.5.1
 
 - see Important note @2019 January 27
 - MainView, TopView, RouteView Options to highlight every 10th gridline
+- print current selection size x/y in statusbar of MainView
 - add to RouteView Edit: node up 1 level/node down 1 level
 - a Mapfile save will not write an assigned tilepart if its value exceeds ID #253
 - load tileset-configs from MapTilesets.yml even if the game-type (UFO/TFTD) does not have its resources configured
