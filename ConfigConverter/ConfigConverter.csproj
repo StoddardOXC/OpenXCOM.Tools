@@ -70,6 +70,11 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.Designer.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <PostBuildEvent>copy /y C:\GIT\OpenXCOM.Tools\ConfigConverter\bin\Release\ConfigConverter.exe C:\0xC_kL\editors\MapView_kL\ConfigConverter\

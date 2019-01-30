@@ -47,7 +47,7 @@
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(195, 120);
+			this.btnCancel.Location = new System.Drawing.Point(240, 140);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(85, 30);
 			this.btnCancel.TabIndex = 0;
@@ -59,7 +59,7 @@
 			// 
 			this.btnConvert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.btnConvert.Enabled = false;
-			this.btnConvert.Location = new System.Drawing.Point(95, 120);
+			this.btnConvert.Location = new System.Drawing.Point(95, 140);
 			this.btnConvert.Name = "btnConvert";
 			this.btnConvert.Size = new System.Drawing.Size(85, 30);
 			this.btnConvert.TabIndex = 1;
@@ -71,15 +71,16 @@
 			// 
 			this.tbInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 			| System.Windows.Forms.AnchorStyles.Right)));
-			this.tbInput.Location = new System.Drawing.Point(5, 65);
+			this.tbInput.Location = new System.Drawing.Point(5, 85);
 			this.tbInput.Name = "tbInput";
-			this.tbInput.Size = new System.Drawing.Size(335, 19);
+			this.tbInput.ReadOnly = true;
+			this.tbInput.Size = new System.Drawing.Size(380, 19);
 			this.tbInput.TabIndex = 3;
 			// 
 			// btnInput
 			// 
 			this.btnInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnInput.Location = new System.Drawing.Point(340, 65);
+			this.btnInput.Location = new System.Drawing.Point(385, 85);
 			this.btnInput.Name = "btnInput";
 			this.btnInput.Size = new System.Drawing.Size(27, 18);
 			this.btnInput.TabIndex = 4;
@@ -89,7 +90,7 @@
 			// 
 			// lblInput
 			// 
-			this.lblInput.Location = new System.Drawing.Point(5, 50);
+			this.lblInput.Location = new System.Drawing.Point(5, 70);
 			this.lblInput.Name = "lblInput";
 			this.lblInput.Size = new System.Drawing.Size(360, 15);
 			this.lblInput.TabIndex = 2;
@@ -97,7 +98,7 @@
 			// 
 			// lblResult
 			// 
-			this.lblResult.Location = new System.Drawing.Point(5, 95);
+			this.lblResult.Location = new System.Drawing.Point(5, 115);
 			this.lblResult.Name = "lblResult";
 			this.lblResult.Size = new System.Drawing.Size(360, 15);
 			this.lblResult.TabIndex = 5;
@@ -108,10 +109,11 @@
 			| System.Windows.Forms.AnchorStyles.Right)));
 			this.lblInfo.Location = new System.Drawing.Point(5, 10);
 			this.lblInfo.Name = "lblInfo";
-			this.lblInfo.Size = new System.Drawing.Size(360, 25);
+			this.lblInfo.Size = new System.Drawing.Size(405, 50);
 			this.lblInfo.TabIndex = 6;
-			this.lblInfo.Text = "This app inputs MapEdit.dat or MapEdit.cfg and converts it out to MapTilesets.yml, " +
-	"a YAML configuration file for MapView 2+";
+			this.lblInfo.Text = "This app inputs MapEdit.dat and converts it out to MapTilesets.yml, a YAML config" +
+	"uration file for MapView 2+\r\n\r\nImages.dat and Paths.pth must be in the directory" +
+	" with MapEdit.dat";
 			this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// MainForm
@@ -120,7 +122,7 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(372, 154);
+			this.ClientSize = new System.Drawing.Size(417, 174);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.btnConvert);
 			this.Controls.Add(this.tbInput);
@@ -130,7 +132,7 @@
 			this.Controls.Add(this.btnInput);
 			this.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.Name = "MainForm";
-			this.Text = "ConfigConverter";
+			this.Text = "ConfigConverter2";
 			this.ResumeLayout(false);
 			this.PerformLayout();
 

@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration ("")]
 [assembly: AssemblyCompany ("the grays")]
 [assembly: AssemblyProduct ("DSShared")]
-[assembly: AssemblyCopyright ("2017-2018")]
+[assembly: AssemblyCopyright ("2017-2019")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 // Setting ComVisible to false makes the types in this assembly not visible to
