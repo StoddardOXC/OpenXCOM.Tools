@@ -1293,11 +1293,11 @@ namespace MapView
 
 		private void OnMapResizeClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MainViewOverlay.MapBase != null)
+			if (_mainViewUnderlay.MapBase != null)
 			{
 				using (var f = new MapResizeInputBox())
 				{
-					f.MapBase = _mainViewUnderlay.MainViewOverlay.MapBase;
+					f.MapBase = _mainViewUnderlay.MapBase;
 
 					if (f.ShowDialog(this) == DialogResult.OK)
 					{
@@ -1311,7 +1311,7 @@ namespace MapView
 
 						_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-						tsslDimensions.Text = f.MapBase.MapSize.ToString();
+						tsslDimensions   .Text = f.MapBase.MapSize.ToString();
 						tsslPosition     .Text =
 						tsslSelectionSize.Text = String.Empty;
 

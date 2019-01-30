@@ -41,7 +41,7 @@
 		/// <param name="levs"></param>
 		internal MapTileList(int rows, int cols, int levs)
 		{
-			_tiles = new MapTileBase[rows * cols * levs];
+			_tiles     = new MapTileBase[rows * cols * levs];
 			_locations = new MapLocations(rows, cols, levs);
 		}
 		#endregion

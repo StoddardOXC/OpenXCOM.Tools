@@ -278,14 +278,14 @@ namespace MapView.Forms.MainWindow
 		#region Eventcalls (editstrip)
 		private void OnDownClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MainViewOverlay.MapBase != null)
-				_mainViewUnderlay.MainViewOverlay.MapBase.LevelDown();
+			if (_mainViewUnderlay.MapBase != null)
+				_mainViewUnderlay.MapBase.LevelDown();
 		}
 
 		private void OnUpClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MainViewOverlay.MapBase != null)
-				_mainViewUnderlay.MainViewOverlay.MapBase.LevelUp();
+			if (_mainViewUnderlay.MapBase != null)
+				_mainViewUnderlay.MapBase.LevelUp();
 		}
 		#endregion
 

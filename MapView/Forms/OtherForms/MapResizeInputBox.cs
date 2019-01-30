@@ -119,11 +119,22 @@ namespace MapView
 		{
 			if (!String.IsNullOrEmpty(txtL.Text)) // NOTE: btnOkClick will deal with a blank string.
 			{
-				int height = -1;
+				int height;
 				if (Int32.TryParse(txtL.Text, out height))
 				{
 					if (height > 0)
-						cbCeiling.Visible = (height != _mapBase.MapSize.Levs);
+					{
+						int delta = (height - _mapBase.MapSize.Levs);
+						if (cbCeiling.Visible = (delta != 0))
+						{
+							if (delta > 0)
+							{
+								cbCeiling.Text = "add to top";
+							}
+							else
+								cbCeiling.Text = "subtract from top";
+						}
+					}
 					else
 						ShowErrorDialog("Height must be 1 or more.", "Error", MessageBoxIcon.Error);
 				}
@@ -296,9 +307,9 @@ namespace MapView
 			this.cbCeiling.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.cbCeiling.Location = new System.Drawing.Point(170, 95);
 			this.cbCeiling.Name = "cbCeiling";
-			this.cbCeiling.Size = new System.Drawing.Size(85, 21);
+			this.cbCeiling.Size = new System.Drawing.Size(120, 21);
 			this.cbCeiling.TabIndex = 13;
-			this.cbCeiling.Text = "add to top";
+			this.cbCeiling.Text = "top";
 			this.cbCeiling.UseVisualStyleBackColor = true;
 			this.cbCeiling.Visible = false;
 			// 

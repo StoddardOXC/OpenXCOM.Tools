@@ -49,6 +49,9 @@ namespace MapView
 
 
 		#region Properties
+		/// <summary>
+		/// MapBase is set only by MainViewUnderlay.MapBase{set}.
+		/// </summary>
 		internal MapFileBase MapBase
 		{ get; set; }
 
