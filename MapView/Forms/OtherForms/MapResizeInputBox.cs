@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 
 using XCom.Interfaces.Base;
+using XCom.Services;
 
 
 namespace MapView
@@ -47,9 +48,15 @@ namespace MapView
 			get { return _levs; }
 		}
 
-		internal bool CeilingChecked
+		internal MapResizeService.MapResizeZtype ZType
 		{
-			get { return cbCeiling.Checked; }
+			get
+			{
+				if (cbCeiling.Enabled && cbCeiling.Checked)
+					return MapResizeService.MapResizeZtype.MRZT_TOP;
+
+				return MapResizeService.MapResizeZtype.MRZT_BOT;
+			}
 		}
 		#endregion
 
@@ -75,23 +82,23 @@ namespace MapView
 				|| String.IsNullOrEmpty(txtR.Text)
 				|| String.IsNullOrEmpty(txtL.Text))
 			{
-				ShowErrorDialog("All fields must have a value.", "Error", MessageBoxIcon.Error);
+				ShowErrorDialog("All fields must have a value.", "Error");
 			}
 			else if (!Int32.TryParse(txtC.Text, out _cols) || _cols < 1
 				||   !Int32.TryParse(txtR.Text, out _rows) || _rows < 1
 				||   !Int32.TryParse(txtL.Text, out _levs) || _levs < 1)
 			{
-				ShowErrorDialog("Values must be positive integers greater than 0.", "Error", MessageBoxIcon.Error);
+				ShowErrorDialog("Values must be positive integers greater than 0.", "Error");
 			}
 			else if (_cols % 10 != 0 || _rows % 10 != 0)
 			{
-				ShowErrorDialog("Columns and Rows must be evenly divisible by 10.", "Error", MessageBoxIcon.Error);
+				ShowErrorDialog("Columns and Rows must be evenly divisible by 10.", "Error");
 			}
 			else if (_cols == int.Parse(oldC.Text, System.Globalization.CultureInfo.InvariantCulture)
 				&&   _rows == int.Parse(oldR.Text, System.Globalization.CultureInfo.InvariantCulture)
 				&&   _levs == int.Parse(oldL.Text, System.Globalization.CultureInfo.InvariantCulture))
 			{
-				ShowErrorDialog("The new size is the same as the old size.", "uh ...", MessageBoxIcon.Error);
+				ShowErrorDialog("The new size is the same as the old size.", "uh ...");
 			}
 			else // finally (sic) ->
 			{
@@ -125,7 +132,7 @@ namespace MapView
 					if (height > 0)
 					{
 						int delta = (height - _mapBase.MapSize.Levs);
-						if (cbCeiling.Visible = (delta != 0))
+						if (cbCeiling.Enabled = (delta != 0))
 						{
 							if (delta > 0)
 							{
@@ -136,10 +143,10 @@ namespace MapView
 						}
 					}
 					else
-						ShowErrorDialog("Height must be 1 or more.", "Error", MessageBoxIcon.Error);
+						ShowErrorDialog("Height must be 1 or more.", "Error");
 				}
 				else
-					ShowErrorDialog("Height must a positive integer.", "Error", MessageBoxIcon.Error);
+					ShowErrorDialog("Height must a positive integer.", "Error");
 			}
 		}
 		#endregion
@@ -151,18 +158,16 @@ namespace MapView
 		/// </summary>
 		/// <param name="error">the error string to show</param>
 		/// <param name="caption">the dialog's caption text</param>
-		/// <param name="icon">the MessageBoxIcon to use</param>
 		private void ShowErrorDialog(
 				string error,
-				string caption,
-				MessageBoxIcon icon)
+				string caption)
 		{
 			MessageBox.Show(
 						this,
 						error,
 						caption,
 						MessageBoxButtons.OK,
-						icon,
+						MessageBoxIcon.Error,
 						MessageBoxDefaultButton.Button1,
 						0);
 		}
@@ -304,6 +309,7 @@ namespace MapView
 			// 
 			this.cbCeiling.Checked = true;
 			this.cbCeiling.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.cbCeiling.Enabled = false;
 			this.cbCeiling.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.cbCeiling.Location = new System.Drawing.Point(170, 95);
 			this.cbCeiling.Name = "cbCeiling";
@@ -311,7 +317,6 @@ namespace MapView
 			this.cbCeiling.TabIndex = 13;
 			this.cbCeiling.Text = "top";
 			this.cbCeiling.UseVisualStyleBackColor = true;
-			this.cbCeiling.Visible = false;
 			// 
 			// label1
 			// 

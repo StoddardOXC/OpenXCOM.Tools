@@ -1305,7 +1305,7 @@ namespace MapView
 										f.Rows,
 										f.Cols,
 										f.Levs,
-										f.CeilingChecked);
+										f.ZType);
 
 						_mainViewUnderlay.ForceResize();
 

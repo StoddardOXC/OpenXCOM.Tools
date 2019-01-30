@@ -419,28 +419,30 @@ namespace XCom
 		/// <param name="rows">total rows in the new Map</param>
 		/// <param name="cols">total columns in the new Map</param>
 		/// <param name="levs">total levels in the new Map</param>
-		/// <param name="ceiling">true to add extra levels above the top level,
-		/// false to add extra levels below the ground level - but only if a
-		/// height difference is found for either case</param>
+		/// <param name="zType">MRZT_TOP to add or subtract delta-levels
+		/// starting at the top level, MRZT_BOT to add or subtract delta-levels
+		/// starting at the ground level - but only if a height difference is
+		/// found for either case</param>
 		public override void MapResize(
 				int rows,
 				int cols,
 				int levs,
-				bool ceiling)
+				MapResizeService.MapResizeZtype zType)
 		{
 			var tileList = MapResizeService.ResizeMapDimensions(
 															rows, cols, levs,
 															MapSize,
 															MapTiles,
-															ceiling);
+															zType);
 			if (tileList != null)
 			{
 				MapChanged = true;
 
-				if (levs != MapSize.Levs && ceiling) // adjust route-nodes ->
+				if (levs != MapSize.Levs // adjust route-nodes ->
+					&& zType == MapResizeService.MapResizeZtype.MRZT_TOP)
 				{
-					int delta = levs - MapSize.Levs;	// NOTE: map levels are inverted
-					foreach (RouteNode node in Routes)	// so adding levels to the ceiling needs to push the existing nodes down.
+					int delta = (levs - MapSize.Levs);	// NOTE: map levels are inverted so adding or subtracting
+					foreach (RouteNode node in Routes)	// levels to the top needs to push any existing nodes down or up.
 						node.Lev += delta;
 				}
 

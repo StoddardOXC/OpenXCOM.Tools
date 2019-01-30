@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-//using XCom.Services;
+using XCom.Services;
 
 
 namespace XCom.Interfaces.Base
@@ -174,12 +174,12 @@ namespace XCom.Interfaces.Base
 		/// <param name="rows"></param>
 		/// <param name="cols"></param>
 		/// <param name="levs"></param>
-		/// <param name="ceiling"></param>
+		/// <param name="zType"></param>
 		public virtual void MapResize(
 				int rows,
 				int cols,
 				int levs,
-				bool ceiling)
+				MapResizeService.MapResizeZtype zType)
 		{}
 		#endregion
 

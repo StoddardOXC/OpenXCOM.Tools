@@ -3,15 +3,22 @@
 
 namespace XCom.Services
 {
-	internal static class MapResizeService
+	public static class MapResizeService
 	{
+		public enum MapResizeZtype
+		{
+			MRZT_BOT,	// 0 - a simple addition or subtraction of z-levels (increase/decrease)
+			MRZT_TOP	// 1 - this needs to create/delete levels at top and push existing levels down/up
+		}
+
+
 		internal static MapTileList ResizeMapDimensions(
 				int rows,
 				int cols,
 				int levs,
 				MapSize sizePre,
 				MapTileList tileListPre,
-				bool ceiling)
+				MapResizeZtype zType)
 		{
 			if (   rows > 0
 				&& cols > 0
@@ -24,26 +31,34 @@ namespace XCom.Services
 				for (int col = 0; col != cols; ++col)
 					tileListPost[row, col, lev] = XCMapTile.VacantTile;
 
-				int levelPre;
-				int levelPost;
-
-				for (int lev = 0; lev != levs && lev < sizePre.Levs; ++lev)
-				for (int row = 0; row != rows && row < sizePre.Rows; ++row)
-				for (int col = 0; col != cols && col < sizePre.Cols; ++col)
+				switch (zType)
 				{
-					if (ceiling)
+					case MapResizeZtype.MRZT_BOT:
 					{
-						levelPost = levs         - lev - 1;
-						levelPre  = sizePre.Levs - lev - 1;
+						for (int lev = 0; lev != levs && lev != sizePre.Levs; ++lev)
+						for (int row = 0; row != rows && row != sizePre.Rows; ++row)
+						for (int col = 0; col != cols && col != sizePre.Cols; ++col)
+						{
+							tileListPost[row, col, lev] = tileListPre[row, col, lev];
+						}
+						break;
 					}
-					else
-					{
-						levelPost =
-						levelPre  = lev;
-					}
-					tileListPost[row, col, levelPost] = tileListPre[row, col, levelPre];
-				}
 
+					case MapResizeZtype.MRZT_TOP:
+					{
+						int levelsPre  = sizePre.Levs - 1;
+						int levelsPost = levs - 1;
+
+						for (int lev = 0; lev != levs && lev != sizePre.Levs; ++lev)
+						for (int row = 0; row != rows && row != sizePre.Rows; ++row)
+						for (int col = 0; col != cols && col != sizePre.Cols; ++col)
+						{
+							tileListPost[row, col, levelsPost - lev] = // copy tiles from bot to top.
+							tileListPre [row, col, levelsPre  - lev];
+						}
+						break;
+					}
+				}
 				return tileListPost;
 			}
 			return null;
