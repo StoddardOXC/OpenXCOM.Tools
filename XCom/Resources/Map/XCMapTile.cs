@@ -64,6 +64,9 @@ namespace XCom
 			set { SetQuadrantPart(quad, value); }
 		}
 
+		/// <summary>
+		/// @note This is used only by MapFileBase.SaveGifFile().
+		/// </summary>
 		public override TilepartBase[] UsedParts
 		{
 			get

@@ -1224,11 +1224,11 @@ namespace MapView.Forms.MapObservers.RouteViews
 			var node   = MapFile.Routes[dest];
 			int levels = MapFile.MapSize.Levs;
 
-			if (!RouteNodeCollection.IsOutsideMap(
-												node,
-												MapFile.MapSize.Cols,
-												MapFile.MapSize.Rows,
-												levels))
+			if (!RouteNodeCollection.IsNodeOutsideMapBounds(
+														node,
+														MapFile.MapSize.Cols,
+														MapFile.MapSize.Rows,
+														levels))
 			{
 				OgnodeId = NodeSelected.Index; // store the current nodeId for the og-button.
 

@@ -47,6 +47,11 @@ namespace XCom
 
 
 		#region Methods (override)
+		/// <summary>
+		/// Gets the Map's dimensions as a string to print in MainView's
+		/// statusbar.
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString()
 		{
 			return String.Format(

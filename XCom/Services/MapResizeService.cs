@@ -12,7 +12,7 @@ namespace XCom.Services
 		}
 
 
-		internal static MapTileList ResizeMapDimensions(
+		internal static MapTileList GetResizedTileList(
 				int rows,
 				int cols,
 				int levs,

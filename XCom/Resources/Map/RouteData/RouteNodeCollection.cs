@@ -375,7 +375,7 @@ namespace XCom
 		/// <param name="rows"></param>
 		/// <param name="levs"></param>
 		/// <returns></returns>
-		public static bool IsOutsideMap(
+		public static bool IsNodeOutsideMapBounds(
 				RouteNode node,
 				int cols,
 				int rows,

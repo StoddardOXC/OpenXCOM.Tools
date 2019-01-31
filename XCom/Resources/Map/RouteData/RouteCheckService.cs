@@ -11,20 +11,20 @@ namespace XCom.Resources.Map.RouteData
 		/// Checks for and if found gives user a choice to delete nodes that are
 		/// outside of a Map's x/y/z bounds.
 		/// </summary>
-		/// <param name="child"></param>
-		public static void CheckNodeBounds(MapFileChild child)
+		/// <param name="file"></param>
+		public static void CheckNodeBounds(MapFileChild file)
 		{
-			if (child != null)
+			if (file != null)
 			{
 				var invalids = new List<RouteNode>();
 
-				foreach (RouteNode node in child.Routes)
+				foreach (RouteNode node in file.Routes)
 				{
-					if (RouteNodeCollection.IsOutsideMap(
-													node,
-													child.MapSize.Cols,
-													child.MapSize.Rows,
-													child.MapSize.Levs))
+					if (RouteNodeCollection.IsNodeOutsideMapBounds(
+																node,
+																file.MapSize.Cols,
+																file.MapSize.Rows,
+																file.MapSize.Levs))
 					{
 						invalids.Add(node);
 					}
@@ -44,7 +44,7 @@ namespace XCom.Resources.Map.RouteData
 					foreach (var node in invalids)
 						info += Environment.NewLine
 							  + "id " + node.Index
-							  + " : " + node.GetLocationString(child.MapSize.Levs);
+							  + " : " + node.GetLocationString(file.MapSize.Levs);
 
 					if (MessageBox.Show(
 									info,
@@ -54,10 +54,10 @@ namespace XCom.Resources.Map.RouteData
 									MessageBoxDefaultButton.Button1,
 									0) == DialogResult.Yes)
 					{
-						child.RoutesChanged = true;
+						file.RoutesChanged = true;
 
 						foreach (var node in invalids)
-							child.Routes.DeleteNode(node);
+							file.Routes.DeleteNode(node);
 					}
 				}
 			}
@@ -67,21 +67,21 @@ namespace XCom.Resources.Map.RouteData
 		/// Checks for and if found gives user a choice to delete nodes that are
 		/// outside of a Map's x/y/z bounds.
 		/// </summary>
-		/// <param name="child"></param>
+		/// <param name="file"></param>
 		/// <returns>true if node(s) are deleted</returns>
-		public static bool CheckNodeBoundsMenuitem(MapFileChild child)
+		public static bool CheckNodeBoundsMenuitem(MapFileChild file)
 		{
-			if (child != null)
+			if (file != null)
 			{
 				var invalids = new List<RouteNode>();
 
-				foreach (RouteNode node in child.Routes)
+				foreach (RouteNode node in file.Routes)
 				{
-					if (RouteNodeCollection.IsOutsideMap(
-													node,
-													child.MapSize.Cols,
-													child.MapSize.Rows,
-													child.MapSize.Levs))
+					if (RouteNodeCollection.IsNodeOutsideMapBounds(
+																node,
+																file.MapSize.Cols,
+																file.MapSize.Rows,
+																file.MapSize.Levs))
 					{
 						invalids.Add(node);
 					}
@@ -108,7 +108,7 @@ namespace XCom.Resources.Map.RouteData
 					foreach (var node in invalids)
 						info += Environment.NewLine
 							  + "id " + node.Index
-							  + " : " + node.GetLocationString(child.MapSize.Levs);
+							  + " : " + node.GetLocationString(file.MapSize.Levs);
 				}
 				else
 				{
@@ -126,10 +126,10 @@ namespace XCom.Resources.Map.RouteData
 							MessageBoxDefaultButton.Button1,
 							0) == DialogResult.Yes)
 				{
-					child.RoutesChanged = true;
+					file.RoutesChanged = true;
 
 					foreach (var node in invalids)
-						child.Routes.DeleteNode(node);
+						file.Routes.DeleteNode(node);
 
 					return true;
 				}

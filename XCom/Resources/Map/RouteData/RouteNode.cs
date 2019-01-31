@@ -115,9 +115,9 @@ namespace XCom
 		{
 			Index = id;
 
-			Col = col;
-			Row = row;
-			Lev = lev; // NOTE: auto-converts to int-type.
+			Col =      col;
+			Row =      row;
+			Lev = (int)lev; // NOTE: auto-converts to int-type. Do it explicitly.
 
 			_links = new Link[LinkSlots];
 			for (int slotId = 0; slotId != LinkSlots; ++slotId)
@@ -176,7 +176,7 @@ namespace XCom
 		/// <returns></returns>
 		public string GetLocationString(int levels)
 		{
-			return ("c " + Col + "  r " + Row + "  L " + (levels - Lev));
+			return ("c " + Col + "  r " + Row + "  L " + ((byte)(levels - Lev)));
 		}
 		#endregion
 

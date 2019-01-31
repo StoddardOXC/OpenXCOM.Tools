@@ -10,7 +10,9 @@ namespace XCom.Interfaces.Base
 	{
 		/// <summary>
 		/// An array of TilepartBase[] in the correct draw order. This array
-		/// should be iterated over when drawing to the screen.</summary>
+		/// should be iterated over when drawing to the screen.
+		/// @note This is used only by MapFileBase.SaveGifFile().
+		/// </summary>
 		public abstract TilepartBase[] UsedParts
 		{ get; }
 

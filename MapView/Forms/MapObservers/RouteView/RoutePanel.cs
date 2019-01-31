@@ -317,11 +317,11 @@ namespace MapView.Forms.MapObservers.RouteViews
 							if ((dest = MapFile.Routes[destId]) == null
 								|| dest.Lev != MapFile.Level
 								|| (NodeSelected != null && dest == NodeSelected)
-								|| RouteNodeCollection.IsOutsideMap(
-																dest,
-																MapFile.MapSize.Cols,
-																MapFile.MapSize.Rows,
-																MapFile.MapSize.Levs))
+								|| RouteNodeCollection.IsNodeOutsideMapBounds(
+																			dest,
+																			MapFile.MapSize.Cols,
+																			MapFile.MapSize.Rows,
+																			MapFile.MapSize.Levs))
 							{
 								continue;
 							}

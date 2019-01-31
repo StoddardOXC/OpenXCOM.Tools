@@ -56,7 +56,7 @@ namespace XCom
 					parts[i].SetId = i;
 
 				ReadMapFile(parts);
-				SetupRouteNodes(routes);
+				SetupRouteNodes();
 				CalculateOccultations();
 			}
 			else
@@ -176,15 +176,15 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// 
+		/// Assigns route-nodes to tiles when this MapFile object is
+		/// instantiated.
 		/// </summary>
-		/// <param name="routes"></param>
-		private void SetupRouteNodes(RouteNodeCollection routes)
+		private void SetupRouteNodes()
 		{
-			foreach (RouteNode node in routes)
+			MapTileBase tile;
+			foreach (RouteNode node in Routes)
 			{
-				var tile = this[node.Row, node.Col, node.Lev];
-				if (tile != null)
+				if ((tile = this[node.Row, node.Col, node.Lev]) != null)
 					((XCMapTile)tile).Node = node;
 			}
 		}
@@ -283,9 +283,9 @@ namespace XCom
 									(byte)location.Col,
 									(byte)location.Lev);
 
-			return (((XCMapTile)this[node.Row,
-									 node.Col,
-									 node.Lev]).Node = node);
+			return (((XCMapTile)this[(int)node.Row,
+									 (int)node.Col,
+									      node.Lev]).Node = node);
 		}
 
 		/// <summary>
@@ -429,7 +429,7 @@ namespace XCom
 				int levs,
 				MapResizeService.MapResizeZtype zType)
 		{
-			var tileList = MapResizeService.ResizeMapDimensions(
+			var tileList = MapResizeService.GetResizedTileList(
 															rows, cols, levs,
 															MapSize,
 															MapTiles,
@@ -438,27 +438,44 @@ namespace XCom
 			{
 				MapChanged = true;
 
+				int
+					preRows = MapSize.Rows,
+					preCols = MapSize.Cols,
+					preLevs = MapSize.Levs;
+
 				if (Routes.Any() // adjust route-nodes ->
-					&& levs != MapSize.Levs
+					&& levs != preLevs
 					&& zType == MapResizeService.MapResizeZtype.MRZT_TOP)
 				{
 					RoutesChanged = true;
 
-					int delta = (levs - MapSize.Levs);	// NOTE: map levels are inverted so adding or subtracting
-														// levels to the top needs to push any existing nodes down or up.
+					int delta = (levs - preLevs);	// NOTE: map levels are inverted so adding or subtracting
+													// levels to the top needs to push any existing nodes down or up.
 					foreach (RouteNode node in Routes)
-						node.Lev += delta;
+					{
+						if (node.Lev < 128) // allow nodes that are OoB to come back into view
+						{
+							if ((node.Lev += delta) < 0)	// NOTE: node x/y/z are stored as bytes.
+								node.Lev += 256;			// -> ie. level -1 = level 255
+						}
+						else
+							node.Lev += delta - 256;
+					}
 				}
 
-				if (   cols < MapSize.Cols // check for and ask if user wants to delete any route-nodes outside the new bounds
-					|| rows < MapSize.Rows
-					|| levs < MapSize.Levs)
-				{
-					RouteCheckService.CheckNodeBounds(this);
-				}
+				MapSize = new MapSize(rows, cols, levs);
 
 				MapTiles = tileList;
-				MapSize = new MapSize(rows, cols, levs);
+
+				RouteCheckService.CheckNodeBounds(this);
+
+				for (int lev = 0; lev != levs; ++lev)
+				for (int row = 0; row != rows; ++row)
+				for (int col = 0; col != cols; ++col)
+				{
+					((XCMapTile)this[row, col, lev]).Node = null;
+				}
+				SetupRouteNodes();
 
 				Level = 0; // fires a LevelChangedEvent.
 			}

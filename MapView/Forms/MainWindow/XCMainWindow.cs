@@ -35,10 +35,10 @@ namespace MapView
 
 
 		#region Fields
-		private readonly MainViewUnderlay      _mainViewUnderlay;
+		private readonly MainViewUnderlay _mainViewUnderlay;
 
-		private readonly ViewersManager        _viewersManager;
-		private readonly MainMenusManager      _mainMenusManager;
+		private readonly ViewersManager   _viewersManager;
+		private readonly MainMenusManager _mainMenusManager;
 
 //		private readonly ConsoleWarningHandler _warningHandler;
 
@@ -374,6 +374,7 @@ namespace MapView
 
 
 			LogFile.WriteLine("About to show MainView ...");
+			LogFile.WriteLine("");
 			Show();
 		}
 		#endregion
@@ -2397,7 +2398,7 @@ namespace MapView
 
 					Text = "Map Editor - " + descriptor.BasePath;
 
-					tsslMapLabel.Text = descriptor.Label;
+					tsslMapLabel  .Text = descriptor.Label;
 					tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
 														  : "size: n/a";
 					tsslPosition     .Text =
