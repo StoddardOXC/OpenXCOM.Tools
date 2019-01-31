@@ -443,14 +443,13 @@ namespace XCom
 					preCols = MapSize.Cols,
 					preLevs = MapSize.Levs;
 
-				if (Routes.Any() // adjust route-nodes ->
-					&& levs != preLevs
-					&& zType == MapResizeService.MapResizeZtype.MRZT_TOP)
+				if (zType == MapResizeService.MapResizeZtype.MRZT_TOP // adjust route-nodes ->
+					&& Routes.Any())
 				{
 					RoutesChanged = true;
 
-					int delta = (levs - preLevs);	// NOTE: map levels are inverted so adding or subtracting
-													// levels to the top needs to push any existing nodes down or up.
+					int delta = (levs - preLevs);	// NOTE: map levels are inverted so adding or subtracting levels
+													// to the top needs to push any existing node-levels down or up.
 					foreach (RouteNode node in Routes)
 					{
 						if (node.Lev < 128) // allow nodes that are OoB to come back into view
@@ -459,12 +458,14 @@ namespace XCom
 								node.Lev += 256;			// -> ie. level -1 = level 255
 						}
 						else
-							node.Lev += delta - 256;
+						{
+							if ((node.Lev += delta - 256) < 0)	// nodes above the highest Maplevel maintain
+								node.Lev += 256;				// their relative z-level
+						}
 					}
 				}
 
 				MapSize = new MapSize(rows, cols, levs);
-
 				MapTiles = tileList;
 
 				RouteCheckService.CheckNodeBounds(this);
@@ -472,9 +473,8 @@ namespace XCom
 				for (int lev = 0; lev != levs; ++lev)
 				for (int row = 0; row != rows; ++row)
 				for (int col = 0; col != cols; ++col)
-				{
 					((XCMapTile)this[row, col, lev]).Node = null;
-				}
+
 				SetupRouteNodes();
 
 				Level = 0; // fires a LevelChangedEvent.
