@@ -78,13 +78,12 @@ namespace MapView
 		{ private get; set; }
 
 		/// <summary>
-		/// Gets/Sets the MapChanged flag. This is only an intermediary that
-		/// adds an asterisk to the file-label in MainView's statusbar; the real
+		/// Sets the MapChanged flag. This is only an intermediary that adds an
+		/// asterisk to the file-label in MainView's statusbar; the real
 		/// MapChanged flag is stored in XCom..MapFileBase. reasons.
 		/// </summary>
 		internal bool MapChanged
 		{
-			get { return _mainViewUnderlay.MapBase.MapChanged; }
 			set
 			{
 				string text = tsslMapLabel.Text;
@@ -1072,7 +1071,9 @@ namespace MapView
 				_mainViewUnderlay.MapBase.SaveMap();
 				_mainViewUnderlay.MapBase.SaveRoutes();
 
-				MapChanged = false;
+				MapChanged =
+				ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+				ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
 			}
 			MaptreeChanged = !ResourceInfo.TileGroupInfo.SaveTileGroups();
 		}
@@ -1089,14 +1090,19 @@ namespace MapView
 		internal void OnSaveRoutesClick(object sender, EventArgs e)
 		{
 			if (_mainViewUnderlay.MapBase != null)
+			{
 				_mainViewUnderlay.MapBase.SaveRoutes();
+
+				ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+				ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
+			}
 		}
 
 		private void OnSaveAsClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MapBase != null
-				&& _mainViewUnderlay.MapBase.Descriptor != null)	// safety. Not sure if a 'MapBase' could be
-			{														// instantiated without a 'Descriptor'.
+			if (_mainViewUnderlay.MapBase != null					// safety. Not sure if a 'MapBase' could be
+				&& _mainViewUnderlay.MapBase.Descriptor != null)	// instantiated without a 'Descriptor'.
+			{
 				var sfd = new SaveFileDialog();
 
 				sfd.FileName = _mainViewUnderlay.MapBase.Descriptor.Label + GlobalsXC.MapExt;
@@ -1134,6 +1140,10 @@ namespace MapView
 
 						_mainViewUnderlay.MapBase.SaveMap(pfMaps);
 						_mainViewUnderlay.MapBase.SaveRoutes(pfRoutes);
+
+						MapChanged = // ohreally - does this change the label in the statusbar etc.
+						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
 					}
 					else
 						MessageBox.Show(
@@ -1228,7 +1238,12 @@ namespace MapView
 							}
 
 							if (_mainViewUnderlay.MapBase.RoutesChanged)
+							{
 								_mainViewUnderlay.MapBase.SaveRoutes();
+
+								ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+								ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
+							}
 						}
 
 						if (MaptreeChanged)
@@ -1242,8 +1257,9 @@ namespace MapView
 						break;
 
 					case DialogResult.Ignore:
-						MapChanged = false;
-						_mainViewUnderlay.MapBase.ClearRoutesChanged();
+						MapChanged =
+						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged =
 						MaptreeChanged = false;
 
 						OnConfiguratorClick(null, EventArgs.Empty); // recurse.
@@ -1339,11 +1355,20 @@ namespace MapView
 
 					if (f.ShowDialog(this) == DialogResult.OK)
 					{
-						MapChanged |= f.MapBase.MapResize(
-														f.Rows,
-														f.Cols,
-														f.Levs,
-														f.ZType);
+						int bit = f.MapBase.MapResize(
+													f.Rows,
+													f.Cols,
+													f.Levs,
+													f.ZType);
+
+						if (!_mainViewUnderlay.MapBase.MapChanged && ((bit & 0x1) != 0))
+							MapChanged = true;
+
+						if (!_mainViewUnderlay.MapBase.RoutesChanged && (bit & 0x2) != 0)
+						{
+							ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+							ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = true;
+						}
 
 						_mainViewUnderlay.ForceResize();
 
@@ -1822,14 +1847,20 @@ namespace MapView
 								}
 
 								if (_mainViewUnderlay.MapBase.RoutesChanged)
+								{
 									_mainViewUnderlay.MapBase.SaveRoutes();
+
+									ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+									ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
+								}
 
 								OnMapTreeMouseDown(null, e); // recurse.
 								break;
 
 							case DialogResult.Ignore:
-								MapChanged = false;
-								_mainViewUnderlay.MapBase.ClearRoutesChanged();
+								MapChanged =
+								ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+								ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
 
 								OnMapTreeMouseDown(null, e); // recurse.
 								break;
@@ -2434,8 +2465,6 @@ namespace MapView
 
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
 
-					RouteCheckService.CheckNodeBounds(@base as MapFileChild);
-
 					Text = "Map Editor - " + descriptor.BasePath;
 
 					tsslMapLabel  .Text = descriptor.Label;
@@ -2460,6 +2489,12 @@ namespace MapView
 						_mainMenusManager.StartViewers();
 
 					ViewerFormsManager.SetObservers(@base); // reset all observer events
+
+					if (RouteCheckService.CheckNodeBounds(@base as MapFileChild))
+					{
+						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = true;
+					}
 				}
 			}
 		}
@@ -2501,8 +2536,7 @@ namespace MapView
 				{
 					case DialogResult.Yes:		// save & clear MapChanged flag
 						_mainViewUnderlay.MapBase.SaveMap();
-						MapChanged = false;
-						break;
+						goto case DialogResult.No;
 
 					case DialogResult.No:		// don't save & clear MapChanged flag
 						MapChanged = false;
@@ -2537,10 +2571,11 @@ namespace MapView
 				{
 					case DialogResult.Yes:		// save & clear RoutesChanged flag
 						_mainViewUnderlay.MapBase.SaveRoutes();
-						break;
+						goto case DialogResult.No;
 
 					case DialogResult.No:		// don't save & clear RoutesChanged flag
-						_mainViewUnderlay.MapBase.ClearRoutesChanged();
+						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
 						break;
 
 					case DialogResult.Cancel:	// dismiss confirmation dialog & leave state unaffected

@@ -64,6 +64,9 @@ namespace XCom.Interfaces.Base
 
 		/// <summary>
 		/// User will be shown a dialog asking to save if the Routes changed.
+		/// @note The setter must be mediated by RouteView.RoutesChanged in
+		/// order to show/hide a "routes changed" label to/from 'pnlDataFields'
+		/// in RouteView.
 		/// </summary>
 		public bool RoutesChanged
 		{ get; set; }
@@ -165,9 +168,6 @@ namespace XCom.Interfaces.Base
 		public virtual void SaveRoutes(string pf)
 		{}
 
-		public virtual void ClearRoutesChanged()
-		{}
-
 		/// <summary>
 		/// Forwards the call to MapFileChild.
 		/// </summary>
@@ -175,14 +175,17 @@ namespace XCom.Interfaces.Base
 		/// <param name="cols"></param>
 		/// <param name="levs"></param>
 		/// <param name="zType"></param>
-		/// <returns>true if the Mapfile changed</returns>
-		public virtual bool MapResize(
+		/// <returns>a bitwise int of changes
+		///          0x0 - no changes
+		///          0x1 - Map changed
+		///          0x2 - Routes changed</returns>
+		public virtual int MapResize(
 				int rows,
 				int cols,
 				int levs,
 				MapResizeService.MapResizeZtype zType)
 		{
-			return false;
+			return 0x0;
 		}
 		#endregion
 

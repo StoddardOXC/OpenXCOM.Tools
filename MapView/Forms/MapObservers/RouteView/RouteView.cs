@@ -131,6 +131,16 @@ namespace MapView.Forms.MapObservers.RouteViews
 
 		private MapFileChild MapFile
 		{ get; set; }
+
+		/// <summary>
+		/// Sets the RoutesChanged flag. This is only an intermediary that shows
+		/// "routes changed" in RouteView; the real RoutesChanged flag is stored
+		/// in XCom..MapFileBase. reasons.
+		/// </summary>
+		internal bool RoutesChanged
+		{
+			set { label_RoutesChanged.Visible = (MapFile.RoutesChanged = value); }
+		}
 		#endregion
 
 
@@ -351,7 +361,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			{
 				if (((XCMapTile)args.Tile).Node == null)
 				{
-					MapFile.RoutesChanged = true;
+					RoutesChanged = true;
 
 					((XCMapTile)MapFile[_nodeMoved.Row, // clear the node from the previous tile
 										_nodeMoved.Col,
@@ -473,6 +483,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				if ((NodeSelected = node) == null
 					&& args.MouseButton == MouseButtons.Right)
 				{
+					RoutesChanged = true;
 					NodeSelected = MapFile.AddRouteNode(args.Location);
 				}
 				update = (NodeSelected != null);
@@ -483,6 +494,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				{
 					if (args.MouseButton == MouseButtons.Right)
 					{
+						RoutesChanged = true;
 						node = MapFile.AddRouteNode(args.Location);
 						ConnectNode(node);
 					}
@@ -544,7 +556,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				int slot = GetOpenLinkSlot(NodeSelected, node.Index);
 				if (slot > -1)
 				{
-					MapFile.RoutesChanged = true;
+					RoutesChanged = true;
 					NodeSelected[slot].Destination = node.Index;
 					NodeSelected[slot].Distance = CalculateLinkDistance(NodeSelected, node);
 				}
@@ -570,7 +582,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 					slot = GetOpenLinkSlot(node, NodeSelected.Index);
 					if (slot > -1)
 					{
-						MapFile.RoutesChanged = true;
+						RoutesChanged = true;
 						node[slot].Destination = NodeSelected.Index;
 						node[slot].Distance = CalculateLinkDistance(node, NodeSelected);
 					}
@@ -859,7 +871,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (!_loadingInfo)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 				NodeSelected.Type = (UnitType)cbType.SelectedItem;
 
 				if (Tag as String == "ROUTE")
@@ -882,7 +894,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				}
 				else
 				{
-					MapFile.RoutesChanged = true;
+					RoutesChanged = true;
 					NodeSelected.Rank = (byte)cbRank.SelectedIndex;
 //					NodeSelected.Rank = (byte)((Pterodactyl)cbRank.SelectedItem).Case; // <- MapView1-type code.
 
@@ -900,7 +912,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (!_loadingInfo)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 				NodeSelected.Patrol = (PatrolPriority)cbPatrol.SelectedItem;
 
 				if (Tag as String == "ROUTE")
@@ -917,7 +929,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (!_loadingInfo)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 				NodeSelected.Spawn = (SpawnWeight)((Pterodactyl)cbSpawn.SelectedItem).Case;
 
 				if (Tag as String == "ROUTE")
@@ -934,7 +946,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (!_loadingInfo)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 				NodeSelected.Attack = (BaseAttack)cbAttack.SelectedItem;
 
 				if (Tag as String == "ROUTE")
@@ -956,7 +968,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (!_loadingInfo)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 
 				int slot;
 				TextBox tb;
@@ -1157,7 +1169,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (!_loadingInfo)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 
 				int slot;
 
@@ -1438,7 +1450,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				var nodeData = Clipboard.GetText().Split(NodeCopySeparator);
 				if (nodeData[0] == NodeCopyPrefix)
 				{
-					MapFile.RoutesChanged = true;
+					RoutesChanged = true;
 
 					var invariant = System.Globalization.CultureInfo.InvariantCulture;
 
@@ -1468,7 +1480,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (NodeSelected != null)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 
 				((XCMapTile)MapFile[NodeSelected.Row,
 									NodeSelected.Col,
@@ -1640,7 +1652,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 
 				if (changed != 0)
 				{
-					MapFile.RoutesChanged = true;
+					RoutesChanged = true;
 
 					ViewerFormsManager.RouteView   .Control     .UpdateNodeInformation();
 					ViewerFormsManager.TopRouteView.ControlRoute.UpdateNodeInformation();
@@ -1683,7 +1695,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 								MessageBoxDefaultButton.Button2,
 								0) == DialogResult.Yes)
 				{
-					MapFile.RoutesChanged = true;
+					RoutesChanged = true;
 
 					for (int slot = 0; slot != RouteNode.LinkSlots; ++slot)
 					{
@@ -1752,7 +1764,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			string info;
 			if (changed != 0)
 			{
-				MapFile.RoutesChanged = true;
+				RoutesChanged = true;
 				info = String.Format(
 								System.Globalization.CultureInfo.CurrentCulture,
 								"{0} link{1} updated.",
@@ -1837,6 +1849,8 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			if (RouteCheckService.CheckNodeBoundsMenuitem(MapFile))
 			{
+				RoutesChanged = true;
+
 				ViewerFormsManager.RouteView   .Control     .UpdateNodeInformation();
 				ViewerFormsManager.TopRouteView.ControlRoute.UpdateNodeInformation();
 			}

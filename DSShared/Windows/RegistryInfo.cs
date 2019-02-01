@@ -154,10 +154,10 @@ namespace DSShared.Windows
 			string key;
 			int val;
 
+			var cultureInfo = CultureInfo.InvariantCulture;
+
 			foreach (var keyval in keyvals)
 			{
-				var cultureInfo = CultureInfo.InvariantCulture;
-
 				key = cultureInfo.TextInfo.ToTitleCase(keyval.Key.ToString());
 				//DSLogFile.WriteLine(". key= " + key);
 

@@ -279,8 +279,6 @@ namespace XCom
 		/// <returns></returns>
 		public RouteNode AddRouteNode(MapLocation location)
 		{
-			RoutesChanged = true;
-
 			var node = Routes.AddNode(
 									(byte)location.Row,
 									(byte)location.Col,
@@ -387,7 +385,6 @@ namespace XCom
 		public override void SaveRoutes()
 		{
 			Routes.SaveRoutes();
-			RoutesChanged = false;
 		}
 
 		/// <summary>
@@ -400,14 +397,6 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Clears the 'RoutesChanged' flag.
-		/// </summary>
-		public override void ClearRoutesChanged()
-		{
-			RoutesChanged = false;
-		}
-
-		/// <summary>
 		/// Resizes the current Map.
 		/// </summary>
 		/// <param name="rows">total rows in the new Map</param>
@@ -417,13 +406,18 @@ namespace XCom
 		/// starting at the top level, MRZT_BOT to add or subtract delta-levels
 		/// starting at the ground level - but only if a height difference is
 		/// found for either case</param>
-		/// <returns>true if the Mapfile changed</returns>
-		public override bool MapResize(
+		/// <returns>a bitwise int of changes
+		///          0x0 - no changes
+		///          0x1 - Map changed
+		///          0x2 - Routes changed</returns>
+		public override int MapResize(
 				int rows,
 				int cols,
 				int levs,
 				MapResizeService.MapResizeZtype zType)
 		{
+			int bit = 0x0;
+
 			var tileList = MapResizeService.GetResizedTileList(
 															rows, cols, levs,
 															MapSize,
@@ -431,6 +425,8 @@ namespace XCom
 															zType);
 			if (tileList != null)
 			{
+				bit |= 0x1;
+
 				int
 					preRows = MapSize.Rows,
 					preCols = MapSize.Cols,
@@ -439,7 +435,7 @@ namespace XCom
 				if (zType == MapResizeService.MapResizeZtype.MRZT_TOP // adjust route-nodes ->
 					&& Routes.Any())
 				{
-					RoutesChanged = true;
+					bit |= 0x2;
 
 					int delta = (levs - preLevs);	// NOTE: map levels are inverted so adding or subtracting levels
 													// to the top needs to push any existing node-levels down or up.
@@ -461,7 +457,8 @@ namespace XCom
 				MapSize = new MapSize(rows, cols, levs);
 				MapTiles = tileList;
 
-				RouteCheckService.CheckNodeBounds(this);
+				if (RouteCheckService.CheckNodeBounds(this))
+					bit |= 0x2;
 
 				for (int lev = 0; lev != levs; ++lev)
 				for (int row = 0; row != rows; ++row)
@@ -471,10 +468,8 @@ namespace XCom
 				SetupRouteNodes();
 
 				Level = 0; // fires a LevelChangedEvent.
-
-				return true;
 			}
-			return false;
+			return bit;
 		}
 		#endregion
 	}

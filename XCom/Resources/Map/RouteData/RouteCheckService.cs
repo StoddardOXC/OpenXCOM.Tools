@@ -12,7 +12,8 @@ namespace XCom.Resources.Map.RouteData
 		/// outside of a Map's x/y/z bounds.
 		/// </summary>
 		/// <param name="file"></param>
-		public static void CheckNodeBounds(MapFileChild file)
+		/// <returns>true if user opted to clear invalid nodes</returns>
+		public static bool CheckNodeBounds(MapFileChild file)
 		{
 			if (file != null)
 			{
@@ -54,13 +55,14 @@ namespace XCom.Resources.Map.RouteData
 									MessageBoxDefaultButton.Button1,
 									0) == DialogResult.Yes)
 					{
-						file.RoutesChanged = true;
-
 						foreach (var node in invalids)
 							file.Routes.DeleteNode(node);
+
+						return true;
 					}
 				}
 			}
+			return false;
 		}
 
 		/// <summary>
@@ -126,8 +128,6 @@ namespace XCom.Resources.Map.RouteData
 							MessageBoxDefaultButton.Button1,
 							0) == DialogResult.Yes)
 				{
-					file.RoutesChanged = true;
-
 					foreach (var node in invalids)
 						file.Routes.DeleteNode(node);
 

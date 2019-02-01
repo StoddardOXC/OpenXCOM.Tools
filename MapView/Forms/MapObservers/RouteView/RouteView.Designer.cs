@@ -13,7 +13,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		/// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing && (components != null))
+			if (disposing && components != null)
 				components.Dispose();
 
 			base.Dispose(disposing);
@@ -68,6 +68,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tscbConnectType = new System.Windows.Forms.ToolStripComboBox();
 			this.tsddbEdit = new System.Windows.Forms.ToolStripDropDownButton();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsmiAllNodesRank0 = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiClearLinkData = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsmiUpdateAllLinkDistances = new System.Windows.Forms.ToolStripMenuItem();
@@ -85,6 +86,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.btnGoLink1 = new System.Windows.Forms.Button();
 			this.btnOg = new System.Windows.Forms.Button();
 			this.pnlDataFields = new System.Windows.Forms.Panel();
+			this.label_RoutesChanged = new System.Windows.Forms.Label();
 			this.gbNodeEditor = new System.Windows.Forms.GroupBox();
 			this.btnCut = new System.Windows.Forms.Button();
 			this.pnlDataFieldsLeft = new System.Windows.Forms.Panel();
@@ -93,7 +95,6 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.labelAttack = new System.Windows.Forms.Label();
 			this.gbTileData = new System.Windows.Forms.GroupBox();
 			this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.tsMain.SuspendLayout();
 			this.gbLinkData.SuspendLayout();
 			this.pnlDataFields.SuspendLayout();
@@ -551,6 +552,11 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tsmiOptions.Text = "Options";
 			this.tsmiOptions.Click += new System.EventHandler(this.OnOptionsClick);
 			// 
+			// toolStripSeparator2
+			// 
+			this.toolStripSeparator2.Name = "toolStripSeparator2";
+			this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
+			// 
 			// tsmiAllNodesRank0
 			// 
 			this.tsmiAllNodesRank0.Name = "tsmiAllNodesRank0";
@@ -739,6 +745,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			// 
 			// pnlDataFields
 			// 
+			this.pnlDataFields.Controls.Add(this.label_RoutesChanged);
 			this.pnlDataFields.Controls.Add(this.btnOg);
 			this.pnlDataFields.Controls.Add(this.gbNodeEditor);
 			this.pnlDataFields.Controls.Add(this.gbLinkData);
@@ -749,6 +756,15 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.pnlDataFields.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
 			this.pnlDataFields.Size = new System.Drawing.Size(640, 205);
 			this.pnlDataFields.TabIndex = 4;
+			// 
+			// label_RoutesChanged
+			// 
+			this.label_RoutesChanged.Location = new System.Drawing.Point(555, 160);
+			this.label_RoutesChanged.Name = "label_RoutesChanged";
+			this.label_RoutesChanged.Size = new System.Drawing.Size(55, 30);
+			this.label_RoutesChanged.TabIndex = 40;
+			this.label_RoutesChanged.Text = "routes\r\nchanged";
+			this.label_RoutesChanged.Visible = false;
 			// 
 			// gbNodeEditor
 			// 
@@ -845,11 +861,6 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.UseAnimation = false;
 			// 
-			// toolStripSeparator2
-			// 
-			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(207, 6);
-			// 
 			// RouteView
 			// 
 			this.Controls.Add(this.pnlRoutes);
@@ -938,5 +949,6 @@ namespace MapView.Forms.MapObservers.RouteViews
 		private System.Windows.Forms.ToolStripMenuItem tsmi_LowerNode;
 		private System.Windows.Forms.ToolStripMenuItem tsmi_RaiseNode;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+		private System.Windows.Forms.Label label_RoutesChanged;
 	}
 }
