@@ -758,7 +758,8 @@ namespace MapView
 
 		private void OnTerrainLeftClick(object sender, EventArgs e)
 		{
-			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+			if (!XCMainWindow.Instance.MaptreeChanged && InputBoxType == BoxType.EditTileset)
+				 XCMainWindow.Instance.MaptreeChanged = true;
 
 			int sel = lbTerrainsAvailable.SelectedIndex;
 
@@ -784,7 +785,8 @@ namespace MapView
 
 		private void OnTerrainRightClick(object sender, EventArgs e)
 		{
-			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+			if (!XCMainWindow.Instance.MaptreeChanged && InputBoxType == BoxType.EditTileset)
+				 XCMainWindow.Instance.MaptreeChanged = true;
 
 			int sel = lbTerrainsAvailable.SelectedIndex;
 
@@ -813,7 +815,8 @@ namespace MapView
 
 		private void StepTerrainEntry(int dir)
 		{
-			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+			if (!XCMainWindow.Instance.MaptreeChanged && InputBoxType == BoxType.EditTileset)
+				 XCMainWindow.Instance.MaptreeChanged = true;
 
 			var terrains = Descriptor.Terrains;
 
@@ -852,7 +855,8 @@ namespace MapView
 
 		private void OnTerrainPasteClick(object sender, EventArgs e)
 		{
-			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+			if (!XCMainWindow.Instance.MaptreeChanged && InputBoxType == BoxType.EditTileset)
+				 XCMainWindow.Instance.MaptreeChanged = true;
 
 			Descriptor.Terrains.Clear();
 
@@ -867,7 +871,8 @@ namespace MapView
 
 		private void OnTerrainClearClick(object sender, EventArgs e)
 		{
-			XCMainWindow.Instance.MaptreeChanged = (InputBoxType == BoxType.EditTileset);
+			if (!XCMainWindow.Instance.MaptreeChanged && InputBoxType == BoxType.EditTileset)
+				 XCMainWindow.Instance.MaptreeChanged = true;
 
 			Descriptor.Terrains.Clear();
 			ListTerrains();

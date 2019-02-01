@@ -71,11 +71,24 @@ namespace MapView
 			set { _optionsManager["MainWindow"] = value; }
 		}
 
+		private bool _treeChanged;
 		/// <summary>
 		/// Gets/Sets the MaptreeChanged flag.
 		/// </summary>
 		internal bool MaptreeChanged
-		{ private get; set; }
+		{
+			get { return _treeChanged; }
+			set
+			{
+				if (_treeChanged = value)
+				{
+					if (!Text.EndsWith("*", StringComparison.OrdinalIgnoreCase))
+						Text += "*";
+				}
+				else if (Text.EndsWith("*", StringComparison.OrdinalIgnoreCase))
+					Text = Text.Substring(0, Text.Length - 1);
+			}
+		}
 
 		/// <summary>
 		/// Sets the MapChanged flag. This is only an intermediary that adds an
@@ -2466,6 +2479,7 @@ namespace MapView
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
 
 					Text = "Map Editor - " + descriptor.BasePath;
+					if (MaptreeChanged) Text += "*";
 
 					tsslMapLabel  .Text = descriptor.Label;
 					tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
