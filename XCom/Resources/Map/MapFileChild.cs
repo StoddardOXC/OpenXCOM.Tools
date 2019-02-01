@@ -27,6 +27,8 @@ namespace XCom
 		#endregion
 
 
+		public bool IsLoadChanged;
+
 		#region cTor
 		/// <summary>
 		/// cTor.
@@ -138,8 +140,9 @@ namespace XCom
 
 				if (high - IdOffset >= parts.Count)
 				{
-					_bypass    =
-					MapChanged = true;
+					_bypass = true;
+
+					IsLoadChanged = true;
 
 					MessageBox.Show(
 								"There are tileset parts being referenced that are"
@@ -322,7 +325,6 @@ namespace XCom
 		public override void SaveMap()
 		{
 			SaveMapData(FullPath);
-			MapChanged = false;
 		}
 
 		/// <summary>
@@ -398,14 +400,6 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Clears the 'MapChanged' flag.
-		/// </summary>
-		public override void ClearMapChanged()
-		{
-			MapChanged = false;
-		}
-
-		/// <summary>
 		/// Clears the 'RoutesChanged' flag.
 		/// </summary>
 		public override void ClearRoutesChanged()
@@ -423,7 +417,8 @@ namespace XCom
 		/// starting at the top level, MRZT_BOT to add or subtract delta-levels
 		/// starting at the ground level - but only if a height difference is
 		/// found for either case</param>
-		public override void MapResize(
+		/// <returns>true if the Mapfile changed</returns>
+		public override bool MapResize(
 				int rows,
 				int cols,
 				int levs,
@@ -436,8 +431,6 @@ namespace XCom
 															zType);
 			if (tileList != null)
 			{
-				MapChanged = true;
-
 				int
 					preRows = MapSize.Rows,
 					preCols = MapSize.Cols,
@@ -478,7 +471,10 @@ namespace XCom
 				SetupRouteNodes();
 
 				Level = 0; // fires a LevelChangedEvent.
+
+				return true;
 			}
+			return false;
 		}
 		#endregion
 	}

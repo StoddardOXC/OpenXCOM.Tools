@@ -55,6 +55,9 @@ namespace XCom.Interfaces.Base
 
 		/// <summary>
 		/// User will be shown a dialog asking to save if the Map changed.
+		/// @note The setter must be mediated by XCMainWindow.MapChanged in
+		/// order to apply/remove an asterisk to/from the file-label in
+		/// MainView's statusbar.
 		/// </summary>
 		public bool MapChanged
 		{ get; set; }
@@ -162,9 +165,6 @@ namespace XCom.Interfaces.Base
 		public virtual void SaveRoutes(string pf)
 		{}
 
-		public virtual void ClearMapChanged()
-		{}
-
 		public virtual void ClearRoutesChanged()
 		{}
 
@@ -175,12 +175,15 @@ namespace XCom.Interfaces.Base
 		/// <param name="cols"></param>
 		/// <param name="levs"></param>
 		/// <param name="zType"></param>
-		public virtual void MapResize(
+		/// <returns>true if the Mapfile changed</returns>
+		public virtual bool MapResize(
 				int rows,
 				int cols,
 				int levs,
 				MapResizeService.MapResizeZtype zType)
-		{}
+		{
+			return false;
+		}
 		#endregion
 
 

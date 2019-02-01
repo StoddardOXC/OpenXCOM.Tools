@@ -71,8 +71,37 @@ namespace MapView
 			set { _optionsManager["MainWindow"] = value; }
 		}
 
+		/// <summary>
+		/// Gets/Sets the MaptreeChanged flag.
+		/// </summary>
 		internal bool MaptreeChanged
 		{ private get; set; }
+
+		/// <summary>
+		/// Gets/Sets the MapChanged flag. This is only an intermediary that
+		/// adds an asterisk to the file-label in MainView's statusbar; the real
+		/// MapChanged flag is stored in XCom..MapFileBase. reasons.
+		/// </summary>
+		internal bool MapChanged
+		{
+			get { return _mainViewUnderlay.MapBase.MapChanged; }
+			set
+			{
+				string text = tsslMapLabel.Text;
+				if (_mainViewUnderlay.MapBase.MapChanged = value) // shuffle the value down to MapFileBase.MapChanged ...
+				{
+					if (!text.EndsWith("*", StringComparison.OrdinalIgnoreCase))
+						text += "*";
+				}
+				else if (text.EndsWith("*", StringComparison.OrdinalIgnoreCase))
+					text = text.Substring(0, text.Length - 1);
+
+				tsslMapLabel.Text = text;
+			}
+		}
+
+//		internal bool RoutesChanged
+//		{ get; set; }
 
 		/// <summary>
 		/// The currently searched and found and highlighted Treenode on the MapTree.
@@ -1042,6 +1071,8 @@ namespace MapView
 			{
 				_mainViewUnderlay.MapBase.SaveMap();
 				_mainViewUnderlay.MapBase.SaveRoutes();
+
+				MapChanged = false;
 			}
 			MaptreeChanged = !ResourceInfo.TileGroupInfo.SaveTileGroups();
 		}
@@ -1049,7 +1080,10 @@ namespace MapView
 		internal void OnSaveMapClick(object sender, EventArgs e)
 		{
 			if (_mainViewUnderlay.MapBase != null)
+			{
 				_mainViewUnderlay.MapBase.SaveMap();
+				MapChanged = false;
+			}
 		}
 
 		internal void OnSaveRoutesClick(object sender, EventArgs e)
@@ -1188,7 +1222,10 @@ namespace MapView
 						if (_mainViewUnderlay.MapBase != null)
 						{
 							if (_mainViewUnderlay.MapBase.MapChanged)
+							{
 								_mainViewUnderlay.MapBase.SaveMap();
+								MapChanged = false;
+							}
 
 							if (_mainViewUnderlay.MapBase.RoutesChanged)
 								_mainViewUnderlay.MapBase.SaveRoutes();
@@ -1205,7 +1242,7 @@ namespace MapView
 						break;
 
 					case DialogResult.Ignore:
-						_mainViewUnderlay.MapBase.ClearMapChanged();
+						MapChanged = false;
 						_mainViewUnderlay.MapBase.ClearRoutesChanged();
 						MaptreeChanged = false;
 
@@ -1302,11 +1339,11 @@ namespace MapView
 
 					if (f.ShowDialog(this) == DialogResult.OK)
 					{
-						f.MapBase.MapResize(
-										f.Rows,
-										f.Cols,
-										f.Levs,
-										f.ZType);
+						MapChanged |= f.MapBase.MapResize(
+														f.Rows,
+														f.Cols,
+														f.Levs,
+														f.ZType);
 
 						_mainViewUnderlay.ForceResize();
 
@@ -1779,7 +1816,10 @@ namespace MapView
 
 							case DialogResult.Retry:
 								if (_mainViewUnderlay.MapBase.MapChanged)
+								{
 									_mainViewUnderlay.MapBase.SaveMap();
+									MapChanged = false;
+								}
 
 								if (_mainViewUnderlay.MapBase.RoutesChanged)
 									_mainViewUnderlay.MapBase.SaveRoutes();
@@ -1788,7 +1828,7 @@ namespace MapView
 								break;
 
 							case DialogResult.Ignore:
-								_mainViewUnderlay.MapBase.ClearMapChanged();
+								MapChanged = false;
 								_mainViewUnderlay.MapBase.ClearRoutesChanged();
 
 								OnMapTreeMouseDown(null, e); // recurse.
@@ -2367,7 +2407,7 @@ namespace MapView
 			{
 				//LogFile.WriteLine(". descriptor= " + descriptor);
 
-				var @base = MapFileService.LoadTileset(descriptor);
+				var @base = MapFileService.LoadTileset(descriptor); // NOTE: LoadTileset() instantiates a MapFileChild but whatver.
 				if (@base != null)
 				{
 					miSaveAll    .Enabled =
@@ -2403,6 +2443,8 @@ namespace MapView
 														  : "size: n/a";
 					tsslPosition     .Text =
 					tsslSelectionSize.Text = String.Empty;
+
+					MapChanged = ((MapFileChild)@base).IsLoadChanged; // don't bother to reset IsLoadChanged.
 
 					ViewerFormsManager.RouteView   .Control     .ClearSelectedInfo();
 					ViewerFormsManager.TopRouteView.ControlRoute.ClearSelectedInfo();
@@ -2459,10 +2501,11 @@ namespace MapView
 				{
 					case DialogResult.Yes:		// save & clear MapChanged flag
 						_mainViewUnderlay.MapBase.SaveMap();
+						MapChanged = false;
 						break;
 
 					case DialogResult.No:		// don't save & clear MapChanged flag
-						_mainViewUnderlay.MapBase.ClearMapChanged();
+						MapChanged = false;
 						break;
 
 					case DialogResult.Cancel:	// dismiss confirmation dialog & leave state unaffected

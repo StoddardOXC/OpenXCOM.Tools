@@ -355,7 +355,7 @@ namespace MapView
 		{
 			if (MapBase != null && FirstClick)
 			{
-				MapBase.MapChanged = true;
+				XCMainWindow.Instance.MapChanged = true;
 
 				XCMapTile tile;
 
@@ -418,7 +418,7 @@ namespace MapView
 		{
 			if (MapBase != null && _copied != null && FirstClick)
 			{
-				MapBase.MapChanged = true;
+				XCMainWindow.Instance.MapChanged = true;
 
 				XCMapTile tile, tileCopy;
 				for (int
@@ -457,7 +457,7 @@ namespace MapView
 		{
 			if (MapBase != null && FirstClick)
 			{
-				MapBase.MapChanged = true;
+				XCMainWindow.Instance.MapChanged = true;
 
 				var start = GetAbsoluteDragStart();
 				var end   = GetAbsoluteDragEnd();

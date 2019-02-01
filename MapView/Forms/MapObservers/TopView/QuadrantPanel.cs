@@ -207,7 +207,7 @@ namespace MapView.Forms.MapObservers.TopViews
 									break;
 							}
 
-							MapBase.MapChanged = true;
+							XCMainWindow.Instance.MapChanged = true;
 
 							Refresh();
 
