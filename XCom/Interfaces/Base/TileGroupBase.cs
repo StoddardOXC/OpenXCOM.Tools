@@ -78,7 +78,7 @@ namespace XCom.Interfaces.Base
 		}
 
 		/// <summary>
-		/// Adds a tileset. Called by
+		/// Adds a tileset-descriptor. Called by
 		/// - MapTreeTilesetInputBox.OnCreateTilesetClick()
 		/// NOTE: Check that the descriptor does *not* exist and category does
 		/// exist first.
@@ -91,7 +91,7 @@ namespace XCom.Interfaces.Base
 		}
 
 		/// <summary>
-		/// Deletes a tileset. Called by
+		/// Deletes a tileset-descriptor. Called by
 		/// - XCMainWindow.OnDeleteTilesetClick()
 		/// - MapTreeTilesetInputBox.OnCreateTilesetClick()
 		/// NOTE: Check that category and perhaps tileset exist first.

@@ -340,7 +340,7 @@ namespace MapView
 				fbd.SelectedPath = BasepathTileset;
 				fbd.Description = String.Format(
 											System.Globalization.CultureInfo.CurrentCulture,
-											"Browse to a BasePath folder. A valid BasePath folder"
+											"Browse to a basepath folder. A valid basepath folder"
 												+ " has the subfolders MAPS and ROUTES.");
 
 				if (fbd.ShowDialog() == DialogResult.OK)
@@ -995,7 +995,7 @@ namespace MapView
 				fbd.SelectedPath = LastTerrainDir;
 				fbd.Description = String.Format(
 											System.Globalization.CultureInfo.CurrentCulture,
-											"Browse to a BasePath folder. A valid BasePath folder"
+											"Browse to a basepath folder. A valid basepath folder"
 												+ " has the subfolder TERRAIN.");
 
 				if (fbd.ShowDialog() == DialogResult.OK)
@@ -1083,8 +1083,8 @@ namespace MapView
 
 		private static bool IsTilesetGrouped(string labelMap)
 		{
-			foreach (var tileGroup in ResourceInfo.TileGroupInfo.TileGroups)
-			foreach (var category in tileGroup.Value.Categories)
+			foreach (var group in ResourceInfo.TileGroupInfo.TileGroups)
+			foreach (var category in group.Value.Categories)
 			foreach (var descriptor in category.Value.Values)
 			{
 				if (descriptor.Label == labelMap)

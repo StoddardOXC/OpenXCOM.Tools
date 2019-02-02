@@ -1,8 +1,18 @@
 Distribution build (for Windows 32/64) is hosted on Google Drive.
 
+MapView stores settings in a subfolder of itself. If you do not have user-permissions to write to that folder (eg. Program Files) you may have to either enable them or install MapView to a different hierarchy on your hardrive (eg. C:\).
+
 note for Mono users: MapView needs to run once and then be restarted for its window to resize properly.
 
 Built against .NET 4.5.1
+
+2019 February 1<br>
+notconfigured
+
+- show asterisk on MainView's titlebar if the Maptree changes
+- show asterisk on MainView's statusbar if the Map changes
+- show "routes changed" in RouteView if the Routes change
+- fix ambiguity of the Maptree changed flag in the TilesetEditor
 
 2019 January 30<br>
 [MapView2_190130.7z](https://drive.google.com/file/d/1-g_sk4aPzMsEBZT2203hFUpHY57xTQ_i/view?usp=sharing)
