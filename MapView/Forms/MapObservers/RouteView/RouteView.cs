@@ -282,7 +282,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				selected += String.Format(
 										System.Globalization.CultureInfo.InvariantCulture,
 										"c {0}  r {1}  L {2}",
-										_col, _row, MapFile.MapSize.Levs - level);
+										_col + 1, _row + 1, MapFile.MapSize.Levs - level); // 1-based count.
 
 				lblSelected.Text = selected;
 			}
@@ -309,7 +309,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				over += String.Format(
 									System.Globalization.CultureInfo.InvariantCulture,
 									"c {0}  r {1}  L {2}",
-									loc.X, loc.Y, MapFile.MapSize.Levs - _lev);
+									loc.X + 1, loc.Y + 1, MapFile.MapSize.Levs - _lev); // 1-based count.
 			}
 
 			lblOver.Text = over;
@@ -688,7 +688,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				btnGoLink5.Text = String.Empty;
 
 
-				cbType.SelectedItem   = UnitType.Any;
+				cbType  .SelectedItem = UnitType.Any;
 				cbPatrol.SelectedItem = PatrolPriority.Zero;
 				cbAttack.SelectedItem = BaseAttack.Zero;
 
@@ -719,12 +719,12 @@ namespace MapView.Forms.MapObservers.RouteViews
 			}
 			else // selected node is valid ->
 			{
-				gbTileData.Enabled   =
-				gbNodeData.Enabled   =
-				gbLinkData.Enabled   =
+				gbTileData  .Enabled =
+				gbNodeData  .Enabled =
+				gbLinkData  .Enabled =
 				gbNodeEditor.Enabled = true;
 
-				cbType.SelectedItem   = NodeSelected.Type;
+				cbType  .SelectedItem = NodeSelected.Type;
 				cbPatrol.SelectedItem = NodeSelected.Patrol;
 				cbAttack.SelectedItem = NodeSelected.Attack;
 

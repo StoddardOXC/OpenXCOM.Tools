@@ -2650,7 +2650,7 @@ namespace MapView
 				tsslPosition.Text = String.Format(
 												System.Globalization.CultureInfo.CurrentCulture,
 												"c {0}  r {1}  L {2}",
-												col, row, lev);
+												col + 1, row + 1, _mainViewUnderlay.MapBase.MapSize.Levs - lev); // 1-based count.
 		}
 
 		internal void StatusBarPrintScale()

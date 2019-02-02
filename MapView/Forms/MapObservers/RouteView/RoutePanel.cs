@@ -30,7 +30,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		private const string Spawn  = "spawn";
 		private const string Patrol = "patrol";
 
-		private const string textTile1 = ""; // "position" or "location" or ... "pos" or "loc" ...
+		private const string textTile1 = ""; // "position" or "location" or ... "pos" or "loc" ... ie, undecided
 		#endregion
 
 
@@ -682,7 +682,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 			var tile = GetTile(ref x, ref y); // x/y -> tile-location
 			if (tile != null)
 			{
-				string textTile2 = "c " + x + "  r " + y + "  L " + (MapFile.MapSize.Levs - MapFile.Level);
+				string textTile2 =   "c " + (x + 1)
+								 + "  r " + (y + 1)
+								 + "  L " + (MapFile.MapSize.Levs - MapFile.Level); // 1-based count.
 
 				int textWidth1 = (int)_graphics.MeasureString(textTile1, _fontOverlay).Width;
 				int textWidth2 = (int)_graphics.MeasureString(textTile2, _fontOverlay).Width;

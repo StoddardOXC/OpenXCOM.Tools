@@ -683,9 +683,7 @@ namespace MapView
 			_lev = args.Location.Lev;
 			//LogFile.WriteLine(". " + _col + "," + _row + "," + _lev);
 
-			XCMainWindow.Instance.StatusBarPrintPosition(
-													_col, _row,
-													MapBase.MapSize.Levs - _lev);
+			XCMainWindow.Instance.StatusBarPrintPosition(_col, _row, _lev);
 		}
 
 		/// <summary>
@@ -702,9 +700,7 @@ namespace MapView
 			_lev = args.Level;
 			//LogFile.WriteLine(". " + _col + "," + _row + "," + _lev);
 
-			XCMainWindow.Instance.StatusBarPrintPosition(
-													_col, _row,
-													MapBase.MapSize.Levs - _lev);
+			XCMainWindow.Instance.StatusBarPrintPosition(_col, _row, _lev);
 			Refresh();
 		}
 		#endregion
