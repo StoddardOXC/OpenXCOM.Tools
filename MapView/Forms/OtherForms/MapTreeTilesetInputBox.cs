@@ -53,6 +53,9 @@ namespace MapView
 		private static Dictionary<int, Tuple<string,string>> _copiedTerrains
 				 = new Dictionary<int, Tuple<string,string>>();
 
+		/// <summary>
+		/// Is static to grant access to all instantiations.
+		/// </summary>
 		private static Dictionary<int, Tuple<string,string>> CopiedTerrains
 		{
 			get { return _copiedTerrains; }
@@ -103,7 +106,7 @@ namespace MapView
 		{ get; set; }
 
 		/// <summary>
-		/// Stores the original terrain-list of a tileset, used only for
+		/// Stores the original terrains-list of a tileset, used only for
 		/// 'EditTileset' to check if the terrains have changed when user clicks
 		/// Accept.
 		/// </summary>
@@ -112,7 +115,7 @@ namespace MapView
 
 		private string _basepath;
 		/// <summary>
-		/// Gets/Sets the basepath of the Tileset. Set calls ListTerrains()
+		/// Gets/Sets the basepath of the Tileset. Setter calls ListTerrains()
 		/// which also sets the Descriptor.
 		/// </summary>
 		private string BasepathTileset
@@ -128,9 +131,9 @@ namespace MapView
 		}
 
 		/// <summary>
-		/// The basepath that the user has set with the Configurator.
+		/// The basepath that the user has set in the Configurator.
 		/// </summary>
-		private string BasepathConfig
+		private string BasepathConfigurator
 		{ get; set; }
 
 		private Descriptor Descriptor
@@ -204,11 +207,11 @@ namespace MapView
 			lbTerrainsAllocated.DisplayMember = "Terrain";
 			lbTerrainsAvailable.DisplayMember = "Terrain";
 
-			TileGroup = ResourceInfo.TileGroupInfo.TileGroups[Group] as TileGroup;
+			TileGroup = ResourceInfo.TileGroupManager.TileGroups[Group] as TileGroup;
 
 			string keydir = (TileGroup.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
 																 : SharedSpace.ResourceDirectoryTftd;
-			BasepathConfig = SharedSpace.Instance.GetShare(keydir);
+			BasepathConfigurator = SharedSpace.Instance.GetShare(keydir);
 			//LogFile.WriteLine("BasepathConfig= " + BasepathConfig);
 			rb_ConfigBasepath.Checked = true;
 
@@ -245,7 +248,7 @@ namespace MapView
 					else
 						lblMcdRecords.ForeColor = Color.Tan;
 
-					BasepathTileset = descriptor.BasePath;
+					BasepathTileset = descriptor.Basepath;
 					break;
 				}
 
@@ -346,7 +349,7 @@ namespace MapView
 				if (fbd.ShowDialog() == DialogResult.OK)
 				{
 					BasepathTileset = fbd.SelectedPath;
-					OnTilesetLabelChanged(null, EventArgs.Empty);
+					OnTilesetTextboxChanged(null, EventArgs.Empty);
 				}
 			}
 		}
@@ -376,7 +379,7 @@ namespace MapView
 												  : basepath;
 
 					Tileset = Path.GetFileNameWithoutExtension(pfeMap);
-					OnTilesetLabelChanged(null, EventArgs.Empty);	// NOTE: This will fire OnTilesetLabelChanged() twice usually but
+					OnTilesetTextboxChanged(null, EventArgs.Empty);	// NOTE: This will fire OnTilesetLabelChanged() twice usually but
 				}													// has to be here in case the basepath changed but the label didn't.
 			}
 		}
@@ -388,7 +391,7 @@ namespace MapView
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnTilesetLabelChanged(object sender, EventArgs e)
+		private void OnTilesetTextboxChanged(object sender, EventArgs e)
 		{
 			if (Inited) // do not run until the textbox has been initialized.
 			{
@@ -462,9 +465,9 @@ namespace MapView
 			switch (InputBoxType)
 			{
 				case BoxType.EditTileset:
-					if (Tileset == TilesetOriginal
-						|| (!IsTilesetGrouped(Tileset) && !MapfileExists(Tileset))) // spellcast: ConfuseOpponent(OBJECT_SELF)
-					{
+					if (Tileset == TilesetOriginal										// use original Descriptor if label hasn't changed
+						|| (!IsTilesetCategorized(Tileset) && !MapfileExists(Tileset)))	// or if (label is not in Category AND its Mapfile doesn't exist in the current tileset's basepath on disk)
+					{																	// -> spellcast: ConfuseOpponent(OBJECT_SELF)
 						Descriptor = TileGroup.Categories[Category][TilesetOriginal];
 						IsOriginalDescriptor = true; // is Original or is Original w/ modified label
 					}
@@ -473,7 +476,7 @@ namespace MapView
 					break;
 
 				case BoxType.AddTileset:
-					if (IsTilesetGrouped(Tileset)) // completely disallowed. ie, user must delete the old tileset first
+					if (IsTilesetCategorized(Tileset))
 					{
 						Descriptor = null;
 					}
@@ -572,7 +575,7 @@ namespace MapView
 		/// <param name="e"></param>
 		private void OnCreateDescriptorClick(object sender, EventArgs e)
 		{
-			if (!IsTilesetGrouped(Tileset))
+			if (!IsTilesetCategorized(Tileset))
 			{
 				Descriptor = new Descriptor(		// be careful with that; it isn't being deleted if user clicks Cancel
 										Tileset,	// or chooses instead to create yet another descriptor.
@@ -667,7 +670,7 @@ namespace MapView
 												+ Environment.NewLine + Environment.NewLine
 												+ GetFullpathMapfile(Tileset));
 							}
-							else if (IsTilesetGrouped(Tileset))
+							else if (IsTilesetCategorized(Tileset))
 							{
 								ShowErrorDialog("The tileset already exists in the Maptree."
 											+ Environment.NewLine + Environment.NewLine
@@ -946,7 +949,7 @@ namespace MapView
 			if (sender == rb_CustomBasepath)
 			{
 				if (String.IsNullOrEmpty(LastTerrainDir))
-					LastTerrainDir = BasepathConfig;
+					LastTerrainDir = BasepathConfigurator;
 
 				tbTerrainPath.Text = Path.Combine(LastTerrainDir, GlobalsXC.TerrainDir);
 				tbTerrainPath.ReadOnly = false;
@@ -955,14 +958,14 @@ namespace MapView
 			}
 			else if (sender == rb_TilesetBasepath)
 			{
-				tbTerrainPath.Text = Path.Combine(Descriptor.BasePath, GlobalsXC.TerrainDir);
+				tbTerrainPath.Text = Path.Combine(Descriptor.Basepath, GlobalsXC.TerrainDir);
 				tbTerrainPath.ReadOnly = true;
 
 				btnFindBasepath.Visible = false;
 			}
 			else //if (sender == rb_ConfigBasepath)
 			{
-				tbTerrainPath.Text = Path.Combine(BasepathConfig, GlobalsXC.TerrainDir);
+				tbTerrainPath.Text = Path.Combine(BasepathConfigurator, GlobalsXC.TerrainDir);
 				tbTerrainPath.ReadOnly = true;
 
 				btnFindBasepath.Visible = false;
@@ -1066,11 +1069,11 @@ namespace MapView
 		}
 
 		/// <summary>
-		/// Checks if a Map-file w/ 'label' exists in the current 'BasePath'
+		/// Checks if a Map-file w/ label exists in the current basepath
 		/// directory.
 		/// </summary>
-		/// <param name="labelMap">the name w/out extension of a Map-file to check for</param>
-		/// <returns></returns>
+		/// <param name="labelMap">the label w/out extension of a Map-file to check for</param>
+		/// <returns>true if the Map-file already exists on the hardrive</returns>
 		private bool MapfileExists(string labelMap)
 		{
 			string pfeMap = null;
@@ -1081,9 +1084,14 @@ namespace MapView
 			return (pfeMap != null && File.Exists(pfeMap));
 		}
 
+/*		/// <summary>
+		/// Checks if a tileset w/ label exists anywhere in the TileGroups.
+		/// </summary>
+		/// <param name="labelMap">the label of a tileset to check for</param>
+		/// <returns>true if a tileset w/ label already exists in the Groups</returns>
 		private static bool IsTilesetGrouped(string labelMap)
 		{
-			foreach (var group in ResourceInfo.TileGroupInfo.TileGroups)
+			foreach (var group in ResourceInfo.TileGroupManager.TileGroups)
 			foreach (var category in group.Value.Categories)
 			foreach (var descriptor in category.Value.Values)
 			{
@@ -1091,8 +1099,28 @@ namespace MapView
 					return true;
 			}
 			return false;
+		} */
+
+		/// <summary>
+		/// Checks if a specified tileset-label exists in the current tileset's
+		/// Category.
+		/// @note A label shall be unique in its Category.
+		/// </summary>
+		/// <param name="labelMap">the tileset-label to check</param>
+		/// <returns>true if the tileset-label already exists in the current
+		/// tileset's Category</returns>
+		private bool IsTilesetCategorized(string labelMap)
+		{
+			var category = ResourceInfo.TileGroupManager.TileGroups[Group].Categories[Category];
+			return category.ContainsKey(labelMap);
 		}
 
+		/// <summary>
+		/// Checks if two terrains-lists are (not) equivalent.
+		/// </summary>
+		/// <param name="a">first terrains-list</param>
+		/// <param name="b">second terrains-list</param>
+		/// <returns>true if the specified terrains-lists are different</returns>
 		private static bool IsTerrainsChanged(
 				IDictionary<int, Tuple<string, string>> a,
 				IDictionary<int, Tuple<string, string>> b)

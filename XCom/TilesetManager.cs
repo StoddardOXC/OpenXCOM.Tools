@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 using YamlDotNet.RepresentationModel;
 
@@ -9,9 +9,8 @@ using YamlDotNet.RepresentationModel;
 namespace XCom
 {
 	/// <summary>
-	/// A TilesetManager reads, stores, and manages all the tileset-data taken
-	/// from the user-file MapTilesets.yml. It's the user-configuration for all
-	/// the Maps.
+	/// A TilesetManager reads and loads all the tileset-data in the user-file
+	/// MapTilesets.yml. It's the user-configuration for all the Maps.
 	/// NOTE: Tilesets are converted into Descriptors and Tilesets are no longer
 	/// used after loading is finished.
 	/// </summary>
@@ -145,7 +144,7 @@ namespace XCom
 							nodetry2 = nodeTerrains[i] as YamlMappingNode;
 							//LogFile.WriteLine(". . . nodetry2= " + nodetry2); // eg. "{ { U_EXT02, basepath } }"
 
-							foreach (var keyval in nodetry2.Children) // note: there's only one keyval in a terrain-node.
+							foreach (var keyval in nodetry2.Children) // note: there's only one keyval in each terrain-node.
 							{
 								terr = keyval.Key.ToString();
 								path = keyval.Value.ToString();

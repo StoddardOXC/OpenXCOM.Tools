@@ -30,11 +30,11 @@ namespace XCom
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("MapFileService.LoadTileset descriptor= " + descriptor);
 
-			string pfeMap = descriptor.BasePath;
+			string pfeMap = descriptor.Basepath;
 			if (!String.IsNullOrEmpty(pfeMap)) // -> the BasePath can be null if resource-type is notconfigured.
 			{
 				pfeMap = Path.Combine(
-									Path.Combine(descriptor.BasePath, GlobalsXC.MapsDir),
+									Path.Combine(descriptor.Basepath, GlobalsXC.MapsDir),
 									descriptor.Label + GlobalsXC.MapExt);
 			}
 			//LogFile.WriteLine(". pfeMap= " + pfeMap);
@@ -84,7 +84,7 @@ namespace XCom
 						MapFileWarn.Instance.SetText(descriptor.Label, text);
 					}
 
-					var RMP = new RouteNodeCollection(descriptor.Label, descriptor.BasePath);
+					var RMP = new RouteNodeCollection(descriptor.Label, descriptor.Basepath);
 					var MAP = new MapFileChild(
 											descriptor,
 											parts,

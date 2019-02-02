@@ -16,6 +16,11 @@ namespace XCom
 	/// Group. (not really. Because they'll usually be in the same directory on
 	/// the hardrive and the OS won't allow duplicate labels in one directory.)
 	/// @note Is disallowed in MapTreeTilesetInputBox regardless.
+	/// 
+	/// TODO: adapt ConfigConverter to allow a tileset to be assigned under >1
+	/// Category. If a tileset's descriptor changes it needs to change all
+	/// instances. But only if both Label and BasePath IN THE YAML match (etc).
+	/// 
 	/// </summary>
 	public sealed class Descriptor // *snap*
 	{
@@ -28,13 +33,15 @@ namespace XCom
 		public string Label
 		{ get; private set; }
 
-		public string BasePath
+		public string Basepath
 		{ get; private set; }
 
-		private Dictionary<int, Tuple<string,string>> _terrains = new Dictionary<int, Tuple<string, string>>();
+		private Dictionary<int, Tuple<string,string>> _terrains = new Dictionary<int, Tuple<string,string>>();
 		/// <summary>
-		/// A dictionary of this tileset's terrains as IDs that keys another
-		/// dictionary that contains terrain-strings that key their path-strings.
+		/// A dictionary of this tileset's terrains as IDs that keys a tuple
+		/// that pairs terrain-labels with basepath-strings. A basepath-string
+		/// can be blank (use config's basepath), "basepath" (use the tileset's
+		/// basepath), or the basepath of any TERRAIN directory.
 		/// </summary>
 		public Dictionary<int, Tuple<string,string>> Terrains
 		{
@@ -66,7 +73,7 @@ namespace XCom
 
 			Label    = tileset;
 			Terrains = terrains;
-			BasePath = basepath;
+			Basepath = basepath;
 			Pal      = palette;
 
 			_dirTerr = (Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
@@ -85,7 +92,7 @@ namespace XCom
 				return _dirTerr;
 
 			if (path == GlobalsXC.BASEPATH)								// use this Tileset's basepath
-				return Path.Combine(BasePath, GlobalsXC.TerrainDir);
+				return Path.Combine(Basepath, GlobalsXC.TerrainDir);
 
 			return Path.Combine(path, GlobalsXC.TerrainDir);			// use the path specified.
 		}
@@ -93,7 +100,7 @@ namespace XCom
 		/// <summary>
 		/// Gets the MCD-records for a given terrain in this Descriptor.
 		/// </summary>
-		/// <param name="id">the position of the terrain in this tileset's terrain-list</param>
+		/// <param name="id">the position of the terrain in this tileset's terrains-list</param>
 		/// <returns>an McdRecordCollection containing all the parts for the Terrain</returns>
 		public McdRecordCollection GetTerrainRecords(int id)
 		{
@@ -112,7 +119,7 @@ namespace XCom
 		/// <summary>																					// Pretty clever huh - Dr.No look out!!science!!
 		/// Gets the count of MCD-records in an MCD-file.
 		/// </summary>
-		/// <param name="id">the position of the terrain in this tileset's terrain-list</param>
+		/// <param name="id">the position of the terrain in this tileset's terrains-list</param>
 		/// <returns>count of MCD-records or 0 on fail</returns>
 		public int GetRecordCount(int id)
 		{
@@ -129,7 +136,7 @@ namespace XCom
 		/// Gets the count of sprites in a given Terrain.
 		/// @note Used only by MapInfoOutputBox.Analyze()
 		/// </summary>
-		/// <param name="id">the position of the terrain in this tileset's terrain-list</param>
+		/// <param name="id">the position of the terrain in this tileset's terrains-list</param>
 		/// <returns>count of sprites</returns>
 		public int GetSpriteCount(int id)
 		{

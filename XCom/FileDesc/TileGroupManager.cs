@@ -10,6 +10,9 @@ using XCom.Interfaces.Base;
 
 namespace XCom
 {
+	/// <summary>
+	/// Manages tileset-groups and writes MapTilesets.yml.
+	/// </summary>
 	public sealed class TileGroupManager
 	{
 		#region Fields
@@ -30,8 +33,8 @@ namespace XCom
 		#region cTor
 		internal TileGroupManager(TilesetManager tilesetManager)
 		{
-			foreach (string tilegroup in tilesetManager.Groups)
-				TileGroups[tilegroup] = new TileGroupChild(tilegroup, tilesetManager.Tilesets);
+			foreach (string labelGroup in tilesetManager.Groups)
+				TileGroups[labelGroup] = new TileGroupChild(labelGroup, tilesetManager.Tilesets);
 		}
 		#endregion
 
@@ -186,7 +189,7 @@ namespace XCom
 									keyResourcePath = SharedSpace.ResourceDirectoryTftd;
 									break;
 							}
-							string basepath = descriptor.BasePath;
+							string basepath = descriptor.Basepath;
 							if (basepath != SharedSpace.Instance.GetShare(keyResourcePath))
 								sw.WriteLine("    " + GlobalsXC.BASEPATH + ": " + basepath);
 						}

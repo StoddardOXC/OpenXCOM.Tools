@@ -6,6 +6,9 @@ using XCom.Interfaces;
 
 namespace XCom
 {
+	/// <summary>
+	/// Instantiates descriptors for all tilesets in MapTilesets.
+	/// </summary>
 	internal sealed class TileGroupChild
 		:
 			TileGroup
@@ -44,7 +47,7 @@ namespace XCom
 						Categories[tileset.Category] = new Dictionary<string, Descriptor>();
 					}
 
-					if (String.IsNullOrEmpty(tileset.BasePath))
+					if (String.IsNullOrEmpty(tileset.BasePath)) // assign the Configurator's basepath to the tileset's Descriptor ->
 					{
 						switch (GroupType)
 						{

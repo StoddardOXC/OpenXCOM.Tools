@@ -10,16 +10,13 @@ namespace XCom.Interfaces.Base
 		public string Label
 		{ get; private set; }
 
-		private readonly Dictionary<string, Descriptor> _descriptors
-				   = new Dictionary<string, Descriptor>();
-
+		private readonly Dictionary<string, Dictionary<string, Descriptor>> _categories
+				   = new Dictionary<string, Dictionary<string, Descriptor>>();
 		/// <summary>
 		/// Categories is a dictionary of category-labels mapped to a
 		/// subdictionary of descriptor-labels (.MAP/.RMP filenames w/out
 		/// extension) mapped to the Descriptors themselves.
 		/// </summary>
-		private readonly Dictionary<string, Dictionary<string, Descriptor>> _categories
-				   = new Dictionary<string, Dictionary<string, Descriptor>>();
 		public Dictionary<string, Dictionary<string, Descriptor>> Categories
 		{
 			get { return _categories; }
