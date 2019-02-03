@@ -43,7 +43,7 @@
 			this.rb_CustomBasepath = new System.Windows.Forms.RadioButton();
 			this.rb_TilesetBasepath = new System.Windows.Forms.RadioButton();
 			this.rb_ConfigBasepath = new System.Windows.Forms.RadioButton();
-			this.lbl_AllocatedPath = new System.Windows.Forms.Label();
+			this.lbl_PathAllocated_ = new System.Windows.Forms.Label();
 			this.lbl_PathAvailable = new System.Windows.Forms.Label();
 			this.lbl_PathAllocated = new System.Windows.Forms.Label();
 			this.btnFindBasepath = new System.Windows.Forms.Button();
@@ -60,6 +60,8 @@
 			this.btnMoveRight = new System.Windows.Forms.Button();
 			this.btnMoveUp = new System.Windows.Forms.Button();
 			this.gbTileset = new System.Windows.Forms.GroupBox();
+			this.lblTilesetCount_ = new System.Windows.Forms.Label();
+			this.lblTilesetCount = new System.Windows.Forms.Label();
 			this.btnCreateMap = new System.Windows.Forms.Button();
 			this.btnFindDirectory = new System.Windows.Forms.Button();
 			this.lblTilesetMap = new System.Windows.Forms.Label();
@@ -127,7 +129,7 @@
 			this.pnlBottom.Controls.Add(this.btnOk);
 			this.pnlBottom.Controls.Add(this.btnCancel);
 			this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.pnlBottom.Location = new System.Drawing.Point(0, 489);
+			this.pnlBottom.Location = new System.Drawing.Point(0, 514);
 			this.pnlBottom.Name = "pnlBottom";
 			this.pnlBottom.Size = new System.Drawing.Size(612, 30);
 			this.pnlBottom.TabIndex = 0;
@@ -148,7 +150,7 @@
 			this.pnlTop.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pnlTop.Location = new System.Drawing.Point(0, 0);
 			this.pnlTop.Name = "pnlTop";
-			this.pnlTop.Size = new System.Drawing.Size(612, 489);
+			this.pnlTop.Size = new System.Drawing.Size(612, 514);
 			this.pnlTop.TabIndex = 0;
 			// 
 			// gbTerrains
@@ -158,9 +160,9 @@
 			this.gbTerrains.Controls.Add(this.pnlTerrainsHeader);
 			this.gbTerrains.Controls.Add(this.pnlSpacer);
 			this.gbTerrains.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.gbTerrains.Location = new System.Drawing.Point(0, 110);
+			this.gbTerrains.Location = new System.Drawing.Point(0, 130);
 			this.gbTerrains.Name = "gbTerrains";
-			this.gbTerrains.Size = new System.Drawing.Size(612, 379);
+			this.gbTerrains.Size = new System.Drawing.Size(612, 384);
 			this.gbTerrains.TabIndex = 2;
 			this.gbTerrains.TabStop = false;
 			this.gbTerrains.Text = "Terrains";
@@ -172,7 +174,7 @@
 			this.lbTerrainsAllocated.ItemHeight = 12;
 			this.lbTerrainsAllocated.Location = new System.Drawing.Point(3, 110);
 			this.lbTerrainsAllocated.Name = "lbTerrainsAllocated";
-			this.lbTerrainsAllocated.Size = new System.Drawing.Size(267, 266);
+			this.lbTerrainsAllocated.Size = new System.Drawing.Size(267, 271);
 			this.lbTerrainsAllocated.TabIndex = 0;
 			this.lbTerrainsAllocated.SelectedIndexChanged += new System.EventHandler(this.OnAllocatedIndexChanged);
 			// 
@@ -183,7 +185,7 @@
 			this.lbTerrainsAvailable.ItemHeight = 12;
 			this.lbTerrainsAvailable.Location = new System.Drawing.Point(345, 110);
 			this.lbTerrainsAvailable.Name = "lbTerrainsAvailable";
-			this.lbTerrainsAvailable.Size = new System.Drawing.Size(264, 266);
+			this.lbTerrainsAvailable.Size = new System.Drawing.Size(264, 271);
 			this.lbTerrainsAvailable.TabIndex = 1;
 			this.lbTerrainsAvailable.SelectedIndexChanged += new System.EventHandler(this.OnAvailableIndexChanged);
 			// 
@@ -193,7 +195,7 @@
 			this.pnlTerrainsHeader.Controls.Add(this.rb_CustomBasepath);
 			this.pnlTerrainsHeader.Controls.Add(this.rb_TilesetBasepath);
 			this.pnlTerrainsHeader.Controls.Add(this.rb_ConfigBasepath);
-			this.pnlTerrainsHeader.Controls.Add(this.lbl_AllocatedPath);
+			this.pnlTerrainsHeader.Controls.Add(this.lbl_PathAllocated_);
 			this.pnlTerrainsHeader.Controls.Add(this.lbl_PathAvailable);
 			this.pnlTerrainsHeader.Controls.Add(this.lbl_PathAllocated);
 			this.pnlTerrainsHeader.Controls.Add(this.btnFindBasepath);
@@ -249,15 +251,15 @@
 			this.rb_ConfigBasepath.UseVisualStyleBackColor = true;
 			this.rb_ConfigBasepath.CheckedChanged += new System.EventHandler(this.OnRadioTerrainChanged);
 			// 
-			// lbl_AllocatedPath
+			// lbl_PathAllocated_
 			// 
-			this.lbl_AllocatedPath.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			this.lbl_PathAllocated_.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
 			| System.Windows.Forms.AnchorStyles.Right)));
-			this.lbl_AllocatedPath.Location = new System.Drawing.Point(155, 65);
-			this.lbl_AllocatedPath.Name = "lbl_AllocatedPath";
-			this.lbl_AllocatedPath.Size = new System.Drawing.Size(445, 15);
-			this.lbl_AllocatedPath.TabIndex = 9;
-			this.lbl_AllocatedPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.lbl_PathAllocated_.Location = new System.Drawing.Point(155, 65);
+			this.lbl_PathAllocated_.Name = "lbl_PathAllocated_";
+			this.lbl_PathAllocated_.Size = new System.Drawing.Size(445, 15);
+			this.lbl_PathAllocated_.TabIndex = 9;
+			this.lbl_PathAllocated_.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// lbl_PathAvailable
 			// 
@@ -426,6 +428,8 @@
 			// 
 			// gbTileset
 			// 
+			this.gbTileset.Controls.Add(this.lblTilesetCount_);
+			this.gbTileset.Controls.Add(this.lblTilesetCount);
 			this.gbTileset.Controls.Add(this.btnCreateMap);
 			this.gbTileset.Controls.Add(this.btnFindDirectory);
 			this.gbTileset.Controls.Add(this.tbTileset);
@@ -436,10 +440,28 @@
 			this.gbTileset.Dock = System.Windows.Forms.DockStyle.Top;
 			this.gbTileset.Location = new System.Drawing.Point(0, 50);
 			this.gbTileset.Name = "gbTileset";
-			this.gbTileset.Size = new System.Drawing.Size(612, 60);
+			this.gbTileset.Size = new System.Drawing.Size(612, 80);
 			this.gbTileset.TabIndex = 1;
 			this.gbTileset.TabStop = false;
 			this.gbTileset.Text = "Tileset";
+			// 
+			// lblTilesetCount_
+			// 
+			this.lblTilesetCount_.Location = new System.Drawing.Point(210, 60);
+			this.lblTilesetCount_.Name = "lblTilesetCount_";
+			this.lblTilesetCount_.Size = new System.Drawing.Size(95, 15);
+			this.lblTilesetCount_.TabIndex = 8;
+			this.lblTilesetCount_.Text = "lblTilesetCount_";
+			this.lblTilesetCount_.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			// 
+			// lblTilesetCount
+			// 
+			this.lblTilesetCount.Location = new System.Drawing.Point(10, 60);
+			this.lblTilesetCount.Name = "lblTilesetCount";
+			this.lblTilesetCount.Size = new System.Drawing.Size(195, 15);
+			this.lblTilesetCount.TabIndex = 7;
+			this.lblTilesetCount.Text = "Count of tilesets using Path+Map";
+			this.lblTilesetCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
 			// btnCreateMap
 			// 
@@ -525,9 +547,9 @@
 			this.lblMcdRecords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblMcdRecords.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblMcdRecords.ForeColor = System.Drawing.Color.Tan;
-			this.lblMcdRecords.Location = new System.Drawing.Point(435, 30);
+			this.lblMcdRecords.Location = new System.Drawing.Point(370, 30);
 			this.lblMcdRecords.Name = "lblMcdRecords";
-			this.lblMcdRecords.Size = new System.Drawing.Size(170, 15);
+			this.lblMcdRecords.Size = new System.Drawing.Size(235, 15);
 			this.lblMcdRecords.TabIndex = 5;
 			this.lblMcdRecords.Text = "lblMcdRecords";
 			this.lblMcdRecords.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -537,9 +559,9 @@
 			this.lblTilesetCurrent.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
 			this.lblTilesetCurrent.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.lblTilesetCurrent.ForeColor = System.Drawing.Color.DarkSeaGreen;
-			this.lblTilesetCurrent.Location = new System.Drawing.Point(435, 15);
+			this.lblTilesetCurrent.Location = new System.Drawing.Point(370, 15);
 			this.lblTilesetCurrent.Name = "lblTilesetCurrent";
-			this.lblTilesetCurrent.Size = new System.Drawing.Size(170, 15);
+			this.lblTilesetCurrent.Size = new System.Drawing.Size(235, 15);
 			this.lblTilesetCurrent.TabIndex = 4;
 			this.lblTilesetCurrent.Text = "lblTilesetCurrent";
 			this.lblTilesetCurrent.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -550,7 +572,7 @@
 			| System.Windows.Forms.AnchorStyles.Right)));
 			this.lblGroupCurrent.Location = new System.Drawing.Point(90, 15);
 			this.lblGroupCurrent.Name = "lblGroupCurrent";
-			this.lblGroupCurrent.Size = new System.Drawing.Size(340, 15);
+			this.lblGroupCurrent.Size = new System.Drawing.Size(280, 15);
 			this.lblGroupCurrent.TabIndex = 1;
 			this.lblGroupCurrent.Text = "lblGroupCurrent";
 			// 
@@ -568,7 +590,7 @@
 			| System.Windows.Forms.AnchorStyles.Right)));
 			this.lblCategoryCurrent.Location = new System.Drawing.Point(90, 30);
 			this.lblCategoryCurrent.Name = "lblCategoryCurrent";
-			this.lblCategoryCurrent.Size = new System.Drawing.Size(340, 15);
+			this.lblCategoryCurrent.Size = new System.Drawing.Size(280, 15);
 			this.lblCategoryCurrent.TabIndex = 3;
 			this.lblCategoryCurrent.Text = "lblCategoryCurrent";
 			// 
@@ -583,14 +605,14 @@
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
 			this.CancelButton = this.btnCancel;
-			this.ClientSize = new System.Drawing.Size(612, 519);
+			this.ClientSize = new System.Drawing.Size(612, 544);
 			this.Controls.Add(this.pnlTop);
 			this.Controls.Add(this.pnlBottom);
 			this.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
-			this.MinimumSize = new System.Drawing.Size(480, 386);
+			this.MinimumSize = new System.Drawing.Size(480, 400);
 			this.Name = "MapTreeTilesetInputBox";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.pnlBottom.ResumeLayout(false);
@@ -649,9 +671,11 @@
 		private System.Windows.Forms.RadioButton rb_ConfigBasepath;
 		private System.Windows.Forms.Button btnFindBasepath;
 		private System.Windows.Forms.Label lbl_PathAllocated;
-		private System.Windows.Forms.Label lbl_AllocatedPath;
+		private System.Windows.Forms.Label lbl_PathAllocated_;
 		private System.Windows.Forms.Label lbl_PathAvailable;
 		private System.Windows.Forms.Button btnTerrainClear;
 		private System.Windows.Forms.Label lbl_ListAvailable;
+		private System.Windows.Forms.Label lblTilesetCount;
+		private System.Windows.Forms.Label lblTilesetCount_;
 	}
 }

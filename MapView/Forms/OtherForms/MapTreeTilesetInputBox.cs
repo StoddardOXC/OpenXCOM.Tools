@@ -283,6 +283,9 @@ namespace MapView
 			FileAddType = AddType.MapNone;
 
 			tbTileset.Select();
+			tbTileset.SelectionStart = tbTileset.TextLength;
+
+			PrintTilesetCount();
 		}
 		#endregion cTor
 
@@ -399,41 +402,51 @@ namespace MapView
 				{
 					ShowErrorDialog("Characters detected that are not allowed.");
 
-					Tileset = InvalidateCharacters(Tileset); // recurse function after removing invalid chars.
+					Tileset = InvalidateCharacters(Tileset); // recurse after removing invalid chars.
 					tbTileset.SelectionStart = tbTileset.TextLength;
 				}
-				else if (InputBoxType == BoxType.AddTileset)
+				else
 				{
-					ListTerrains();
+					PrintTilesetCount();
 
-					if (String.IsNullOrEmpty(Tileset))
+					switch (InputBoxType)
 					{
-						btnCreateMap.Enabled = false;
+						case BoxType.EditTileset:
+							break;
 
-						lblAddType.Text = "Descriptor invalid";
-						FileAddType = AddType.MapNone;
-					}
-					else if (Descriptor == null || Descriptor.Label != Tileset)
-					{
-						btnCreateMap.Enabled = true;
+						case BoxType.AddTileset:
+							ListTerrains();
 
-						lblAddType.Text = "Create";
-						FileAddType = AddType.MapNone;
-					}
-					else
-					{
-						btnCreateMap.Enabled = false;
+							if (String.IsNullOrEmpty(Tileset))
+							{
+								btnCreateMap.Enabled = false;
 
-						if (MapfileExists(Tileset))
-						{
-							lblAddType.Text = "Add using existing Map file";
-							FileAddType = AddType.MapExists;
-						}
-						else
-						{
-							lblAddType.Text = "Add by creating a new Map file";
-							FileAddType = AddType.MapCreate;
-						}
+								lblAddType.Text = "Descriptor invalid";
+								FileAddType = AddType.MapNone;
+							}
+							else if (Descriptor == null || Descriptor.Label != Tileset)
+							{
+								btnCreateMap.Enabled = true;
+
+								lblAddType.Text = "Create";
+								FileAddType = AddType.MapNone;
+							}
+							else
+							{
+								btnCreateMap.Enabled = false;
+
+								if (MapfileExists(Tileset))
+								{
+									lblAddType.Text = "Add using existing Map file";
+									FileAddType = AddType.MapExists;
+								}
+								else
+								{
+									lblAddType.Text = "Add by creating a new Map file";
+									FileAddType = AddType.MapCreate;
+								}
+							}
+							break;
 					}
 				}
 			}
@@ -447,7 +460,7 @@ namespace MapView
 		/// </summary>
 		private void ListTerrains()
 		{
-			lbl_AllocatedPath.Text = String.Empty;
+			lbl_PathAllocated_.Text = String.Empty;
 
 			btnMoveUp   .Enabled =
 			btnMoveDown .Enabled =
@@ -605,6 +618,8 @@ namespace MapView
 				lblMcdRecords    .Visible = true;
 
 				rb_TilesetBasepath.Enabled = true;
+
+				PrintTilesetCount();
 			}
 			else
 				ShowErrorDialog("The label is already assigned to a different tileset.");
@@ -909,14 +924,14 @@ namespace MapView
 				string basepath = ((tle)lbTerrainsAllocated.Items[id]).Basepath;
 				if (String.IsNullOrEmpty(basepath))
 				{
-					lbl_AllocatedPath.Text = "in Configurator basepath";
+					lbl_PathAllocated_.Text = "in Configurator basepath";
 				}
 				else if (basepath == GlobalsXC.BASEPATH)
 				{
-					lbl_AllocatedPath.Text = "in Tileset basepath";
+					lbl_PathAllocated_.Text = "in Tileset basepath";
 				}
 				else
-					lbl_AllocatedPath.Text = basepath + Path.DirectorySeparatorChar + GlobalsXC.TerrainDir;
+					lbl_PathAllocated_.Text = basepath + Path.DirectorySeparatorChar + GlobalsXC.TerrainDir;
 
 				btnMoveRight.Enabled = true;
 
@@ -1084,22 +1099,50 @@ namespace MapView
 			return (pfeMap != null && File.Exists(pfeMap));
 		}
 
-/*		/// <summary>
-		/// Checks if a tileset w/ label exists anywhere in the TileGroups.
+		/// <summary>
+		/// Gets the count of a specified tileset in the TileGroups.
 		/// </summary>
-		/// <param name="labelMap">the label of a tileset to check for</param>
-		/// <returns>true if a tileset w/ label already exists in the Groups</returns>
-		private static bool IsTilesetGrouped(string labelMap)
+		/// <param name="labelMap">the tileset-label to check</param>
+		/// <returns>the count of tilesets already in the TileGroups</returns>
+		private int GetTilesetCount(string labelMap)
 		{
-			foreach (var group in ResourceInfo.TileGroupManager.TileGroups)
-			foreach (var category in group.Value.Categories)
+			int tilesets = 0;
+
+			foreach (var @group in ResourceInfo.TileGroupManager.TileGroups)
+			foreach (var category in @group.Value.Categories)
 			foreach (var descriptor in category.Value.Values)
 			{
-				if (descriptor.Label == labelMap)
-					return true;
+				if (   descriptor.Label    == labelMap
+					&& descriptor.Basepath == BasepathTileset)
+				{
+					++tilesets;
+				}
 			}
-			return false;
-		} */
+			return tilesets;
+		}
+
+		/// <summary>
+		/// Prints the count of the tileset (in 'tbTileset') that are already in
+		/// the TileGroups.
+		/// </summary>
+		private void PrintTilesetCount()
+		{
+			int tilesets = GetTilesetCount(Tileset);
+
+			if (InputBoxType == BoxType.AddTileset
+				&& Descriptor != null
+				&& Descriptor.Label == Tileset)
+			{
+				++tilesets;
+			}
+
+			lblTilesetCount_.Text = tilesets.ToString();
+
+			if (tilesets > 0)
+				lblTilesetCount_.ForeColor = Color.MediumVioletRed;
+			else
+				lblTilesetCount_.ForeColor = SystemColors.ControlText;
+		}
 
 		/// <summary>
 		/// Checks if a specified tileset-label exists in the current tileset's
