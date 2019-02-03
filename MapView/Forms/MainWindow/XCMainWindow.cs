@@ -2010,8 +2010,8 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					var group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
-					group.AddCategory(f.Input);
+					var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+					@group.AddCategory(f.Input);
 
 					CreateTree();
 					SelectCategoryNode(f.Input);
@@ -2044,8 +2044,8 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					var group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
-					group.EditCategory(f.Input, labelCategory);
+					var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+					@group.EditCategory(f.Input, labelCategory);
 
 					CreateTree();
 					SelectCategoryNode(f.Input);
@@ -2087,8 +2087,8 @@ namespace MapView
 			{
 				MaptreeChanged = true;
 
-				var group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
-				group.DeleteCategory(labelCategory);
+				var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+				@group.DeleteCategory(labelCategory);
 
 				CreateTree();
 				SelectCategoryNodeTop(labelGroup);
@@ -2192,8 +2192,8 @@ namespace MapView
 			{
 				MaptreeChanged = true;
 
-				var group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
-				group.DeleteTileset(labelTileset, labelCategory);
+				var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+				@group.DeleteTileset(labelTileset, labelCategory);
 
 				CreateTree();
 				SelectTilesetNodeTop(labelCategory);
@@ -2471,12 +2471,12 @@ namespace MapView
 
 					_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-					if (@base.Parts[0][0].Pal == Palette.UfoBattle) // used by Mono only ->
+					if (descriptor.Pal == Palette.TftdBattle) // used by Mono only ->
 					{
-						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesUfoBattle;
-					}
-					else
 						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesTftdBattle;
+					}
+					else // default to ufo-battle palette
+						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesUfoBattle;
 
 					_mainViewUnderlay.MapBase = @base;
 

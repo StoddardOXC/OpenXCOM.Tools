@@ -44,13 +44,13 @@ namespace XCom
 		/// <param name="basepath"></param>
 		internal Tileset(
 				string label,
-				string group,
+				string @group,
 				string category,
 				Dictionary<int, Tuple<string,string>> terrains,
 				string basepath)
 		{
 			Label    = label;
-			Group    = group;
+			Group    = @group;
 			Category = category;
 			Terrains = terrains;
 			BasePath = basepath;

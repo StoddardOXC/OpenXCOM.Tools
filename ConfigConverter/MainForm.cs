@@ -748,7 +748,7 @@ namespace ConfigConverter
 
 			internal Tileset(
 					string label,
-					string group,
+					string @group,
 					string category,
 					List<string> terrains,
 					string basepath)
@@ -756,7 +756,7 @@ namespace ConfigConverter
 					this()
 			{
 				Label    = label;
-				Group    = group;
+				Group    = @group;
 				Category = category;
 				Terrains = terrains;
 
