@@ -212,7 +212,6 @@ namespace MapView
 			string keydir = (TileGroup.Pal == Palette.UfoBattle) ? SharedSpace.ResourceDirectoryUfo
 																 : SharedSpace.ResourceDirectoryTftd;
 			BasepathConfigurator = SharedSpace.Instance.GetShare(keydir);
-			//LogFile.WriteLine("BasepathConfig= " + BasepathConfig);
 			rb_ConfigBasepath.Checked = true;
 
 			switch (InputBoxType = boxType)
@@ -226,6 +225,8 @@ namespace MapView
 					btnFindTileset  .Visible =
 					btnFindDirectory.Visible =
 					btnCreateMap    .Visible = false;
+
+					btn_GlobalTerrains.Enabled = true;
 
 					TilesetOriginal = String.Copy(Tileset);
 
@@ -266,6 +267,8 @@ namespace MapView
 					btnTerrainClear.Enabled = false;
 
 					rb_TilesetBasepath.Enabled = false;
+
+					btn_GlobalTerrains.Enabled = false;
 
 					string keyBaseDir = null;
 					switch (TileGroup.GroupType)
@@ -574,6 +577,9 @@ namespace MapView
 			}
 			lbTerrainsAllocated.EndUpdate();
 			lbTerrainsAvailable.EndUpdate();
+
+			btn_GlobalTerrains.Enabled = Descriptor != null
+									  && lbTerrainsAllocated.Items.Count != 0;
 		}
 
 
@@ -1031,6 +1037,40 @@ namespace MapView
 				}
 			}
 			lbTerrainsAvailable.Select();
+		}
+
+
+		/// <summary>
+		/// Applies the current Allocated terrains-list to all tilesets that
+		/// have the current tileset's label and basepath.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void OnGlobalTerrainsClick(object sender, EventArgs e)
+		{
+			//btn_GlobalTerrains
+			// TODO: disable btn if Descriptor is invalid
+
+			var terrains = Descriptor.Terrains;
+
+			bool changed = false;
+
+			foreach (var @group in ResourceInfo.TileGroupManager.TileGroups)
+			foreach (var category in @group.Value.Categories)
+			foreach (var descriptor in category.Value.Values)
+			{
+				if (   descriptor.Label    == Descriptor.Label
+					&& descriptor.Basepath == Descriptor.Basepath)
+				{
+					changed = true;
+
+					for (int i = 0; i != terrains.Count; ++i)
+						descriptor.Terrains[i] = CloneTerrain(terrains[i]);
+				}
+			}
+
+			if (changed && !XCMainWindow.Instance.MaptreeChanged)
+				XCMainWindow.Instance.MaptreeChanged = true;
 		}
 		#endregion Eventcalls
 

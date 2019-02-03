@@ -33,6 +33,7 @@
 			this.lblHeaderGroup = new System.Windows.Forms.Label();
 			this.tbTileset = new System.Windows.Forms.TextBox();
 			this.pnlBottom = new System.Windows.Forms.Panel();
+			this.btn_GlobalTerrains = new System.Windows.Forms.Button();
 			this.lblAddType = new System.Windows.Forms.Label();
 			this.pnlTop = new System.Windows.Forms.Panel();
 			this.gbTerrains = new System.Windows.Forms.GroupBox();
@@ -86,8 +87,8 @@
 			// 
 			// btnOk
 			// 
-			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnOk.Location = new System.Drawing.Point(435, 0);
+			this.btnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnOk.Location = new System.Drawing.Point(435, 25);
 			this.btnOk.Name = "btnOk";
 			this.btnOk.Size = new System.Drawing.Size(80, 25);
 			this.btnOk.TabIndex = 1;
@@ -96,9 +97,9 @@
 			// 
 			// btnCancel
 			// 
-			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-			this.btnCancel.Location = new System.Drawing.Point(525, 0);
+			this.btnCancel.Location = new System.Drawing.Point(525, 25);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(80, 25);
 			this.btnCancel.TabIndex = 2;
@@ -125,20 +126,35 @@
 			// 
 			// pnlBottom
 			// 
+			this.pnlBottom.Controls.Add(this.btn_GlobalTerrains);
 			this.pnlBottom.Controls.Add(this.lblAddType);
 			this.pnlBottom.Controls.Add(this.btnOk);
 			this.pnlBottom.Controls.Add(this.btnCancel);
 			this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.pnlBottom.Location = new System.Drawing.Point(0, 514);
+			this.pnlBottom.Location = new System.Drawing.Point(0, 490);
 			this.pnlBottom.Name = "pnlBottom";
-			this.pnlBottom.Size = new System.Drawing.Size(612, 30);
+			this.pnlBottom.Size = new System.Drawing.Size(612, 54);
 			this.pnlBottom.TabIndex = 0;
+			// 
+			// btn_GlobalTerrains
+			// 
+			this.btn_GlobalTerrains.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.btn_GlobalTerrains.Location = new System.Drawing.Point(5, 0);
+			this.btn_GlobalTerrains.Name = "btn_GlobalTerrains";
+			this.btn_GlobalTerrains.Size = new System.Drawing.Size(600, 25);
+			this.btn_GlobalTerrains.TabIndex = 12;
+			this.btn_GlobalTerrains.Text = "apply terrains to all tilesets using Path+Map";
+			this.btn_GlobalTerrains.UseVisualStyleBackColor = true;
+			this.btn_GlobalTerrains.Click += new System.EventHandler(this.OnGlobalTerrainsClick);
 			// 
 			// lblAddType
 			// 
-			this.lblAddType.Location = new System.Drawing.Point(5, 5);
+			this.lblAddType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+			| System.Windows.Forms.AnchorStyles.Right)));
+			this.lblAddType.Location = new System.Drawing.Point(5, 35);
 			this.lblAddType.Name = "lblAddType";
-			this.lblAddType.Size = new System.Drawing.Size(200, 15);
+			this.lblAddType.Size = new System.Drawing.Size(425, 15);
 			this.lblAddType.TabIndex = 0;
 			this.lblAddType.Text = "lblAddType";
 			// 
@@ -150,7 +166,7 @@
 			this.pnlTop.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.pnlTop.Location = new System.Drawing.Point(0, 0);
 			this.pnlTop.Name = "pnlTop";
-			this.pnlTop.Size = new System.Drawing.Size(612, 514);
+			this.pnlTop.Size = new System.Drawing.Size(612, 490);
 			this.pnlTop.TabIndex = 0;
 			// 
 			// gbTerrains
@@ -162,7 +178,7 @@
 			this.gbTerrains.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.gbTerrains.Location = new System.Drawing.Point(0, 130);
 			this.gbTerrains.Name = "gbTerrains";
-			this.gbTerrains.Size = new System.Drawing.Size(612, 384);
+			this.gbTerrains.Size = new System.Drawing.Size(612, 360);
 			this.gbTerrains.TabIndex = 2;
 			this.gbTerrains.TabStop = false;
 			this.gbTerrains.Text = "Terrains";
@@ -174,7 +190,7 @@
 			this.lbTerrainsAllocated.ItemHeight = 12;
 			this.lbTerrainsAllocated.Location = new System.Drawing.Point(3, 110);
 			this.lbTerrainsAllocated.Name = "lbTerrainsAllocated";
-			this.lbTerrainsAllocated.Size = new System.Drawing.Size(267, 271);
+			this.lbTerrainsAllocated.Size = new System.Drawing.Size(267, 247);
 			this.lbTerrainsAllocated.TabIndex = 0;
 			this.lbTerrainsAllocated.SelectedIndexChanged += new System.EventHandler(this.OnAllocatedIndexChanged);
 			// 
@@ -185,7 +201,7 @@
 			this.lbTerrainsAvailable.ItemHeight = 12;
 			this.lbTerrainsAvailable.Location = new System.Drawing.Point(345, 110);
 			this.lbTerrainsAvailable.Name = "lbTerrainsAvailable";
-			this.lbTerrainsAvailable.Size = new System.Drawing.Size(264, 271);
+			this.lbTerrainsAvailable.Size = new System.Drawing.Size(264, 247);
 			this.lbTerrainsAvailable.TabIndex = 1;
 			this.lbTerrainsAvailable.SelectedIndexChanged += new System.EventHandler(this.OnAvailableIndexChanged);
 			// 
@@ -324,7 +340,7 @@
 			// 
 			// lblAvailable
 			// 
-			this.lblAvailable.Location = new System.Drawing.Point(345, 80);
+			this.lblAvailable.Location = new System.Drawing.Point(350, 80);
 			this.lblAvailable.Name = "lblAvailable";
 			this.lblAvailable.Size = new System.Drawing.Size(55, 15);
 			this.lblAvailable.TabIndex = 11;
@@ -677,5 +693,6 @@
 		private System.Windows.Forms.Label lbl_ListAvailable;
 		private System.Windows.Forms.Label lblTilesetCount;
 		private System.Windows.Forms.Label lblTilesetCount_;
+		private System.Windows.Forms.Button btn_GlobalTerrains;
 	}
 }
