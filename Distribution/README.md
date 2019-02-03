@@ -14,7 +14,9 @@ notconfigured
 - show asterisk on MainView's statusbar if the Map changes
 - show "routes changed" in RouteView if the Routes change
 - fix ambiguity of the Maptree changed flag in the TilesetEditor
-- constrain tileset-labels to Categories (instead of Groups)
+- TilesetEditor: constrain tileset-labels to Categories (instead of Groups)
+- TilesetEditor: print count of tilesets with identical label/basepath
+- TilesetEditor: button that applies current terrainset to all tilesets with identical label/basepath
 
 2019 January 30<br>
 [MapView2_190130.7z](https://drive.google.com/file/d/1-g_sk4aPzMsEBZT2203hFUpHY57xTQ_i/view?usp=sharing)

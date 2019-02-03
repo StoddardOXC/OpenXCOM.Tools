@@ -1,6 +1,6 @@
 ﻿namespace MapView
 {
-	partial class MapTreeTilesetInputBox
+	partial class TilesetEditor
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -617,7 +617,7 @@
 			this.toolTip1.ReshowDelay = 100;
 			this.toolTip1.UseAnimation = false;
 			// 
-			// MapTreeTilesetInputBox
+			// TilesetEditor
 			// 
 			this.AutoScaleBaseSize = new System.Drawing.Size(5, 12);
 			this.CancelButton = this.btnCancel;
@@ -629,7 +629,7 @@
 			this.MaximizeBox = false;
 			this.MinimizeBox = false;
 			this.MinimumSize = new System.Drawing.Size(480, 400);
-			this.Name = "MapTreeTilesetInputBox";
+			this.Name = "TilesetEditor";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.pnlBottom.ResumeLayout(false);
 			this.pnlTop.ResumeLayout(false);

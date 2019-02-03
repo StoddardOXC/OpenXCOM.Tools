@@ -2108,11 +2108,11 @@ namespace MapView
 			string labelCategory = tvMaps.SelectedNode.Text;
 			string labelTileset  = String.Empty;
 
-			using (var f = new MapTreeTilesetInputBox(
-												MapTreeTilesetInputBox.BoxType.AddTileset,
-												labelGroup,
-												labelCategory,
-												labelTileset))
+			using (var f = new TilesetEditor(
+										TilesetEditor.BoxType.AddTileset,
+										labelGroup,
+										labelCategory,
+										labelTileset))
 			{
 				if (f.ShowDialog(this) == DialogResult.OK)
 				{
@@ -2139,11 +2139,11 @@ namespace MapView
 			string labelCategory = tvMaps.SelectedNode.Parent.Text;
 			string labelTileset  = tvMaps.SelectedNode.Text;
 
-			using (var f = new MapTreeTilesetInputBox(
-												MapTreeTilesetInputBox.BoxType.EditTileset,
-												labelGroup,
-												labelCategory,
-												labelTileset))
+			using (var f = new TilesetEditor(
+										TilesetEditor.BoxType.EditTileset,
+										labelGroup,
+										labelCategory,
+										labelTileset))
 			{
 				if (f.ShowDialog(this) == DialogResult.OK)
 				{

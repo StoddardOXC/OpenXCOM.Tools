@@ -13,14 +13,7 @@ namespace XCom
 	/// A descriptor is accessed *only* through a Group and Category, and is
 	/// identified by its tileset-label. This allows multiple tilesets (ie. with
 	/// the same label) to be configured differently according to Category and
-	/// Group. (not really. Because they'll usually be in the same directory on
-	/// the hardrive and the OS won't allow duplicate labels in one directory.)
-	/// @note Is disallowed in MapTreeTilesetInputBox regardless.
-	/// 
-	/// TODO: adapt ConfigConverter to allow a tileset to be assigned under >1
-	/// Category. If a tileset's descriptor changes it needs to change all
-	/// instances. But only if both Label and BasePath IN THE YAML match (etc).
-	/// 
+	/// Group.
 	/// </summary>
 	public sealed class Descriptor // *snap*
 	{

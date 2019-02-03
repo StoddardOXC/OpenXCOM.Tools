@@ -17,7 +17,7 @@ namespace MapView
 	/// This is the Tileset Editor for MapView ii. It replaces the Paths Editor
 	/// of MapView i.
 	/// </summary>
-	internal sealed partial class MapTreeTilesetInputBox
+	internal sealed partial class TilesetEditor
 		:
 			Form
 	{
@@ -164,14 +164,14 @@ namespace MapView
 		/// <param name="labelGroup"></param>
 		/// <param name="labelCategory"></param>
 		/// <param name="labelTileset"></param>
-		internal MapTreeTilesetInputBox(
+		internal TilesetEditor(
 				BoxType boxType,
 				string labelGroup,
 				string labelCategory,
 				string labelTileset)
 		{
 			//LogFile.WriteLine("");
-			//LogFile.WriteLine("MapTreeTilesetInputBox cTor");
+			//LogFile.WriteLine("TilesetEditor cTor");
 			//LogFile.WriteLine(". labelGroup= " + labelGroup);
 			//LogFile.WriteLine(". labelCategory= " + labelCategory);
 			//LogFile.WriteLine(". labelTileset= " + labelTileset);
