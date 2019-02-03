@@ -2485,9 +2485,8 @@ namespace MapView
 					Text = "Map Editor - " + descriptor.Basepath;
 					if (MaptreeChanged) Text += "*";
 
-					tsslMapLabel  .Text = descriptor.Label;
-					tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
-														  : "size: n/a";
+					tsslMapLabel     .Text = descriptor.Label;
+					tsslDimensions   .Text = @base.MapSize.ToString();
 					tsslPosition     .Text =
 					tsslSelectionSize.Text = String.Empty;
 
