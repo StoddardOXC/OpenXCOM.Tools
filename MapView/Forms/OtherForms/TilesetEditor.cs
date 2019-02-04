@@ -1129,8 +1129,9 @@ namespace MapView
 
 			foreach (var @group in ResourceInfo.TileGroupManager.TileGroups)
 			foreach (var category in @group.Value.Categories)
-			foreach (var descriptor in category.Value.Values)
+			if (category.Key != Category)
 			{
+				foreach (var descriptor in category.Value.Values)
 				if (   descriptor.Label    == Descriptor.Label
 					&& descriptor.Basepath == Descriptor.Basepath)
 				{

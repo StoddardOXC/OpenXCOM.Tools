@@ -126,36 +126,39 @@ namespace XCom
 					terrains = new Dictionary<int, Tuple<string,string>>();
 
 					nodeTerrains = nodeTileset.Children[new YamlScalarNode(GlobalsXC.TERRAINS)] as YamlSequenceNode;
-					for (int i = 0; i != nodeTerrains.Children.Count; ++i)
+					if (nodeTerrains != null)
 					{
-						terr = null;
-						path = null; // NOTE: 'path' will *not* be appended w/ "TERRAIN" here.
-
-						nodetry1 = nodeTerrains[i] as YamlScalarNode;
-						//LogFile.WriteLine(". . . nodetry1= " + nodetry1); // eg. "U_EXT02"
-
-						if (nodetry1 != null) // ie. ':' not found. Use Configurator basepath ...
+						for (int i = 0; i != nodeTerrains.Children.Count; ++i)
 						{
-							terr = nodetry1.ToString();
-							path = String.Empty;
-						}
-						else // has ':' + path
-						{
-							nodetry2 = nodeTerrains[i] as YamlMappingNode;
-							//LogFile.WriteLine(". . . nodetry2= " + nodetry2); // eg. "{ { U_EXT02, basepath } }"
+							terr = null;
+							path = null; // NOTE: 'path' will *not* be appended w/ "TERRAIN" here.
 
-							foreach (var keyval in nodetry2.Children) // note: there's only one keyval in each terrain-node.
+							nodetry1 = nodeTerrains[i] as YamlScalarNode;
+							//LogFile.WriteLine(". . . nodetry1= " + nodetry1); // eg. "U_EXT02"
+
+							if (nodetry1 != null) // ie. ':' not found. Use Configurator basepath ...
 							{
-								terr = keyval.Key.ToString();
-								path = keyval.Value.ToString();
+								terr = nodetry1.ToString();
+								path = String.Empty;
 							}
+							else // has ':' + path
+							{
+								nodetry2 = nodeTerrains[i] as YamlMappingNode;
+								//LogFile.WriteLine(". . . nodetry2= " + nodetry2); // eg. "{ { U_EXT02, basepath } }"
+
+								foreach (var keyval in nodetry2.Children) // note: there's only one keyval in each terrain-node.
+								{
+									terr = keyval.Key.ToString();
+									path = keyval.Value.ToString();
+								}
+							}
+
+							//LogFile.WriteLine(". terr= " + terr);
+							//LogFile.WriteLine(". path= " + path);
+
+							terrain = new Tuple<string,string>(terr, path);
+							terrains[i] = terrain;
 						}
-
-						//LogFile.WriteLine(". terr= " + terr);
-						//LogFile.WriteLine(". path= " + path);
-
-						terrain = new Tuple<string,string>(terr, path);
-						terrains[i] = terrain;
 					}
 
 
