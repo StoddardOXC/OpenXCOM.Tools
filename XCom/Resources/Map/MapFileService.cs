@@ -24,8 +24,9 @@ namespace XCom
 		/// @note Check that 'descriptor' is not null before call.
 		/// </summary>
 		/// <param name="descriptor"></param>
+		/// <param name="treechanged"></param>
 		/// <returns></returns>
-		public static MapFileBase LoadTileset(Descriptor descriptor)
+		public static MapFileBase LoadTileset(Descriptor descriptor, ref bool treechanged)
 		{
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("MapFileService.LoadTileset descriptor= " + descriptor);
@@ -38,6 +39,57 @@ namespace XCom
 									descriptor.Label + GlobalsXC.MapExt);
 			}
 			//LogFile.WriteLine(". pfeMap= " + pfeMap);
+
+			if (!File.Exists(pfeMap)) // Open a folderbrowser for user to point to a basepath ->
+			{
+				if (MessageBox.Show(
+							"The Mapfile does not exist."
+								+ Environment.NewLine + Environment.NewLine
+								+ "Do you want to browse a different basepath for the .MAP and .RMP files?",
+							"Warning",
+							MessageBoxButtons.YesNo,
+							MessageBoxIcon.Warning,
+							MessageBoxDefaultButton.Button1,
+							0) == DialogResult.Yes)
+				{
+					using (var fbd = new FolderBrowserDialog())
+					{
+						if (!String.IsNullOrEmpty(pfeMap))
+						{
+							fbd.SelectedPath = Path.GetDirectoryName(pfeMap);
+							if (!Directory.Exists(fbd.SelectedPath))
+								fbd.SelectedPath = String.Empty;
+
+							// TODO: Check descriptor's Palette and default to Ufo/Tftd Resource dir instead.
+						}
+						fbd.Description = String.Format(
+													System.Globalization.CultureInfo.CurrentCulture,
+													"Browse to a basepath folder. A valid basepath folder"
+														+ " has the subfolders MAPS and ROUTES.");
+
+						if (fbd.ShowDialog() == DialogResult.OK)
+						{
+							pfeMap = Path.Combine(fbd.SelectedPath, GlobalsXC.MapsDir);
+							pfeMap = Path.Combine(pfeMap, descriptor.Label + GlobalsXC.MapExt);
+
+							if (File.Exists(pfeMap))
+							{
+								descriptor.Basepath = fbd.SelectedPath;
+								treechanged = true;
+							}
+							else
+								MessageBox.Show(
+											descriptor.Label + GlobalsXC.MapExt
+												+ " was not found in that basepath.",
+											"Error",
+											MessageBoxButtons.OK,
+											MessageBoxIcon.Error,
+											MessageBoxDefaultButton.Button1,
+											0);
+						}
+					}
+				}
+			}
 
 			if (File.Exists(pfeMap))
 			{
@@ -100,19 +152,6 @@ namespace XCom
 							MessageBoxIcon.Warning,
 							MessageBoxDefaultButton.Button1,
 							0);
-			}
-			else
-			{
-				//LogFile.WriteLine(". . Mapfile does NOT exist");
-				MessageBox.Show(
-							"The Mapfile does not exist.",
-							"Warning",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Warning,
-							MessageBoxDefaultButton.Button1,
-							0);
-
-				// TODO: Open a filebrowser for user to point to a Mapfile.
 			}
 
 			return null;

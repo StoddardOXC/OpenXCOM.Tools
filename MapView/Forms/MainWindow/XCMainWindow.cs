@@ -2465,7 +2465,10 @@ namespace MapView
 			{
 				//LogFile.WriteLine(". descriptor= " + descriptor);
 
-				var @base = MapFileService.LoadTileset(descriptor); // NOTE: LoadTileset() instantiates a MapFileChild but whatver.
+				bool treechanged = false;
+				var @base = MapFileService.LoadTileset(descriptor, ref treechanged); // NOTE: LoadTileset() instantiates a MapFileChild but whatver.
+				if (treechanged) MaptreeChanged = true;
+
 				if (@base != null)
 				{
 					miSaveAll    .Enabled =
@@ -2493,7 +2496,7 @@ namespace MapView
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
 
 					Text = "Map Editor - " + descriptor.Basepath;
-					if (MaptreeChanged) Text += "*";
+					if (MaptreeChanged) MaptreeChanged = MaptreeChanged; // maniacal laugh YOU figure it out.
 
 					tsslMapLabel     .Text = descriptor.Label;
 					tsslDimensions   .Text = @base.MapSize.ToString();

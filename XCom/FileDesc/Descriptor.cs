@@ -27,7 +27,7 @@ namespace XCom
 		{ get; private set; }
 
 		public string Basepath
-		{ get; private set; }
+		{ get; internal set; }
 
 		private Dictionary<int, Tuple<string,string>> _terrains = new Dictionary<int, Tuple<string,string>>();
 		/// <summary>
