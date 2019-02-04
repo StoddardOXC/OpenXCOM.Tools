@@ -203,7 +203,7 @@ namespace PckView
 							var invariant = System.Globalization.CultureInfo.InvariantCulture;
 
 							var keyvals = nodeRoot.Children[new YamlScalarNode(viewer)] as YamlMappingNode;
-							foreach (var keyval in keyvals) // NOTE: There is a better way to do this. See TilesetManager..cTor
+							foreach (var keyval in keyvals) // NOTE: There is a better way to do this. See TilesetLoader..cTor
 							{
 								switch (keyval.Key.ToString()) // TODO: Error handling. ->
 								{

@@ -9,12 +9,12 @@ using YamlDotNet.RepresentationModel;
 namespace XCom
 {
 	/// <summary>
-	/// A TilesetManager reads and loads all the tileset-data in the user-file
+	/// A TilesetLoader reads and loads all the tileset-data in the user-file
 	/// MapTilesets.yml. It's the user-configuration for all the Maps.
 	/// NOTE: Tilesets are converted into Descriptors and Tilesets are no longer
 	/// used after loading is finished.
 	/// </summary>
-	public sealed class TilesetManager
+	public sealed class TilesetLoader
 	{
 		#region Fields & Properties
 		private List<Tileset> _tilesets = new List<Tileset>();
@@ -37,10 +37,10 @@ namespace XCom
 		/// object.
 		/// </summary>
 		/// <param name="fullpath">path+file+extension of MapTilesets.yml</param>
-		public TilesetManager(string fullpath)
+		public TilesetLoader(string fullpath)
 		{
 			//LogFile.WriteLine("");
-			//LogFile.WriteLine("TilesetManager cTor");
+			//LogFile.WriteLine("TilesetLoader cTor");
 
 			// TODO: if exists(fullpath)
 			// else error out.

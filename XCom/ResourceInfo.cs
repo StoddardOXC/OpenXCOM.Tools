@@ -33,7 +33,7 @@ namespace XCom
 		{
 //			XConsole.Init(20);
 
-			TileGroupManager = new TileGroupManager(new TilesetManager(pathConfig.Fullpath));
+			TileGroupManager = new TileGroupManager(new TilesetLoader(pathConfig.Fullpath));
 		}
 
 		/// <summary>

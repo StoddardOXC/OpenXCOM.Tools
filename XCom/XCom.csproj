@@ -197,7 +197,7 @@
       <DependentUpon>ConsoleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Tileset.cs" />
-    <Compile Include="TilesetManager.cs" />
+    <Compile Include="TilesetLoader.cs" />
     <Compile Include="XConsole.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -31,7 +31,7 @@ namespace XCom
 
 
 		#region cTor
-		internal TileGroupManager(TilesetManager tilesetManager)
+		internal TileGroupManager(TilesetLoader tilesetManager)
 		{
 			foreach (string labelGroup in tilesetManager.Groups)
 				TileGroups[labelGroup] = new TileGroupChild(labelGroup, tilesetManager.Tilesets);
