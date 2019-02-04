@@ -54,14 +54,14 @@ namespace XCom
 				{
 					using (var fbd = new FolderBrowserDialog())
 					{
-						if (!String.IsNullOrEmpty(pfeMap))
+						string basepath = descriptor.Basepath;
+						if (!String.IsNullOrEmpty(basepath)
+							&& Directory.Exists(basepath))
 						{
-							fbd.SelectedPath = Path.GetDirectoryName(pfeMap);
-							if (!Directory.Exists(fbd.SelectedPath))
-								fbd.SelectedPath = String.Empty;
-
-							// TODO: Check descriptor's Palette and default to Ufo/Tftd Resource dir instead.
+							fbd.SelectedPath = basepath;
 						}
+						// TODO: Check descriptor's Palette and default to Ufo/Tftd Resource dir instead.
+
 						fbd.Description = String.Format(
 													System.Globalization.CultureInfo.CurrentCulture,
 													"Browse to a basepath folder. A valid basepath folder"
