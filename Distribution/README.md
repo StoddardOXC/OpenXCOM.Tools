@@ -6,7 +6,7 @@ note for Mono users: MapView needs to run once and then be restarted for its win
 
 Built against .NET 4.5.1
 
-2019 February 2<br>
+2019 February 4<br>
 notconfigured
 
 - show x/y/z tile-positions using 1-based counting (instead of 0-based)
@@ -14,7 +14,7 @@ notconfigured
 - show asterisk on MainView's statusbar if the Map changes
 - show "routes changed" in RouteView if the Routes change
 - fix ambiguity of the Maptree changed flag in the TilesetEditor
-- TilesetEditor: constrain tileset-labels to Categories (instead of Groups)
+- TilesetEditor: constrain tileset-labels to Categories (instead of globally)
 - TilesetEditor: print count of tilesets with identical label/basepath
 - TilesetEditor: button that applies current terrainset to all tilesets with identical label/basepath
 

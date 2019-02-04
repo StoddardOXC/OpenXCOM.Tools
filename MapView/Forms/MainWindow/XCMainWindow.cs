@@ -2016,7 +2016,7 @@ namespace MapView
 					@group.AddCategory(f.Input);
 
 					CreateTree();
-					SelectCategoryNode(f.Input);
+					SelectCategoryNode(f.Input, @group.Label);
 				}
 			}
 		}
@@ -2050,7 +2050,7 @@ namespace MapView
 					@group.EditCategory(f.Input, labelCategory);
 
 					CreateTree();
-					SelectCategoryNode(f.Input);
+					SelectCategoryNode(f.Input, @group.Label);
 				}
 			}
 		}
@@ -2123,7 +2123,7 @@ namespace MapView
 					MaptreeChanged = true;
 
 					CreateTree();
-					SelectTilesetNode(f.Tileset, labelCategory);
+					SelectTilesetNode(f.Tileset, labelCategory, labelGroup);
 				}
 			}
 		}
@@ -2154,7 +2154,7 @@ namespace MapView
 					MaptreeChanged = true;
 
 					CreateTree();
-					SelectTilesetNode(f.Tileset, labelCategory);
+					SelectTilesetNode(f.Tileset, labelCategory, labelGroup);
 				}
 			}
 		}
@@ -2290,7 +2290,8 @@ namespace MapView
 		/// Selects a treenode in the Maps tree given a category-label.
 		/// </summary>
 		/// <param name="labelCategory"></param>
-		private void SelectCategoryNode(string labelCategory)
+		/// <param name="labelGroup"></param>
+		private void SelectCategoryNode(string labelCategory, string labelGroup)
 		{
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("SelectCategoryNode");
@@ -2321,8 +2322,9 @@ namespace MapView
 		/// Category.
 		/// </summary>
 		/// <param name="labelTileset"></param>
-		/// <param name="category"></param>
-		private void SelectTilesetNode(string labelTileset, string category)
+		/// <param name="labelCategory"></param>
+		/// <param name="labelGroup"></param>
+		private void SelectTilesetNode(string labelTileset, string labelCategory, string labelGroup)
 		{
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("SelectTilesetNode");
@@ -2335,26 +2337,29 @@ namespace MapView
 
 				//LogFile.WriteLine(". group= " + nodeGroup.Text);
 
-				var groupCollection = nodeGroup.Nodes;
-				foreach (TreeNode nodeCategory in groupCollection)
+				if (nodeGroup.Text == labelGroup)
 				{
-					if (found) break;
-
-					//LogFile.WriteLine(". . category= " + nodeCategory.Text);
-
-					if (nodeCategory.Text == category)
+					var groupCollection = nodeGroup.Nodes;
+					foreach (TreeNode nodeCategory in groupCollection)
 					{
-						var categoryCollection = nodeCategory.Nodes;
-						foreach (TreeNode nodeTileset in categoryCollection)
+						if (found) break;
+
+						//LogFile.WriteLine(". . category= " + nodeCategory.Text);
+
+						if (nodeCategory.Text == labelCategory)
 						{
-							//LogFile.WriteLine(". . . tileset= " + nodeTileset.Text);
-
-							if (nodeTileset.Text == labelTileset)
+							var categoryCollection = nodeCategory.Nodes;
+							foreach (TreeNode nodeTileset in categoryCollection)
 							{
-								found = true;
+								//LogFile.WriteLine(". . . tileset= " + nodeTileset.Text);
 
-								tvMaps.SelectedNode = nodeTileset;
-								break;
+								if (nodeTileset.Text == labelTileset)
+								{
+									found = true;
+
+									tvMaps.SelectedNode = nodeTileset;
+									break;
+								}
 							}
 						}
 					}

@@ -1182,8 +1182,8 @@ namespace MapView
 						//
 						// Although in reality I suppose it could/would fire if a user
 						// manually inserts a tileset into MapTilesets but there aren't
-						// corresponding .MAP/.RMP files for it. Or a user could delete
-						// the files from disk but keep their tileset in MapTilesets.
+						// corresponding .MAP/.RMP files for it. Or a user might delete
+						// the files from disk but keep the tileset(s) in MapTilesets.
 						//
 						// TODO: Ask the user if he/she wants to delete the tileset
 						// (not the files, there are no files).
