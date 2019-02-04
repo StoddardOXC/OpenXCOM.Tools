@@ -1,19 +1,21 @@
-Distribution build (for Windows 32/64) is hosted on Google Drive.
-
-MapView stores settings in a subfolder of itself. If you do not have user-permissions to write to that folder (eg. Program Files) you may have to either enable them or install MapView to a different hierarchy on your hardrive (eg. C:\).
+MapView stores settings in a subfolder of itself. If you do not have user-permissions to write to that folder - eg. Program Files - you may have to either enable them or install MapView to a different hierarchy on your hardrive - eg. C:\\
 
 note for Mono users: MapView needs to run once and then be restarted for its window to resize properly.
+Automated builds for Mono only: https://lxnt.wtf/oxem/#/MapView by Stoddard.
+
+<br>
+Distribution builds for Windows 32/64 is hosted on Google Drive.
 
 Built against .NET 4.5.1
 
 2019 February 4<br>
-notconfigured
+[MapView2_190204.7z](https://drive.google.com/file/d/1qwrR_li1ckdvfeK60h4-UMGLzN53a8cB/view?usp=sharing)
 
 - show x/y/z tile-positions using 1-based counting (instead of 0-based)
 - show asterisk on MainView's titlebar if the Maptree changes
 - show asterisk on MainView's statusbar if the Map changes
 - show "routes changed" in RouteView if the Routes change
-- fix ambiguity of the Maptree changed flag in the TilesetEditor
+- TilesetEditor: fix ambiguity of the Maptree changed flag
 - TilesetEditor: constrain tileset-labels to Categories (instead of globally)
 - TilesetEditor: print count of tilesets with identical label/basepath
 - TilesetEditor: button that applies current terrainset to all tilesets with identical label/basepath
