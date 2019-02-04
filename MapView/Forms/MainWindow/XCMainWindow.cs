@@ -429,6 +429,7 @@ namespace MapView
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("XCMainWindow.CreateTree");
 
+			tvMaps.BeginUpdate();
 			tvMaps.Nodes.Clear();
 
 			var groups = ResourceInfo.TileGroupManager.TileGroups;
@@ -472,6 +473,7 @@ namespace MapView
 					}
 				}
 			}
+			tvMaps.EndUpdate();
 		}
 
 		/// <summary>

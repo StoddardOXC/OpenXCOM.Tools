@@ -111,6 +111,8 @@ namespace XCom
 							MessageBoxIcon.Warning,
 							MessageBoxDefaultButton.Button1,
 							0);
+
+				// TODO: Open a filebrowser for user to point to a Mapfile.
 			}
 
 			return null;

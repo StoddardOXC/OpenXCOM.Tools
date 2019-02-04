@@ -42,7 +42,7 @@ namespace XCom
 			set { _terrains = value; }
 		}
 
-		public Palette Pal
+		public Palette Pal // TODO: Defining the palette in both a Descriptor and its TileGroup is redundant.
 		{ get; private set; }
 		#endregion
 

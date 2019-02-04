@@ -76,7 +76,7 @@ namespace XCom.Interfaces.Base
 
 		/// <summary>
 		/// Adds a tileset-descriptor. Called by
-		/// - TilesetEditor.OnCreateTilesetClick()
+		/// - TilesetEditor.OnAcceptClick()
 		/// NOTE: Check that the descriptor does *not* exist and category does
 		/// exist first.
 		/// </summary>
@@ -90,7 +90,7 @@ namespace XCom.Interfaces.Base
 		/// <summary>
 		/// Deletes a tileset-descriptor. Called by
 		/// - XCMainWindow.OnDeleteTilesetClick()
-		/// - TilesetEditor.OnCreateTilesetClick()
+		/// - TilesetEditor.OnAcceptClick()
 		/// NOTE: Check that category and perhaps tileset exist first.
 		/// </summary>
 		/// <param name="labelTileset">the label of the tileset to delete</param>
