@@ -2302,16 +2302,19 @@ namespace MapView
 			{
 				if (found) break;
 
-				var groupCollection = nodeGroup.Nodes;
-				foreach (TreeNode nodeCategory in groupCollection)
+				if (nodeGroup.Text == labelGroup)
 				{
-					if (nodeCategory.Text == labelCategory)
+					var groupCollection = nodeGroup.Nodes;
+					foreach (TreeNode nodeCategory in groupCollection)
 					{
-						found = true;
+						if (nodeCategory.Text == labelCategory)
+						{
+							found = true;
 
-						tvMaps.SelectedNode = nodeCategory;
-						nodeCategory.Expand();
-						break;
+							tvMaps.SelectedNode = nodeCategory;
+							nodeCategory.Expand();
+							break;
+						}
 					}
 				}
 			}
