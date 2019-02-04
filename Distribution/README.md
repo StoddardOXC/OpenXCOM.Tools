@@ -1,6 +1,6 @@
 MapView stores settings in a subfolder of itself. If you do not have user-permissions to write to that folder - eg. Program Files - you may have to either enable them or install MapView to a different hierarchy on your hardrive - eg. C:\\
 
-note for Mono users: MapView needs to run once and then be restarted for its window to resize properly.
+note for Mono users: MapView needs to run once and then be restarted for its window to resize properly.<br>
 Automated builds for Mono only: https://lxnt.wtf/oxem/#/MapView by Stoddard.
 
 <br>
