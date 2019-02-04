@@ -132,7 +132,7 @@ namespace MapView
 							+ DSShared.PathInfo.ConfigResources + " in the settings folder and"
 							+ " rerun MapView. A configuration dialog should appear.");
 					}
-					else if (ResourceInfo.TileGroupInfo.TileGroups.ContainsKey(Input)) // check if group-label already exists
+					else if (ResourceInfo.TileGroupManager.TileGroups.ContainsKey(Input)) // check if group-label already exists
 					{
 						ShowErrorDialog("The group label already exists.");
 					}
@@ -151,7 +151,7 @@ namespace MapView
 					{
 						bool bork = false;
 
-						var tilegroup = ResourceInfo.TileGroupInfo.TileGroups[GroupLabel];
+						var tilegroup = ResourceInfo.TileGroupManager.TileGroups[GroupLabel];
 						foreach (var labelCategory in tilegroup.Categories.Keys)
 						{
 							if (String.Equals(labelCategory, Input, StringComparison.OrdinalIgnoreCase))

@@ -16,7 +16,7 @@ namespace XCom
 			MapFileBase
 	{
 		#region Properties
-		private string FullPath
+		private string Fullpath
 		{ get; set; }
 
 		public Dictionary<int, Tuple<string,string>> Terrains
@@ -43,8 +43,8 @@ namespace XCom
 			:
 				base(descriptor, parts)
 		{
-			string dirMap = Path.Combine(Descriptor.BasePath, GlobalsXC.MapsDir);
-			FullPath = Path.Combine(
+			string dirMap = Path.Combine(Descriptor.Basepath, GlobalsXC.MapsDir);
+			Fullpath = Path.Combine(
 								dirMap,
 								Descriptor.Label + GlobalsXC.MapExt);
 
@@ -52,7 +52,7 @@ namespace XCom
 
 			Routes = routes;
 
-			if (File.Exists(FullPath))
+			if (File.Exists(Fullpath))
 			{
 				for (int i = 0; i != parts.Count; ++i)
 					parts[i].SetId = i;
@@ -67,7 +67,7 @@ namespace XCom
 										System.Globalization.CultureInfo.CurrentCulture,
 										"The file does not exist{0}{0}{1}",
 										Environment.NewLine,
-										FullPath);
+										Fullpath);
 				MessageBox.Show(
 							error,
 							"Error",
@@ -87,7 +87,7 @@ namespace XCom
 		/// <param name="parts">a list of tileset-parts</param>
 		private void ReadMapFile(List<TilepartBase> parts)
 		{
-			using (var bs = new BufferedStream(File.OpenRead(FullPath)))
+			using (var bs = new BufferedStream(File.OpenRead(Fullpath)))
 			{
 				int rows = bs.ReadByte();
 				int cols = bs.ReadByte();
@@ -322,7 +322,7 @@ namespace XCom
 		/// </summary>
 		public override void SaveMap()
 		{
-			SaveMapData(FullPath);
+			SaveMapData(Fullpath);
 		}
 
 		/// <summary>

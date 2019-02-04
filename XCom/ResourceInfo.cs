@@ -19,7 +19,7 @@ namespace XCom
 
 
 		#region Properties (static)
-		public static TileGroupManager TileGroupInfo
+		public static TileGroupManager TileGroupManager
 		{ get; private set; }
 		#endregion
 
@@ -33,7 +33,7 @@ namespace XCom
 		{
 //			XConsole.Init(20);
 
-			TileGroupInfo = new TileGroupManager(new TilesetManager(pathConfig.Fullpath));
+			TileGroupManager = new TileGroupManager(new TilesetManager(pathConfig.Fullpath));
 		}
 
 		/// <summary>

@@ -10,6 +10,9 @@ using XCom.Interfaces.Base;
 
 namespace XCom
 {
+	/// <summary>
+	/// Manages tileset-groups and writes MapTilesets.yml.
+	/// </summary>
 	public sealed class TileGroupManager
 	{
 		#region Fields
@@ -30,8 +33,8 @@ namespace XCom
 		#region cTor
 		internal TileGroupManager(TilesetManager tilesetManager)
 		{
-			foreach (string tilegroup in tilesetManager.Groups)
-				TileGroups[tilegroup] = new TileGroupChild(tilegroup, tilesetManager.Tilesets);
+			foreach (string labelGroup in tilesetManager.Groups)
+				TileGroups[labelGroup] = new TileGroupChild(labelGroup, tilesetManager.Tilesets);
 		}
 		#endregion
 
@@ -140,8 +143,8 @@ namespace XCom
 					sw.WriteLine("");
 					sw.WriteLine(PrePad + labelGroup + Padder(labelGroup.Length + PrePadLength));
 
-					var group = TileGroups[labelGroup] as TileGroupChild;	// <- fuck inheritance btw. It's not been used properly and is
-					foreach (var labelCategory in group.Categories.Keys)	// largely irrelevant and needlessly confusing in this codebase.
+					var @group = TileGroups[labelGroup] as TileGroupChild;	// <- fuck inheritance btw. It's not being used properly and is
+					foreach (var labelCategory in @group.Categories.Keys)	// largely irrelevant and needlessly confusing in this codebase.
 					{
 						//LogFile.WriteLine(". . saving Category= " + labelCategory);
 
@@ -151,7 +154,7 @@ namespace XCom
 						blankline = false;
 						sw.WriteLine(PrePad + labelCategory + Padder(labelCategory.Length + PrePadLength));
 
-						var category = group.Categories[labelCategory];
+						var category = @group.Categories[labelCategory];
 						foreach (var labelTileset in category.Keys)
 						{
 							//LogFile.WriteLine(". . saving Tileset= " + labelTileset);
@@ -175,19 +178,19 @@ namespace XCom
 							sw.WriteLine("    " + GlobalsXC.CATEGORY + ": " + labelCategory);
 							sw.WriteLine("    " + GlobalsXC.GROUP + ": " + labelGroup);
 
-							string keyResourcePath = String.Empty;
-							switch (group.GroupType)
+							string keyConfigPath = String.Empty;
+							switch (@group.GroupType)
 							{
 								case GameType.Ufo:
-									keyResourcePath = SharedSpace.ResourceDirectoryUfo;
+									keyConfigPath = SharedSpace.ResourceDirectoryUfo;
 									break;
 
 								case GameType.Tftd:
-									keyResourcePath = SharedSpace.ResourceDirectoryTftd;
+									keyConfigPath = SharedSpace.ResourceDirectoryTftd;
 									break;
 							}
-							string basepath = descriptor.BasePath;
-							if (basepath != SharedSpace.Instance.GetShare(keyResourcePath))
+							string basepath = descriptor.Basepath;
+							if (basepath != SharedSpace.Instance.GetShare(keyConfigPath)) // don't write basepath if it's the (default) Configurator's basepath
 								sw.WriteLine("    " + GlobalsXC.BASEPATH + ": " + basepath);
 						}
 					}
@@ -199,22 +202,17 @@ namespace XCom
 		/// <summary>
 		/// Adds padding such as " ---#" out to 80 characters.
 		/// </summary>
-		/// <param name="len"></param>
+		/// <param name="length"></param>
 		/// <returns></returns>
-		private static string Padder(int len)
+		private static string Padder(int length)
 		{
 			string pad = String.Empty;
-			if (len < 79)
-				pad = " ";
+			if (length < 79) pad = " ";
 
-			for (int i = 78; i > len; --i)
-			{
+			for (int i = 78; i > length; --i)
 				pad += "-";
-			}
 
-			if (len < 79)
-				pad += "#";
-
+			if (length < 79) pad += "#";
 			return pad;
 		}
 		#endregion

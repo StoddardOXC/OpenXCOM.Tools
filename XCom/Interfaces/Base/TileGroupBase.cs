@@ -10,16 +10,13 @@ namespace XCom.Interfaces.Base
 		public string Label
 		{ get; private set; }
 
-		private readonly Dictionary<string, Descriptor> _descriptors
-				   = new Dictionary<string, Descriptor>();
-
+		private readonly Dictionary<string, Dictionary<string, Descriptor>> _categories
+				   = new Dictionary<string, Dictionary<string, Descriptor>>();
 		/// <summary>
 		/// Categories is a dictionary of category-labels mapped to a
 		/// subdictionary of descriptor-labels (.MAP/.RMP filenames w/out
 		/// extension) mapped to the Descriptors themselves.
 		/// </summary>
-		private readonly Dictionary<string, Dictionary<string, Descriptor>> _categories
-				   = new Dictionary<string, Dictionary<string, Descriptor>>();
 		public Dictionary<string, Dictionary<string, Descriptor>> Categories
 		{
 			get { return _categories; }
@@ -79,7 +76,7 @@ namespace XCom.Interfaces.Base
 
 		/// <summary>
 		/// Adds a tileset-descriptor. Called by
-		/// - MapTreeTilesetInputBox.OnCreateTilesetClick()
+		/// - TilesetEditor.OnAcceptClick()
 		/// NOTE: Check that the descriptor does *not* exist and category does
 		/// exist first.
 		/// </summary>
@@ -93,7 +90,7 @@ namespace XCom.Interfaces.Base
 		/// <summary>
 		/// Deletes a tileset-descriptor. Called by
 		/// - XCMainWindow.OnDeleteTilesetClick()
-		/// - MapTreeTilesetInputBox.OnCreateTilesetClick()
+		/// - TilesetEditor.OnAcceptClick()
 		/// NOTE: Check that category and perhaps tileset exist first.
 		/// </summary>
 		/// <param name="labelTileset">the label of the tileset to delete</param>

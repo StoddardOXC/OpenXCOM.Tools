@@ -429,9 +429,10 @@ namespace MapView
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("XCMainWindow.CreateTree");
 
+			tvMaps.BeginUpdate();
 			tvMaps.Nodes.Clear();
 
-			var groups = ResourceInfo.TileGroupInfo.TileGroups;
+			var groups = ResourceInfo.TileGroupManager.TileGroups;
 			//LogFile.WriteLine(". groups= " + groups);
 
 			SortableTreeNode nodeGroup;
@@ -472,6 +473,7 @@ namespace MapView
 					}
 				}
 			}
+			tvMaps.EndUpdate();
 		}
 
 		/// <summary>
@@ -1088,7 +1090,7 @@ namespace MapView
 				ViewerFormsManager.RouteView   .Control     .RoutesChanged =
 				ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
 			}
-			MaptreeChanged = !ResourceInfo.TileGroupInfo.SaveTileGroups();
+			MaptreeChanged = !ResourceInfo.TileGroupManager.SaveTileGroups();
 		}
 
 		internal void OnSaveMapClick(object sender, EventArgs e)
@@ -1113,7 +1115,7 @@ namespace MapView
 
 		private void OnSaveAsClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MapBase != null					// safety. Not sure if a 'MapBase' could be
+			if (   _mainViewUnderlay.MapBase != null				// safety. Not sure if a 'MapBase' could be
 				&& _mainViewUnderlay.MapBase.Descriptor != null)	// instantiated without a 'Descriptor'.
 			{
 				var sfd = new SaveFileDialog();
@@ -1121,7 +1123,7 @@ namespace MapView
 				sfd.FileName = _mainViewUnderlay.MapBase.Descriptor.Label + GlobalsXC.MapExt;
 				sfd.Filter = "Map files (*.MAP)|*.MAP|All files (*.*)|*.*";
 				sfd.Title = "Save Map and subordinate Route file as ...";
-				sfd.InitialDirectory = Path.Combine(_mainViewUnderlay.MapBase.Descriptor.BasePath, GlobalsXC.MapsDir);
+				sfd.InitialDirectory = Path.Combine(_mainViewUnderlay.MapBase.Descriptor.Basepath, GlobalsXC.MapsDir);
 
 				if (sfd.ShowDialog() == DialogResult.OK)
 				{
@@ -1154,9 +1156,9 @@ namespace MapView
 						_mainViewUnderlay.MapBase.SaveMap(pfMaps);
 						_mainViewUnderlay.MapBase.SaveRoutes(pfRoutes);
 
-						MapChanged = // ohreally - does this change the label in the statusbar etc.
-						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
-						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
+//						MapChanged = // ohreally - does this change the label in the statusbar etc. nope, this is effectively exporting the Map and Routes
+//						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
+//						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = false;
 					}
 					else
 						MessageBox.Show(
@@ -1173,18 +1175,18 @@ namespace MapView
 
 		private void OnSaveMaptreeClick(object sender, EventArgs e)
 		{
-			MaptreeChanged = !ResourceInfo.TileGroupInfo.SaveTileGroups();
+			MaptreeChanged = !ResourceInfo.TileGroupManager.SaveTileGroups();
 		}
 
 
 		private void OnRegenOccultClick(object sender, EventArgs e) // disabled in designer w/ Visible=FALSE
 		{
-			var mapFile = MainViewUnderlay.Instance.MapBase as MapFileChild;
+/*			var mapFile = MainViewUnderlay.Instance.MapBase as MapFileChild;
 			if (mapFile != null)
 			{
 				mapFile.CalculateOccultations();
 				Refresh();
-			}
+			} */
 		}
 
 
@@ -1262,7 +1264,7 @@ namespace MapView
 						if (MaptreeChanged)
 						{
 //							MaptreeChanged = !ResourceInfo.TileGroupInfo.SaveTileGroups(); // <- that could cause endless recursion.
-							ResourceInfo.TileGroupInfo.SaveTileGroups();
+							ResourceInfo.TileGroupManager.SaveTileGroups();
 							MaptreeChanged = false;
 						}
 
@@ -1906,7 +1908,7 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					ResourceInfo.TileGroupInfo.AddTileGroup(f.Input);
+					ResourceInfo.TileGroupManager.AddTileGroup(f.Input);
 
 					CreateTree();
 					SelectGroupNode(f.Input);
@@ -1940,9 +1942,9 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					ResourceInfo.TileGroupInfo.EditTileGroup(
-														f.Input,
-														labelGroup);
+					ResourceInfo.TileGroupManager.EditTileGroup(
+															f.Input,
+															labelGroup);
 					CreateTree();
 					SelectGroupNode(f.Input);
 				}
@@ -1981,7 +1983,7 @@ namespace MapView
 			{
 				MaptreeChanged = true;
 
-				ResourceInfo.TileGroupInfo.DeleteTileGroup(labelGroup);
+				ResourceInfo.TileGroupManager.DeleteTileGroup(labelGroup);
 
 				CreateTree();
 				SelectGroupNodeTop();
@@ -2010,8 +2012,8 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					var tilegroup = ResourceInfo.TileGroupInfo.TileGroups[labelGroup];
-					tilegroup.AddCategory(f.Input);
+					var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+					@group.AddCategory(f.Input);
 
 					CreateTree();
 					SelectCategoryNode(f.Input);
@@ -2044,10 +2046,9 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					var tilegroup = ResourceInfo.TileGroupInfo.TileGroups[labelGroup];
-					tilegroup.EditCategory(
-										f.Input,
-										labelCategory);
+					var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+					@group.EditCategory(f.Input, labelCategory);
+
 					CreateTree();
 					SelectCategoryNode(f.Input);
 				}
@@ -2088,8 +2089,8 @@ namespace MapView
 			{
 				MaptreeChanged = true;
 
-				var tilegroup = ResourceInfo.TileGroupInfo.TileGroups[labelGroup];
-				tilegroup.DeleteCategory(labelCategory);
+				var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+				@group.DeleteCategory(labelCategory);
 
 				CreateTree();
 				SelectCategoryNodeTop(labelGroup);
@@ -2109,11 +2110,11 @@ namespace MapView
 			string labelCategory = tvMaps.SelectedNode.Text;
 			string labelTileset  = String.Empty;
 
-			using (var f = new MapTreeTilesetInputBox(
-												MapTreeTilesetInputBox.BoxType.AddTileset,
-												labelGroup,
-												labelCategory,
-												labelTileset))
+			using (var f = new TilesetEditor(
+										TilesetEditor.BoxType.AddTileset,
+										labelGroup,
+										labelCategory,
+										labelTileset))
 			{
 				if (f.ShowDialog(this) == DialogResult.OK)
 				{
@@ -2122,7 +2123,7 @@ namespace MapView
 					MaptreeChanged = true;
 
 					CreateTree();
-					SelectTilesetNode(f.Tileset);
+					SelectTilesetNode(f.Tileset, labelCategory);
 				}
 			}
 		}
@@ -2140,11 +2141,11 @@ namespace MapView
 			string labelCategory = tvMaps.SelectedNode.Parent.Text;
 			string labelTileset  = tvMaps.SelectedNode.Text;
 
-			using (var f = new MapTreeTilesetInputBox(
-												MapTreeTilesetInputBox.BoxType.EditTileset,
-												labelGroup,
-												labelCategory,
-												labelTileset))
+			using (var f = new TilesetEditor(
+										TilesetEditor.BoxType.EditTileset,
+										labelGroup,
+										labelCategory,
+										labelTileset))
 			{
 				if (f.ShowDialog(this) == DialogResult.OK)
 				{
@@ -2153,7 +2154,7 @@ namespace MapView
 					MaptreeChanged = true;
 
 					CreateTree();
-					SelectTilesetNode(f.Tileset);
+					SelectTilesetNode(f.Tileset, labelCategory);
 				}
 			}
 		}
@@ -2193,8 +2194,8 @@ namespace MapView
 			{
 				MaptreeChanged = true;
 
-				var tilegroup = ResourceInfo.TileGroupInfo.TileGroups[labelGroup];
-				tilegroup.DeleteTileset(labelTileset, labelCategory);
+				var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
+				@group.DeleteTileset(labelTileset, labelCategory);
 
 				CreateTree();
 				SelectTilesetNodeTop(labelCategory);
@@ -2316,10 +2317,12 @@ namespace MapView
 		}
 
 		/// <summary>
-		/// Selects a treenode in the Maps tree given a tileset-label.
+		/// Selects a treenode in the Maps tree given a tileset-label and
+		/// Category.
 		/// </summary>
 		/// <param name="labelTileset"></param>
-		private void SelectTilesetNode(string labelTileset)
+		/// <param name="category"></param>
+		private void SelectTilesetNode(string labelTileset, string category)
 		{
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("SelectTilesetNode");
@@ -2339,17 +2342,20 @@ namespace MapView
 
 					//LogFile.WriteLine(". . category= " + nodeCategory.Text);
 
-					var categoryCollection = nodeCategory.Nodes;
-					foreach (TreeNode nodeTileset in categoryCollection)
+					if (nodeCategory.Text == category)
 					{
-						//LogFile.WriteLine(". . . tileset= " + nodeTileset.Text);
-
-						if (nodeTileset.Text == labelTileset)
+						var categoryCollection = nodeCategory.Nodes;
+						foreach (TreeNode nodeTileset in categoryCollection)
 						{
-							found = true;
+							//LogFile.WriteLine(". . . tileset= " + nodeTileset.Text);
 
-							tvMaps.SelectedNode = nodeTileset;
-							break;
+							if (nodeTileset.Text == labelTileset)
+							{
+								found = true;
+
+								tvMaps.SelectedNode = nodeTileset;
+								break;
+							}
 						}
 					}
 				}
@@ -2420,7 +2426,7 @@ namespace MapView
 		/// </summary>
 		private static void CreateViewersFile()
 		{
-			var info = (PathInfo)SharedSpace.Instance[PathInfo.ShareViewers];
+			var info = SharedSpace.Instance[PathInfo.ShareViewers] as PathInfo;
 			info.CreateDirectory();
 
 			string pfe = info.Fullpath;
@@ -2467,23 +2473,22 @@ namespace MapView
 
 					_mainViewUnderlay.MainViewOverlay.FirstClick = false;
 
-					if (@base.Parts[0][0].Pal == Palette.UfoBattle) // used by Mono only ->
+					if (descriptor.Pal == Palette.TftdBattle) // used by Mono only ->
 					{
-						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesUfoBattle;
-					}
-					else
 						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesTftdBattle;
+					}
+					else // default to ufo-battle palette
+						_mainViewUnderlay.MainViewOverlay.SpriteBrushes = Palette.BrushesUfoBattle;
 
 					_mainViewUnderlay.MapBase = @base;
 
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
 
-					Text = "Map Editor - " + descriptor.BasePath;
+					Text = "Map Editor - " + descriptor.Basepath;
 					if (MaptreeChanged) Text += "*";
 
-					tsslMapLabel  .Text = descriptor.Label;
-					tsslDimensions.Text = (@base != null) ? @base.MapSize.ToString()
-														  : "size: n/a";
+					tsslMapLabel     .Text = descriptor.Label;
+					tsslDimensions   .Text = @base.MapSize.ToString();
 					tsslPosition     .Text =
 					tsslSelectionSize.Text = String.Empty;
 

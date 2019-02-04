@@ -9,8 +9,8 @@ namespace XCom
 	/// data as well as required terrain-data loaded from PCK/TAB/MCD files.
 	/// However, a Tileset is used only for loading groups- and terrains-
 	/// configuration from MapTilesets; the data is then sorted by the
-	/// TilesetManager and is stored as Descriptor's and Terrain's for use in
-	/// the viewers/editors.
+	/// TilesetManager and is stored as Descriptors and Terrains for use in the
+	/// viewers/editors.
 	/// NOTE: I'm just working as best I can with a big wad of spaghetti.
 	/// </summary>
 	internal sealed class Tileset
@@ -44,13 +44,13 @@ namespace XCom
 		/// <param name="basepath"></param>
 		internal Tileset(
 				string label,
-				string group, // sic.
+				string @group,
 				string category,
 				Dictionary<int, Tuple<string,string>> terrains,
 				string basepath)
 		{
 			Label    = label;
-			Group    = group;
+			Group    = @group;
 			Category = category;
 			Terrains = terrains;
 			BasePath = basepath;

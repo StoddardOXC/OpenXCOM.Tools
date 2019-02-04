@@ -210,9 +210,9 @@
     <Compile Include="Forms\OtherForms\MapTreeInputBox.Designer.cs">
       <DependentUpon>MapTreeInputBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\OtherForms\MapTreeTilesetInputBox.cs" />
-    <Compile Include="Forms\OtherForms\MapTreeTilesetInputBox.Designer.cs">
-      <DependentUpon>MapTreeTilesetInputBox.cs</DependentUpon>
+    <Compile Include="Forms\OtherForms\TilesetEditor.cs" />
+    <Compile Include="Forms\OtherForms\TilesetEditor.Designer.cs">
+      <DependentUpon>TilesetEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -334,8 +334,8 @@
     <EmbeddedResource Include="Forms\OtherForms\MapTreeInputBox.resx">
       <DependentUpon>MapTreeInputBox.Designer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\OtherForms\MapTreeTilesetInputBox.resx">
-      <DependentUpon>MapTreeTilesetInputBox.Designer.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\OtherForms\TilesetEditor.resx">
+      <DependentUpon>TilesetEditor.Designer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MapObservers\RouteView\RouteView.resx">
       <SubType>Designer</SubType>
