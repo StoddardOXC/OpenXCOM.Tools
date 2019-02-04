@@ -412,9 +412,10 @@ namespace ConfigConverter
 									BASEPATH = String.Empty;
 								}
 
-								string label = TILESET;
-
-								int incr = -1; // check for duplicate Tileset labels ->
+								string label = TILESET;	// check for duplicate Tileset labels ->
+														// Duplicates should be okay as long as they're not in the same Category.
+														// ... but given the essentially borked nature of Mv1 tileset config.
+								int incr = -1;			// just do it ->
 								bool found = false;
 								while (!found)
 								{
