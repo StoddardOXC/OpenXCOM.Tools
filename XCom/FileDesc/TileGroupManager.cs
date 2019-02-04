@@ -31,10 +31,10 @@ namespace XCom
 
 
 		#region cTor
-		internal TileGroupManager(TilesetLoader tilesetManager)
+		internal TileGroupManager(TilesetLoader tilesetLoader)
 		{
-			foreach (string labelGroup in tilesetManager.Groups)
-				TileGroups[labelGroup] = new TileGroupChild(labelGroup, tilesetManager.Tilesets);
+			foreach (string labelGroup in tilesetLoader.Groups)
+				TileGroups[labelGroup] = new TileGroupChild(labelGroup, tilesetLoader.Tilesets);
 		}
 		#endregion
 
