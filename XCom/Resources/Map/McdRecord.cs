@@ -88,14 +88,14 @@ namespace XCom
 		public int SetId
 		{ get; private set; }
 
-		public byte Image1 { get; set; }
-		public byte Image2 { get; set; }
-		public byte Image3 { get; set; }
-		public byte Image4 { get; set; }
-		public byte Image5 { get; set; }
-		public byte Image6 { get; set; }
-		public byte Image7 { get; set; }
-		public byte Image8 { get; set; }
+		public byte Sprite1 { get; set; }
+		public byte Sprite2 { get; set; }
+		public byte Sprite3 { get; set; }
+		public byte Sprite4 { get; set; }
+		public byte Sprite5 { get; set; }
+		public byte Sprite6 { get; set; }
+		public byte Sprite7 { get; set; }
+		public byte Sprite8 { get; set; }
 
 		public byte Loft1  { get; set; }
 		public byte Loft2  { get; set; }

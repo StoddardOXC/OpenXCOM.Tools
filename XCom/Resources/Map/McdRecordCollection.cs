@@ -12,10 +12,10 @@ namespace XCom
 		/// <summary>
 		/// Instantiates a read-only collection of MCD records.
 		/// </summary>
-		/// <param name="parts"></param>
-		internal McdRecordCollection(Tilepart[] parts)
+		/// <param name="tileparts"></param>
+		internal McdRecordCollection(Tilepart[] tileparts)
 			:
-				base(parts)
+				base(tileparts)
 		{}
 		#endregion
 	}
