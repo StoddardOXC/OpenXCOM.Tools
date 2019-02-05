@@ -82,10 +82,12 @@ namespace XCom.Resources.Map
 		/// </summary>
 		/// <param name="terrain">the terrain file w/out extension</param>
 		/// <param name="dirTerrain">path to the directory of the terrain file</param>
+		/// <param name="suppressError">true to suppress any error</param>
 		/// <returns>count of MCD-records or 0 on fail</returns>
 		internal static int GetRecordCount(
 				string terrain,
-				string dirTerrain)
+				string dirTerrain,
+				bool suppressError)
 		{
 			string pfeMcd = Path.Combine(dirTerrain, terrain + GlobalsXC.McdExt);
 
@@ -95,15 +97,18 @@ namespace XCom.Resources.Map
 					return (int)bs.Length / Length; // TODO: Error if this don't work out right.
 			}
 
-			MessageBox.Show(
-						"Can't find file for terrain data."
-							+ Environment.NewLine + Environment.NewLine
-							+ pfeMcd,
-						"Error",
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Error,
-						MessageBoxDefaultButton.Button1,
-						0);
+			if (!suppressError)
+			{
+				MessageBox.Show(
+							"Can't find file for terrain data."
+								+ Environment.NewLine + Environment.NewLine
+								+ pfeMcd,
+							"Error",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Error,
+							MessageBoxDefaultButton.Button1,
+							0);
+			}
 			return 0;
 		}
 

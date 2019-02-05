@@ -45,7 +45,7 @@ namespace XCom
 				if (MessageBox.Show(
 							"The Mapfile does not exist."
 								+ Environment.NewLine + Environment.NewLine
-								+ "Do you want to browse a different basepath for the .MAP and .RMP files?",
+								+ "Do you want to browse for a different basepath to the .MAP and .RMP files?",
 							"Warning",
 							MessageBoxButtons.YesNo,
 							MessageBoxIcon.Warning,
@@ -95,18 +95,20 @@ namespace XCom
 			{
 				//LogFile.WriteLine(". . Map file exists");
 
-				var parts = new List<TilepartBase>();
+				var tileparts = new List<TilepartBase>();
 
 				for (int i = 0; i != descriptor.Terrains.Count; ++i) // push together the tileparts of all allocated terrains
 				{
-					var MCD = descriptor.GetTerrainRecords(i);
-					foreach (Tilepart part in MCD)
-						parts.Add(part);
+					//LogFile.WriteLine(". . . terrain= " + descriptor.Terrains[i].Item1 + " : " + descriptor.Terrains[i].Item2);
+
+					var MCD = descriptor.GetTerrainRecords(i); // NOTE: Calls ResourceInfo.LoadSpriteset() also.
+					foreach (Tilepart tilepart in MCD)
+						tileparts.Add(tilepart);
 				}
 
-				if (parts.Count != 0)
+				if (tileparts.Count != 0)
 				{
-					if (parts.Count > MAX_MCDRECORDS) // issue warning ->
+					if (tileparts.Count > MAX_MCDRECORDS) // issue warning ->
 					{
 						string text = String.Empty;
 
@@ -130,7 +132,7 @@ namespace XCom
 							int records = descriptor.GetRecordCount(i);
 							text += st + " - " + records + Environment.NewLine;
 						}
-						text += Environment.NewLine + "total - " + parts.Count;
+						text += Environment.NewLine + "total - " + tileparts.Count;
 
 						MapFileWarn.Instance.Show();
 						MapFileWarn.Instance.SetText(descriptor.Label, text);
@@ -139,7 +141,7 @@ namespace XCom
 					var RMP = new RouteNodeCollection(descriptor.Label, descriptor.Basepath);
 					var MAP = new MapFileChild(
 											descriptor,
-											parts,
+											tileparts,
 											RMP);
 					return MAP;
 				}

@@ -113,8 +113,9 @@ namespace XCom
 		/// Gets the count of MCD-records in an MCD-file.
 		/// </summary>
 		/// <param name="id">the position of the terrain in this tileset's terrains-list</param>
+		/// <param name="suppressError">true to suppress any error</param>
 		/// <returns>count of MCD-records or 0 on fail</returns>
-		public int GetRecordCount(int id)
+		public int GetRecordCount(int id, bool suppressError = false)
 		{
 			var terrain = Terrains[id];
 			string terr = terrain.Item1;
@@ -122,7 +123,7 @@ namespace XCom
 
 			path = GetTerrainDirectory(path);
 
-			return XCTileFactory.GetRecordCount(terr, path);
+			return XCTileFactory.GetRecordCount(terr, path, suppressError);
 		}
 
 		/// <summary>

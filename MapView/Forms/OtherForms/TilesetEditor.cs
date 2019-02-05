@@ -240,7 +240,7 @@ namespace MapView
 						TerrainsOriginal[i] = new Tuple<string,string>(
 																String.Copy(descriptor.Terrains[i].Item1),
 																String.Copy(descriptor.Terrains[i].Item2));
-						records += descriptor.GetRecordCount(i);
+						records += descriptor.GetRecordCount(i, true);
 					}
 					lblMcdRecords.Text = records + " MCD Records";
 
