@@ -120,7 +120,7 @@
     <Compile Include="Resources\Map\RouteData\RouteCheckService.cs" />
     <Compile Include="Resources\Map\SpecialType.cs" />
     <Compile Include="Resources\Map\MapFileService.cs" />
-    <Compile Include="Resources\Map\XCTileFactory.cs" />
+    <Compile Include="Resources\Map\TilepartFactory.cs" />
     <Compile Include="Interfaces\Base\MapLocations.cs" />
     <Compile Include="Interfaces\Base\MapTileList.cs" />
     <Compile Include="Services\MapResizeService.cs" />

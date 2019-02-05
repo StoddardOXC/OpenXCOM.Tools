@@ -103,7 +103,7 @@ namespace XCom
 
 			path = GetTerrainDirectory(path);
 
-			var tiles = XCTileFactory.CreateTileparts(
+			var tiles = TilepartFactory.CreateTileparts(
 													terr, path,
 													ResourceInfo.LoadSpriteset(terr, path, 2, Pal));	// NOTE: That loads the sprites in addition to
 			return new McdRecordCollection(tiles);														// getting the MCD-records. here just because it can be
@@ -123,7 +123,7 @@ namespace XCom
 
 			path = GetTerrainDirectory(path);
 
-			return XCTileFactory.GetRecordCount(terr, path, suppressError);
+			return TilepartFactory.GetRecordCount(terr, path, suppressError);
 		}
 
 		/// <summary>
