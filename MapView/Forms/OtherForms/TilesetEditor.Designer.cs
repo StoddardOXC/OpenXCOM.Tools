@@ -234,7 +234,7 @@
 			// 
 			// rb_CustomBasepath
 			// 
-			this.rb_CustomBasepath.Location = new System.Drawing.Point(435, 15);
+			this.rb_CustomBasepath.Location = new System.Drawing.Point(437, 15);
 			this.rb_CustomBasepath.Name = "rb_CustomBasepath";
 			this.rb_CustomBasepath.Size = new System.Drawing.Size(125, 20);
 			this.rb_CustomBasepath.TabIndex = 4;
@@ -245,7 +245,7 @@
 			// 
 			// rb_TilesetBasepath
 			// 
-			this.rb_TilesetBasepath.Location = new System.Drawing.Point(310, 15);
+			this.rb_TilesetBasepath.Location = new System.Drawing.Point(312, 15);
 			this.rb_TilesetBasepath.Name = "rb_TilesetBasepath";
 			this.rb_TilesetBasepath.Size = new System.Drawing.Size(125, 20);
 			this.rb_TilesetBasepath.TabIndex = 3;
@@ -511,6 +511,7 @@
 			this.lblTilesetMap.TabIndex = 3;
 			this.lblTilesetMap.Text = "Map";
 			this.lblTilesetMap.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTip1.SetToolTip(this.lblTilesetMap, "label of the .MAP and .RMP files");
 			// 
 			// btnFindTileset
 			// 
@@ -542,6 +543,7 @@
 			this.lblTilesetPath.TabIndex = 0;
 			this.lblTilesetPath.Text = "Path";
 			this.lblTilesetPath.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+			this.toolTip1.SetToolTip(this.lblTilesetPath, "path to the .MAP file");
 			// 
 			// gbHeader
 			// 
