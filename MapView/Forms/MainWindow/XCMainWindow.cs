@@ -1896,11 +1896,9 @@ namespace MapView
 
 			using (var f = new MapTreeInputBox(
 											"Enter the label for a new Map group."
-												+ " It needs to start with UFO or TFTD, since"
-												+ " the prefix will set the default path and"
-												+ " palette of its tilesets.",
-											"Note that groups that do not contain"
-												+ " tilesets will not be saved.",
+												+ " It needs to start with UFO or TFTD (case insensitive) since"
+												+ " the prefix will set the default path and palette of its tilesets.",
+											"Note that groups that do not contain tilesets will not be saved.",
 											MapTreeInputBox.BoxType.AddGroup,
 											String.Empty))
 			{
@@ -1908,10 +1906,10 @@ namespace MapView
 				{
 					MaptreeChanged = true;
 
-					ResourceInfo.TileGroupManager.AddTileGroup(f.Input);
+					ResourceInfo.TileGroupManager.AddTileGroup(f.Label);
 
 					CreateTree();
-					SelectGroupNode(f.Input);
+					SelectGroupNode(f.Label);
 				}
 			}
 		}
@@ -1927,26 +1925,24 @@ namespace MapView
 
 			using (var f = new MapTreeInputBox(
 											"Enter a new label for the Map group."
-												+ " It needs to start with UFO or TFTD, since"
-												+ " the prefix will set the default path and"
-												+ " palette of its tilesets.",
-											"Note that groups that do not contain"
-												+ " tilesets will not be saved.",
+												+ " It needs to start with UFO or TFTD (case insensitive) since"
+												+ " the prefix will set the default path and palette of its tilesets.",
+											"Note that groups that do not contain tilesets will not be saved.",
 											MapTreeInputBox.BoxType.EditGroup,
 											String.Empty))
 			{
 				string labelGroup = tvMaps.SelectedNode.Text;
 
-				f.Input = labelGroup;
+				f.Label = labelGroup;
 				if (f.ShowDialog(this) == DialogResult.OK)
 				{
 					MaptreeChanged = true;
 
 					ResourceInfo.TileGroupManager.EditTileGroup(
-															f.Input,
+															f.Label,
 															labelGroup);
 					CreateTree();
-					SelectGroupNode(f.Input);
+					SelectGroupNode(f.Label);
 				}
 			}
 		}
@@ -1967,9 +1963,8 @@ namespace MapView
 			string notice = String.Format(
 										System.Globalization.CultureInfo.CurrentCulture,
 										"Are you sure you want to remove this Map group?"
-											+ " This will also remove all its categories and"
-											+ " tilesets, but files on disk are unaffected.{0}{0}"
-											+ "group\t{1}",
+											+ " This will also remove all its categories and tilesets,"
+											+ " but files on disk are unaffected.{0}{0}group\t{1}",
 										Environment.NewLine,
 										labelGroup);
 			if (MessageBox.Show(
@@ -2003,8 +1998,7 @@ namespace MapView
 
 			using (var f = new MapTreeInputBox(
 											"Enter the label for a new Map category.",
-											"Note that categories that do not contain"
-												+ " tilesets will not be saved.",
+											"Note that categories that do not contain tilesets will not be saved.",
 											MapTreeInputBox.BoxType.AddCategory,
 											labelGroup))
 			{
@@ -2013,10 +2007,10 @@ namespace MapView
 					MaptreeChanged = true;
 
 					var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
-					@group.AddCategory(f.Input);
+					@group.AddCategory(f.Label);
 
 					CreateTree();
-					SelectCategoryNode(f.Input, @group.Label);
+					SelectCategoryNode(f.Label, @group.Label);
 				}
 			}
 		}
@@ -2034,23 +2028,22 @@ namespace MapView
 
 			using (var f = new MapTreeInputBox(
 											"Enter a new label for the Map category.",
-											"Note that categories that do not contain"
-												+ " tilesets will not be saved.",
+											"Note that categories that do not contain tilesets will not be saved.",
 											MapTreeInputBox.BoxType.EditCategory,
 											labelGroup))
 			{
 				string labelCategory = tvMaps.SelectedNode.Text;
 
-				f.Input = labelCategory;
+				f.Label = labelCategory;
 				if (f.ShowDialog(this) == DialogResult.OK)
 				{
 					MaptreeChanged = true;
 
 					var @group = ResourceInfo.TileGroupManager.TileGroups[labelGroup];
-					@group.EditCategory(f.Input, labelCategory);
+					@group.EditCategory(f.Label, labelCategory);
 
 					CreateTree();
-					SelectCategoryNode(f.Input, @group.Label);
+					SelectCategoryNode(f.Label, @group.Label);
 				}
 			}
 		}
