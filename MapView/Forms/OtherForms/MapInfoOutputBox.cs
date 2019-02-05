@@ -271,7 +271,7 @@ namespace MapView
 			this.lbl1PartsFilled.Name = "lbl1PartsFilled";
 			this.lbl1PartsFilled.Size = new System.Drawing.Size(115, 15);
 			this.lbl1PartsFilled.TabIndex = 8;
-			this.lbl1PartsFilled.Text = "Tileparts";
+			this.lbl1PartsFilled.Text = "Tileslots used";
 			// 
 			// pBar
 			// 
