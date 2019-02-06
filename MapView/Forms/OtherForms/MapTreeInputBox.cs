@@ -40,7 +40,7 @@ namespace MapView
 		/// <summary>
 		/// Gets/Sets the text in the textbox.
 		/// </summary>
-		internal string Input
+		internal string Label
 		{
 			get { return tbInput.Text; }
 			set { tbInput.Text = value; }
@@ -98,54 +98,69 @@ namespace MapView
 		#region Eventcalls
 		private void OnAcceptClick(object sender, EventArgs e)
 		{
-			Input = Input.Trim();
+			Label = Label.Trim();
 
 			switch (InputBoxType)
 			{
 				case BoxType.AddGroup:
 				case BoxType.EditGroup:
-					if (String.IsNullOrEmpty(Input))
+					if (String.IsNullOrEmpty(Label))
 					{
 						ShowErrorDialog("A group label has not been specified.");
-					}
-					else if (!Input.StartsWith("ufo",  StringComparison.OrdinalIgnoreCase)
-						&&   !Input.StartsWith("tftd", StringComparison.OrdinalIgnoreCase))
-					{
-						ShowErrorDialog("The group label needs to start with UFO or TFTD.");
 						tbInput.Select();
-						tbInput.SelectionStart  =
-						tbInput.SelectionLength = 0;
 					}
-					else if (Input.StartsWith("ufo", StringComparison.OrdinalIgnoreCase)
+					else if (!Label.StartsWith("ufo",  StringComparison.OrdinalIgnoreCase)
+						&&   !Label.StartsWith("tftd", StringComparison.OrdinalIgnoreCase))
+					{
+						ShowErrorDialog("The group label needs to start with UFO or TFTD (case insensitive).");
+						tbInput.Select();
+					}
+					else if (Label.StartsWith("ufo", StringComparison.OrdinalIgnoreCase)
 						&& String.IsNullOrEmpty(SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryUfo)))
 					{
 						ShowErrorDialog("UFO has not been configured. If you have UFO resources"
-							+ " and want to set the configuration for UFO, rename or delete the file "
-							+ DSShared.PathInfo.ConfigResources + " in the settings folder and"
-							+ " rerun MapView. A configuration dialog should appear.");
+							+ " and want to set the configuration for UFO, run the Configurator"
+							+ " from MainView's Edit menu.");
+						tbInput.Select();
 					}
-					else if (Input.StartsWith("tftd", StringComparison.OrdinalIgnoreCase)
+					else if (Label.StartsWith("tftd", StringComparison.OrdinalIgnoreCase)
 						&& String.IsNullOrEmpty(SharedSpace.Instance.GetShare(SharedSpace.ResourceDirectoryTftd)))
 					{
 						ShowErrorDialog("TFTD has not been configured. If you have TFTD resources"
-							+ " and want to set the configuration for TFTD, rename or delete the file "
-							+ DSShared.PathInfo.ConfigResources + " in the settings folder and"
-							+ " rerun MapView. A configuration dialog should appear.");
-					}
-					else if (ResourceInfo.TileGroupManager.TileGroups.ContainsKey(Input)) // check if group-label already exists
-					{
-						ShowErrorDialog("The group label already exists.");
+							+ " and want to set the configuration for TFTD, run the Configurator"
+							+ " from MainView's Edit menu.");
+						tbInput.Select();
 					}
 					else
-						DialogResult = DialogResult.OK;
+					{
+						bool bork = false;
 
+						var groups = ResourceInfo.TileGroupManager.TileGroups;
+						foreach (var labelGroup in groups.Keys)
+						{
+							if (String.Equals(labelGroup, Label, StringComparison.OrdinalIgnoreCase))
+							{
+								bork = true;
+								break;
+							}
+						}
+
+						if (bork)
+						{
+							ShowErrorDialog("The group label already exists.");
+							tbInput.Select();
+						}
+						else
+							DialogResult = DialogResult.OK;
+					}
 					break;
 
 				case BoxType.AddCategory:
 				case BoxType.EditCategory:
-					if (String.IsNullOrEmpty(Input))
+					if (String.IsNullOrEmpty(Label))
 					{
 						ShowErrorDialog("A category label has not been specified.");
+						tbInput.Select();
 					}
 					else
 					{
@@ -154,7 +169,7 @@ namespace MapView
 						var tilegroup = ResourceInfo.TileGroupManager.TileGroups[GroupLabel];
 						foreach (var labelCategory in tilegroup.Categories.Keys)
 						{
-							if (String.Equals(labelCategory, Input, StringComparison.OrdinalIgnoreCase))
+							if (String.Equals(labelCategory, Label, StringComparison.OrdinalIgnoreCase))
 							{
 								bork = true;
 								break;
@@ -162,7 +177,10 @@ namespace MapView
 						}
 
 						if (bork)
+						{
 							ShowErrorDialog("The category label already exists.");
+							tbInput.Select();
+						}
 						else
 							DialogResult = DialogResult.OK;
 					}

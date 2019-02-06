@@ -13,14 +13,14 @@ namespace XCom
 		{
 			var record = new McdRecord();
 
-			record.Image1 = bindata[0];
-			record.Image2 = bindata[1];
-			record.Image3 = bindata[2];
-			record.Image4 = bindata[3];
-			record.Image5 = bindata[4];
-			record.Image6 = bindata[5];
-			record.Image7 = bindata[6];
-			record.Image8 = bindata[7];
+			record.Sprite1 = bindata[0];
+			record.Sprite2 = bindata[1];
+			record.Sprite3 = bindata[2];
+			record.Sprite4 = bindata[3];
+			record.Sprite5 = bindata[4];
+			record.Sprite6 = bindata[5];
+			record.Sprite7 = bindata[6];
+			record.Sprite8 = bindata[7];
 
 			record.Loft1  = bindata[8];
 			record.Loft2  = bindata[9];
@@ -88,14 +88,14 @@ namespace XCom
 										System.Globalization.CultureInfo.InvariantCulture,
 										"{0,-20}{1} {2} {3} {4} {5} {6} {7} {8}" + Environment.NewLine,
 										"images:",
-										record.Image1,
-										record.Image2,
-										record.Image3,
-										record.Image4,
-										record.Image5,
-										record.Image6,
-										record.Image7,
-										record.Image8);
+										record.Sprite1,
+										record.Sprite2,
+										record.Sprite3,
+										record.Sprite4,
+										record.Sprite5,
+										record.Sprite6,
+										record.Sprite7,
+										record.Sprite8);
 
 			record.ScanGReference = string.Format(
 										System.Globalization.CultureInfo.CurrentCulture,

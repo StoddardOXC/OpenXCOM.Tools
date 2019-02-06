@@ -90,13 +90,18 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Gets the value as a string.
+		/// Gets the value of a specified key as a string.
 		/// </summary>
 		/// <param name="key"></param>
-		/// <returns></returns>
+		/// <returns>the value associated with the key; null if key is
+		/// invalid</returns>
 		public string GetShare(string key)
 		{
-			return _share[key] as String;
+			object val;
+			if (!String.IsNullOrEmpty(key) && _share.TryGetValue(key, out val))
+				return val as String;
+
+			return null;
 		}
 		#endregion
 	}

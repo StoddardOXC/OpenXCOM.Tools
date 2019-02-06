@@ -22,7 +22,8 @@ namespace XCom
 
 
 		#region Properties
-		private readonly Dictionary<string, TileGroupBase> _tilegroups = new Dictionary<string, TileGroupBase>();
+		private readonly Dictionary<string, TileGroupBase> _tilegroups =
+					 new Dictionary<string, TileGroupBase>();
 		public Dictionary<string, TileGroupBase> TileGroups
 		{
 			get { return _tilegroups; }

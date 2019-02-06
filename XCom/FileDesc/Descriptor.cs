@@ -27,7 +27,7 @@ namespace XCom
 		{ get; private set; }
 
 		public string Basepath
-		{ get; private set; }
+		{ get; internal set; }
 
 		private Dictionary<int, Tuple<string,string>> _terrains = new Dictionary<int, Tuple<string,string>>();
 		/// <summary>
@@ -103,7 +103,7 @@ namespace XCom
 
 			path = GetTerrainDirectory(path);
 
-			var tiles = XCTileFactory.CreateTileparts(
+			var tiles = TilepartFactory.CreateTileparts(
 													terr, path,
 													ResourceInfo.LoadSpriteset(terr, path, 2, Pal));	// NOTE: That loads the sprites in addition to
 			return new McdRecordCollection(tiles);														// getting the MCD-records. here just because it can be
@@ -113,8 +113,9 @@ namespace XCom
 		/// Gets the count of MCD-records in an MCD-file.
 		/// </summary>
 		/// <param name="id">the position of the terrain in this tileset's terrains-list</param>
+		/// <param name="suppressError">true to suppress any error</param>
 		/// <returns>count of MCD-records or 0 on fail</returns>
-		public int GetRecordCount(int id)
+		public int GetRecordCount(int id, bool suppressError = false)
 		{
 			var terrain = Terrains[id];
 			string terr = terrain.Item1;
@@ -122,7 +123,7 @@ namespace XCom
 
 			path = GetTerrainDirectory(path);
 
-			return XCTileFactory.GetRecordCount(terr, path);
+			return TilepartFactory.GetRecordCount(terr, path, suppressError);
 		}
 
 		/// <summary>

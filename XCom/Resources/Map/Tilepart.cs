@@ -71,18 +71,18 @@ namespace XCom
 			if (Record.UfoDoor || Record.HumanDoor)
 			{
 				for (int i = 0; i != 8; ++i)
-					Anisprites[i] = _spriteset[Record.Image1];
+					Anisprites[i] = _spriteset[Record.Sprite1];
 			}
 			else
 			{
-				Anisprites[0] = _spriteset[Record.Image1];
-				Anisprites[1] = _spriteset[Record.Image2];
-				Anisprites[2] = _spriteset[Record.Image3];
-				Anisprites[3] = _spriteset[Record.Image4];
-				Anisprites[4] = _spriteset[Record.Image5];
-				Anisprites[5] = _spriteset[Record.Image6];
-				Anisprites[6] = _spriteset[Record.Image7];
-				Anisprites[7] = _spriteset[Record.Image8];
+				Anisprites[0] = _spriteset[Record.Sprite1];
+				Anisprites[1] = _spriteset[Record.Sprite2];
+				Anisprites[2] = _spriteset[Record.Sprite3];
+				Anisprites[3] = _spriteset[Record.Sprite4];
+				Anisprites[4] = _spriteset[Record.Sprite5];
+				Anisprites[5] = _spriteset[Record.Sprite6];
+				Anisprites[6] = _spriteset[Record.Sprite7];
+				Anisprites[7] = _spriteset[Record.Sprite8];
 			}
 		}
 
@@ -99,18 +99,18 @@ namespace XCom
 				{
 					if (Record.UfoDoor || Alternate == null)
 					{
-						Anisprites[0] = _spriteset[Record.Image1];
-						Anisprites[1] = _spriteset[Record.Image2];
-						Anisprites[2] = _spriteset[Record.Image3];
-						Anisprites[3] = _spriteset[Record.Image4];
-						Anisprites[4] = _spriteset[Record.Image5];
-						Anisprites[5] = _spriteset[Record.Image6];
-						Anisprites[6] = _spriteset[Record.Image7];
-						Anisprites[7] = _spriteset[Record.Image8];
+						Anisprites[0] = _spriteset[Record.Sprite1];
+						Anisprites[1] = _spriteset[Record.Sprite2];
+						Anisprites[2] = _spriteset[Record.Sprite3];
+						Anisprites[3] = _spriteset[Record.Sprite4];
+						Anisprites[4] = _spriteset[Record.Sprite5];
+						Anisprites[5] = _spriteset[Record.Sprite6];
+						Anisprites[6] = _spriteset[Record.Sprite7];
+						Anisprites[7] = _spriteset[Record.Sprite8];
 					}
 					else
 					{
-						byte alt = Alternate.Record.Image1;
+						byte alt = Alternate.Record.Sprite1;
 						for (int i = 4; i != 8; ++i)
 							Anisprites[i] = _spriteset[alt];
 					}
@@ -118,7 +118,7 @@ namespace XCom
 				else
 				{
 					for (int i = 0; i != 8; ++i)
-						Anisprites[i] = _spriteset[Record.Image1];
+						Anisprites[i] = _spriteset[Record.Sprite1];
 				}
 			}
 		}
@@ -127,7 +127,7 @@ namespace XCom
 		{
 			if (Record.UfoDoor || Record.HumanDoor)
 			{
-				byte alt = Alternate.Record.Image1;
+				byte alt = Alternate.Record.Sprite1;
 				for (int i = 0; i != 8; ++i)
 					Anisprites[i] = _spriteset[alt];
 			}

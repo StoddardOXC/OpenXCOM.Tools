@@ -101,10 +101,13 @@ namespace XCom
 				}
 
 				MessageBox.Show(
-							"Can't find files for spriteset"
+							"Can't find files for the spriteset"
 								+ Environment.NewLine + Environment.NewLine
 								+ pfePck + Environment.NewLine
-								+ pfeTab,
+								+ pfeTab
+								+ Environment.NewLine + Environment.NewLine
+								+ "Open the Map in the TilesetEditor and re-assign the basepath"
+								+ " for the TERRAIN folder of the .PCK and .TAB files.",
 							"Error",
 							MessageBoxButtons.OK,
 							MessageBoxIcon.Error,

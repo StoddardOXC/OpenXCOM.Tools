@@ -5,7 +5,7 @@ using System.IO;
 
 namespace XCom.Resources.Map
 {
-	public static class XCTileFactory
+	public static class TilepartFactory
 	{
 		#region Fields (static)
 		private const int Length = 62; // there are 62 bytes in each MCD record.
@@ -32,7 +32,7 @@ namespace XCom.Resources.Map
 				if (!File.Exists(pfeMcd))
 				{
 					MessageBox.Show(
-								"Can't find file for terrain data."
+								"Can't find file for MCD data."
 									+ Environment.NewLine + Environment.NewLine
 									+ pfeMcd,
 								"Error",
@@ -45,9 +45,9 @@ namespace XCom.Resources.Map
 				{
 					using (var bs = new BufferedStream(File.OpenRead(pfeMcd)))
 					{
-						var parts = new Tilepart[(int)bs.Length / Length]; // TODO: Error if this don't work out right.
+						var tileparts = new Tilepart[(int)bs.Length / Length]; // TODO: Error if this don't work out right.
 
-						for (int id = 0; id != parts.Length; ++id)
+						for (int id = 0; id != tileparts.Length; ++id)
 						{
 							var bindata = new byte[Length];
 							bs.Read(bindata, 0, Length);
@@ -55,16 +55,16 @@ namespace XCom.Resources.Map
 
 							var part = new Tilepart(id, spriteset, record);
 
-							parts[id] = part;
+							tileparts[id] = part;
 						}
 
-						for (int id = 0; id != parts.Length; ++id)
+						for (int id = 0; id != tileparts.Length; ++id)
 						{
-							parts[id].Dead           = GetDeadPart(terrain, id, parts[id].Record, parts);
-							parts[id].Alternate = GetAlternatePart(terrain, id, parts[id].Record, parts);
+							tileparts[id].Dead      = GetDeadPart(     terrain, id, tileparts[id].Record, tileparts);
+							tileparts[id].Alternate = GetAlternatePart(terrain, id, tileparts[id].Record, tileparts);
 						}
 
-						return parts;
+						return tileparts;
 					}
 				}
 			}
@@ -82,10 +82,12 @@ namespace XCom.Resources.Map
 		/// </summary>
 		/// <param name="terrain">the terrain file w/out extension</param>
 		/// <param name="dirTerrain">path to the directory of the terrain file</param>
+		/// <param name="suppressError">true to suppress any error</param>
 		/// <returns>count of MCD-records or 0 on fail</returns>
 		internal static int GetRecordCount(
 				string terrain,
-				string dirTerrain)
+				string dirTerrain,
+				bool suppressError)
 		{
 			string pfeMcd = Path.Combine(dirTerrain, terrain + GlobalsXC.McdExt);
 
@@ -95,15 +97,18 @@ namespace XCom.Resources.Map
 					return (int)bs.Length / Length; // TODO: Error if this don't work out right.
 			}
 
-			MessageBox.Show(
-						"Can't find file for terrain data."
-							+ Environment.NewLine + Environment.NewLine
-							+ pfeMcd,
-						"Error",
-						MessageBoxButtons.OK,
-						MessageBoxIcon.Error,
-						MessageBoxDefaultButton.Button1,
-						0);
+			if (!suppressError)
+			{
+				MessageBox.Show(
+							"Can't find file for MCD data."
+								+ Environment.NewLine + Environment.NewLine
+								+ pfeMcd,
+							"Error",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Error,
+							MessageBoxDefaultButton.Button1,
+							0);
+			}
 			return 0;
 		}
 
@@ -113,18 +118,18 @@ namespace XCom.Resources.Map
 		/// <param name="file"></param>
 		/// <param name="id"></param>
 		/// <param name="record"></param>
-		/// <param name="parts"></param>
+		/// <param name="tileparts"></param>
 		/// <returns></returns>
 		private static Tilepart GetDeadPart(
 				string file,
 				int id,
 				McdRecord record,
-				Tilepart[] parts)
+				Tilepart[] tileparts)
 		{
 			if (record.DieTile != 0)
 			{
-				if (record.DieTile < parts.Length)
-					return parts[record.DieTile];
+				if (record.DieTile < tileparts.Length)
+					return tileparts[record.DieTile];
 
 				string warn = String.Format(
 										System.Globalization.CultureInfo.CurrentCulture,
@@ -132,7 +137,7 @@ namespace XCom.Resources.Map
 										file,
 										id,
 										record.DieTile,
-										parts.Length);
+										tileparts.Length);
 				MessageBox.Show(
 							warn,
 							"Warning",
@@ -150,18 +155,18 @@ namespace XCom.Resources.Map
 		/// <param name="file"></param>
 		/// <param name="id"></param>
 		/// <param name="record"></param>
-		/// <param name="parts"></param>
+		/// <param name="tileparts"></param>
 		/// <returns></returns>
 		private static Tilepart GetAlternatePart(
 				string file,
 				int id,
 				McdRecord record,
-				Tilepart[] parts)
+				Tilepart[] tileparts)
 		{
 			if (record.Alt_MCD != 0) // || record.HumanDoor || record.UfoDoor
 			{
-				if (record.Alt_MCD < parts.Length)
-					return parts[record.Alt_MCD];
+				if (record.Alt_MCD < tileparts.Length)
+					return tileparts[record.Alt_MCD];
 
 				string warn = String.Format(
 										System.Globalization.CultureInfo.CurrentCulture,
@@ -169,7 +174,7 @@ namespace XCom.Resources.Map
 										file,
 										id,
 										record.Alt_MCD,
-										parts.Length);
+										tileparts.Length);
 				MessageBox.Show(
 							warn,
 							"Warning",

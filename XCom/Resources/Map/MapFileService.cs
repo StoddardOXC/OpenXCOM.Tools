@@ -24,8 +24,9 @@ namespace XCom
 		/// @note Check that 'descriptor' is not null before call.
 		/// </summary>
 		/// <param name="descriptor"></param>
+		/// <param name="treechanged"></param>
 		/// <returns></returns>
-		public static MapFileBase LoadTileset(Descriptor descriptor)
+		public static MapFileBase LoadTileset(Descriptor descriptor, ref bool treechanged)
 		{
 			//LogFile.WriteLine("");
 			//LogFile.WriteLine("MapFileService.LoadTileset descriptor= " + descriptor);
@@ -39,22 +40,75 @@ namespace XCom
 			}
 			//LogFile.WriteLine(". pfeMap= " + pfeMap);
 
+			if (!File.Exists(pfeMap)) // Open a folderbrowser for user to point to a basepath ->
+			{
+				if (MessageBox.Show(
+							"The Mapfile does not exist."
+								+ Environment.NewLine + Environment.NewLine
+								+ "Do you want to browse for a different basepath to the .MAP and .RMP files?",
+							"Warning",
+							MessageBoxButtons.YesNo,
+							MessageBoxIcon.Warning,
+							MessageBoxDefaultButton.Button1,
+							0) == DialogResult.Yes)
+				{
+					using (var fbd = new FolderBrowserDialog())
+					{
+						string basepath = descriptor.Basepath;
+						if (!String.IsNullOrEmpty(basepath)
+							&& Directory.Exists(basepath))
+						{
+							fbd.SelectedPath = basepath;
+						}
+						// TODO: Check descriptor's Palette and default to Ufo/Tftd Resource dir instead.
+
+						fbd.Description = String.Format(
+													System.Globalization.CultureInfo.CurrentCulture,
+													"Browse to a basepath folder. A valid basepath folder"
+														+ " has the subfolders MAPS and ROUTES.");
+
+						if (fbd.ShowDialog() == DialogResult.OK)
+						{
+							pfeMap = Path.Combine(fbd.SelectedPath, GlobalsXC.MapsDir);
+							pfeMap = Path.Combine(pfeMap, descriptor.Label + GlobalsXC.MapExt);
+
+							if (File.Exists(pfeMap))
+							{
+								descriptor.Basepath = fbd.SelectedPath;
+								treechanged = true;
+							}
+							else
+								MessageBox.Show(
+											descriptor.Label + GlobalsXC.MapExt
+												+ " was not found in that basepath.",
+											"Error",
+											MessageBoxButtons.OK,
+											MessageBoxIcon.Error,
+											MessageBoxDefaultButton.Button1,
+											0);
+						}
+					}
+				}
+			}
+
 			if (File.Exists(pfeMap))
 			{
 				//LogFile.WriteLine(". . Map file exists");
 
-				var parts = new List<TilepartBase>();
+				var tileparts = new List<TilepartBase>();
 
 				for (int i = 0; i != descriptor.Terrains.Count; ++i) // push together the tileparts of all allocated terrains
 				{
-					var MCD = descriptor.GetTerrainRecords(i);
-					foreach (Tilepart part in MCD)
-						parts.Add(part);
+					//LogFile.WriteLine(". . . terrain= " + descriptor.Terrains[i].Item1 + " : " + descriptor.Terrains[i].Item2);
+
+					var MCD = descriptor.GetTerrainRecords(i); // NOTE: Calls ResourceInfo.LoadSpriteset() also.
+					foreach (Tilepart tilepart in MCD)
+						tileparts.Add(tilepart);
 				}
 
-				if (parts.Count != 0)
+				if (tileparts.Count != 0)
 				{
-					if (parts.Count > MAX_MCDRECORDS) // issue warning ->
+					if (tileparts.Count > MAX_MCDRECORDS) // issue warning ->
 					{
 						string text = String.Empty;
 
@@ -78,7 +132,7 @@ namespace XCom
 							int records = descriptor.GetRecordCount(i);
 							text += st + " - " + records + Environment.NewLine;
 						}
-						text += Environment.NewLine + "total - " + parts.Count;
+						text += Environment.NewLine + "total - " + tileparts.Count;
 
 						MapFileWarn.Instance.Show();
 						MapFileWarn.Instance.SetText(descriptor.Label, text);
@@ -87,7 +141,7 @@ namespace XCom
 					var RMP = new RouteNodeCollection(descriptor.Label, descriptor.Basepath);
 					var MAP = new MapFileChild(
 											descriptor,
-											parts,
+											tileparts,
 											RMP);
 					return MAP;
 				}
@@ -100,19 +154,6 @@ namespace XCom
 							MessageBoxIcon.Warning,
 							MessageBoxDefaultButton.Button1,
 							0);
-			}
-			else
-			{
-				//LogFile.WriteLine(". . Mapfile does NOT exist");
-				MessageBox.Show(
-							"The Mapfile does not exist.",
-							"Warning",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Warning,
-							MessageBoxDefaultButton.Button1,
-							0);
-
-				// TODO: Open a filebrowser for user to point to a Mapfile.
 			}
 
 			return null;
