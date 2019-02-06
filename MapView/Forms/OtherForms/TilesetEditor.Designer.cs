@@ -91,7 +91,7 @@
 			this.btnAccept.Location = new System.Drawing.Point(420, 60);
 			this.btnAccept.Name = "btnAccept";
 			this.btnAccept.Size = new System.Drawing.Size(80, 25);
-			this.btnAccept.TabIndex = 1;
+			this.btnAccept.TabIndex = 9;
 			this.btnAccept.Text = "Accept";
 			this.btnAccept.Click += new System.EventHandler(this.OnAcceptClick);
 			// 
@@ -102,7 +102,7 @@
 			this.btnDecline.Location = new System.Drawing.Point(505, 60);
 			this.btnDecline.Name = "btnDecline";
 			this.btnDecline.Size = new System.Drawing.Size(80, 25);
-			this.btnDecline.TabIndex = 2;
+			this.btnDecline.TabIndex = 10;
 			this.btnDecline.Text = "Decline";
 			// 
 			// lblHeaderGroup
@@ -140,7 +140,7 @@
 			this.btn_GlobalTerrains.Location = new System.Drawing.Point(5, 0);
 			this.btn_GlobalTerrains.Name = "btn_GlobalTerrains";
 			this.btn_GlobalTerrains.Size = new System.Drawing.Size(580, 25);
-			this.btn_GlobalTerrains.TabIndex = 12;
+			this.btn_GlobalTerrains.TabIndex = 0;
 			this.btn_GlobalTerrains.Text = "Apply allocated terrains to all tilesets that are defined by Path+Map";
 			this.btn_GlobalTerrains.UseVisualStyleBackColor = true;
 			this.btn_GlobalTerrains.Click += new System.EventHandler(this.OnGlobalTerrainsClick);
@@ -152,7 +152,7 @@
 			this.lblAddType.Location = new System.Drawing.Point(5, 75);
 			this.lblAddType.Name = "lblAddType";
 			this.lblAddType.Size = new System.Drawing.Size(405, 15);
-			this.lblAddType.TabIndex = 0;
+			this.lblAddType.TabIndex = 11;
 			this.lblAddType.Text = "lblAddType";
 			this.lblAddType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
 			// 
@@ -357,7 +357,7 @@
 			this.pnlSpacer.Location = new System.Drawing.Point(270, 110);
 			this.pnlSpacer.Name = "pnlSpacer";
 			this.pnlSpacer.Size = new System.Drawing.Size(55, 190);
-			this.pnlSpacer.TabIndex = 3;
+			this.pnlSpacer.TabIndex = 2;
 			// 
 			// btnTerrainClear
 			// 
@@ -581,7 +581,7 @@
 			this.lblTilesetCurrent.Location = new System.Drawing.Point(350, 15);
 			this.lblTilesetCurrent.Name = "lblTilesetCurrent";
 			this.lblTilesetCurrent.Size = new System.Drawing.Size(235, 15);
-			this.lblTilesetCurrent.TabIndex = 4;
+			this.lblTilesetCurrent.TabIndex = 2;
 			this.lblTilesetCurrent.Text = "lblTilesetCurrent";
 			this.lblTilesetCurrent.TextAlign = System.Drawing.ContentAlignment.TopRight;
 			// 
@@ -600,7 +600,7 @@
 			this.lblHeaderCategory.Location = new System.Drawing.Point(10, 30);
 			this.lblHeaderCategory.Name = "lblHeaderCategory";
 			this.lblHeaderCategory.Size = new System.Drawing.Size(65, 15);
-			this.lblHeaderCategory.TabIndex = 2;
+			this.lblHeaderCategory.TabIndex = 3;
 			this.lblHeaderCategory.Text = "CATEGORY";
 			// 
 			// lblCategoryCurrent
@@ -610,7 +610,7 @@
 			this.lblCategoryCurrent.Location = new System.Drawing.Point(90, 30);
 			this.lblCategoryCurrent.Name = "lblCategoryCurrent";
 			this.lblCategoryCurrent.Size = new System.Drawing.Size(260, 15);
-			this.lblCategoryCurrent.TabIndex = 3;
+			this.lblCategoryCurrent.TabIndex = 4;
 			this.lblCategoryCurrent.Text = "lblCategoryCurrent";
 			// 
 			// toolTip1
