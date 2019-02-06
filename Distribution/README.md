@@ -8,6 +8,13 @@ Distribution builds for Windows 32/64 is hosted on Google Drive.
 
 Built against .NET 4.5.1
 
+2019 February 5<br>
+[MapView2_190205.7z](https://drive.google.com/file/d/1JVu3qtqoXleqdj4flFlf_qS9raJtD55Y/view?usp=sharing)
+
+- fix for first run: the initial Configuration threw a KeyNotFoundException exception (by trying to show the current, nonexistent, configuration paths in the Configurator's textboxes)
+- check duplicate Group labels as case insensitive (eg. "ufo_craft" and "Ufo_CraFt" are disallowed in the Maptree together)
+- allow user to browse for a basepath when attempting to load a tileset that can't be found (this ought then allow other things like terrains to be further user-adjusted in the TilesetEditor)
+
 2019 February 4<br>
 [MapView2_190204.7z](https://drive.google.com/file/d/1qwrR_li1ckdvfeK60h4-UMGLzN53a8cB/view?usp=sharing)
 
