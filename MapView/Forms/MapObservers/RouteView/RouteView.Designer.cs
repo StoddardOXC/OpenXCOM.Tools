@@ -63,9 +63,12 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.cbLink2UnitType = new System.Windows.Forms.ComboBox();
 			this.cbLink1UnitType = new System.Windows.Forms.ComboBox();
 			this.labelUnitInfo = new System.Windows.Forms.Label();
-			this.pnlRoutes = new System.Windows.Forms.Panel();
+			this._pnlRoutes = new System.Windows.Forms.Panel();
 			this.tsMain = new System.Windows.Forms.ToolStrip();
 			this.tscbConnectType = new System.Windows.Forms.ToolStripComboBox();
+			this.tsddbFile = new System.Windows.Forms.ToolStripDropDownButton();
+			this.tsmiExport = new System.Windows.Forms.ToolStripMenuItem();
+			this.tsmiImport = new System.Windows.Forms.ToolStripMenuItem();
 			this.tsddbEdit = new System.Windows.Forms.ToolStripDropDownButton();
 			this.tsmiOptions = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -492,14 +495,14 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.labelUnitInfo.Text = "Unit Type";
 			this.toolTip1.SetToolTip(this.labelUnitInfo, "not used in 0penXcom");
 			// 
-			// pnlRoutes
+			// _pnlRoutes
 			// 
-			this.pnlRoutes.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.pnlRoutes.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.pnlRoutes.Location = new System.Drawing.Point(0, 25);
-			this.pnlRoutes.Name = "pnlRoutes";
-			this.pnlRoutes.Size = new System.Drawing.Size(640, 250);
-			this.pnlRoutes.TabIndex = 0;
+			this._pnlRoutes.Dock = System.Windows.Forms.DockStyle.Fill;
+			this._pnlRoutes.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this._pnlRoutes.Location = new System.Drawing.Point(0, 25);
+			this._pnlRoutes.Name = "_pnlRoutes";
+			this._pnlRoutes.Size = new System.Drawing.Size(640, 250);
+			this._pnlRoutes.TabIndex = 0;
 			// 
 			// tsMain
 			// 
@@ -507,6 +510,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tsMain.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
 			this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.tscbConnectType,
+			this.tsddbFile,
 			this.tsddbEdit,
 			this.tsddbDebug});
 			this.tsMain.Location = new System.Drawing.Point(0, 0);
@@ -522,6 +526,32 @@ namespace MapView.Forms.MapObservers.RouteViews
 			this.tscbConnectType.Name = "tscbConnectType";
 			this.tscbConnectType.Size = new System.Drawing.Size(110, 25);
 			this.tscbConnectType.DropDownClosed += new System.EventHandler(this.OnConnectTypeClosed);
+			// 
+			// tsddbFile
+			// 
+			this.tsddbFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+			this.tsddbFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+			this.tsmiExport,
+			this.tsmiImport});
+			this.tsddbFile.Image = ((System.Drawing.Image)(resources.GetObject("tsddbFile.Image")));
+			this.tsddbFile.ImageTransparentColor = System.Drawing.Color.Magenta;
+			this.tsddbFile.Name = "tsddbFile";
+			this.tsddbFile.Size = new System.Drawing.Size(37, 22);
+			this.tsddbFile.Text = "File";
+			// 
+			// tsmiExport
+			// 
+			this.tsmiExport.Name = "tsmiExport";
+			this.tsmiExport.Size = new System.Drawing.Size(232, 22);
+			this.tsmiExport.Text = "export Routes to .RMP file";
+			this.tsmiExport.Click += new System.EventHandler(this.OnExportClick);
+			// 
+			// tsmiImport
+			// 
+			this.tsmiImport.Name = "tsmiImport";
+			this.tsmiImport.Size = new System.Drawing.Size(232, 22);
+			this.tsmiImport.Text = "import Routes from .RMP file";
+			this.tsmiImport.Click += new System.EventHandler(this.OnImportClick);
 			// 
 			// tsddbEdit
 			// 
@@ -863,7 +893,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			// 
 			// RouteView
 			// 
-			this.Controls.Add(this.pnlRoutes);
+			this.Controls.Add(this._pnlRoutes);
 			this.Controls.Add(this.tsMain);
 			this.Controls.Add(this.pnlDataFields);
 			this.Font = new System.Drawing.Font("Verdana", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -950,5 +980,8 @@ namespace MapView.Forms.MapObservers.RouteViews
 		private System.Windows.Forms.ToolStripMenuItem tsmi_RaiseNode;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.Label label_RoutesChanged;
+		private System.Windows.Forms.ToolStripDropDownButton tsddbFile;
+		private System.Windows.Forms.ToolStripMenuItem tsmiExport;
+		private System.Windows.Forms.ToolStripMenuItem tsmiImport;
 	}
 }

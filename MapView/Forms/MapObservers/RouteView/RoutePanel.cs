@@ -710,7 +710,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 					textPatrol1 = Patrol;
 
 					textOver2   = (tile.Node.Index).ToString(System.Globalization.CultureInfo.CurrentCulture);
-					if (MapFile.Parts[0][0].Pal == Palette.UfoBattle)
+					if (MapFile.Descriptor.Pal == Palette.UfoBattle)
 						textRank2 = (RouteNodeCollection.NodeRankUfo[tile.Node.Rank]).ToString();
 					else
 						textRank2 = (RouteNodeCollection.NodeRankTftd[tile.Node.Rank]).ToString();

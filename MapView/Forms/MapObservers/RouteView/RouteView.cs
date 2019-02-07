@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 using MapView.Forms.MainWindow;
@@ -45,7 +46,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 
 
 		#region Fields
-		private Panel pnlRoutes; // NOTE: needs to be here for MapObserver0 stuff.
+		private Panel _pnlRoutes; // NOTE: needs to be here for MapObserver0 stuff.
 
 		private readonly List<object> _linksList = new List<object>();
 
@@ -91,10 +92,10 @@ namespace MapView.Forms.MapObservers.RouteViews
 				{
 					cbRank.Items.Clear();
 
-					if (MapFile.Parts[0][0].Pal == Palette.UfoBattle)			// ie. Get the palette of the 1st image of the
-						cbRank.Items.AddRange(RouteNodeCollection.NodeRankUfo);	// 1st tilepart ... of the MapFileChild object.
-					else
+					if (MapFile.Descriptor.Pal == Palette.TftdBattle) // NOTE: Check TFTD else default to UFO.
 						cbRank.Items.AddRange(RouteNodeCollection.NodeRankTftd);
+					else
+						cbRank.Items.AddRange(RouteNodeCollection.NodeRankUfo);
 
 					UpdateNodeInformation();
 				}
@@ -161,7 +162,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			RoutePanel.MouseMove                += OnRoutePanelMouseMove;
 			RoutePanel.MouseLeave               += OnRoutePanelMouseLeave;
 			RoutePanel.KeyDown                  += OnKeyDown;
-			pnlRoutes.Controls.Add(RoutePanel);
+			_pnlRoutes.Controls.Add(RoutePanel);
 
 			// setup the connect-type dropdown entries
 			tscbConnectType.Items.AddRange(new object[]
@@ -692,10 +693,10 @@ namespace MapView.Forms.MapObservers.RouteViews
 				cbPatrol.SelectedItem = PatrolPriority.Zero;
 				cbAttack.SelectedItem = BaseAttack.Zero;
 
-				if (MapFile.Parts[0][0].Pal == Palette.UfoBattle)
-					cbRank.SelectedItem = RouteNodeCollection.NodeRankUfo[(byte)NodeRankUfo.CivScout];
-				else
+				if (MapFile.Descriptor.Pal == Palette.TftdBattle)
 					cbRank.SelectedItem = RouteNodeCollection.NodeRankTftd[(byte)NodeRankTftd.CivScout];
+				else
+					cbRank.SelectedItem = RouteNodeCollection.NodeRankUfo[(byte)NodeRankUfo.CivScout];
 
 				cbSpawn.SelectedItem = RouteNodeCollection.SpawnWeight[(byte)SpawnWeight.None];
 
@@ -728,10 +729,10 @@ namespace MapView.Forms.MapObservers.RouteViews
 				cbPatrol.SelectedItem = NodeSelected.Patrol;
 				cbAttack.SelectedItem = NodeSelected.Attack;
 
-				if (MapFile.Parts[0][0].Pal == Palette.UfoBattle)
-					cbRank.SelectedItem = RouteNodeCollection.NodeRankUfo[NodeSelected.Rank];
-				else
+				if (MapFile.Descriptor.Pal == Palette.TftdBattle)
 					cbRank.SelectedItem = RouteNodeCollection.NodeRankTftd[NodeSelected.Rank];
+				else
+					cbRank.SelectedItem = RouteNodeCollection.NodeRankUfo[NodeSelected.Rank];
 
 				cbSpawn.SelectedItem = RouteNodeCollection.SpawnWeight[(byte)NodeSelected.Spawn];
 
@@ -1587,8 +1588,60 @@ namespace MapView.Forms.MapObservers.RouteViews
 			else
 				ViewerFormsManager.RouteView.Control.tscbConnectType.SelectedIndex = tscbConnectType.SelectedIndex;
 
-			pnlRoutes.Select();	// take focus off the stupid combobox. Tks. NOTE: It tends to
-		}						// stay "highlighted" but at least it's no longer "selected".
+			_pnlRoutes.Select();	// take focus off the stupid combobox. Tks. NOTE: It tends to
+		}							// stay "highlighted" but at least it's no longer "selected".
+
+
+		private void OnExportClick(object sender, EventArgs e)
+		{
+			if (MapFile != null)
+			{
+				using (var sfd = new SaveFileDialog())
+				{
+					sfd.Title = "Save Route file as ...";
+					sfd.DefaultExt = GlobalsXC.RouteExt;
+					sfd.FileName = MapFile.Descriptor.Label + GlobalsXC.RouteExt;
+					sfd.Filter = "Route files (*.RMP)|*.RMP|All files (*.*)|*.*";
+					sfd.InitialDirectory = Path.Combine(MapFile.Descriptor.Basepath, GlobalsXC.RoutesDir);
+
+					if (sfd.ShowDialog() == DialogResult.OK)
+					{
+						MapFile.Routes.SaveRoutesExport(sfd.FileName);
+					}
+				}
+			}
+		}
+
+		private void OnImportClick(object sender, EventArgs e)
+		{
+			if (MapFile != null)
+			{
+				using (var ofd = new OpenFileDialog())
+				{
+					ofd.Title = "Open a Route file ...";
+					ofd.DefaultExt = GlobalsXC.RouteExt;
+					ofd.FileName = MapFile.Descriptor.Label + GlobalsXC.RouteExt;
+					ofd.Filter = "Route files (*.RMP)|*.RMP|All files (*.*)|*.*";
+					ofd.InitialDirectory = Path.Combine(MapFile.Descriptor.Basepath, GlobalsXC.RoutesDir);
+
+					if (ofd.ShowDialog() == DialogResult.OK)
+					{
+						RoutesChanged = true;
+
+						DeselectNode();
+
+						MapFile.ClearRouteNodes();
+						MapFile.Routes = new RouteNodeCollection(ofd.FileName);
+						MapFile.SetupRouteNodes();
+
+						UpdateNodeInformation(); // not sure is necessary ...
+						_pnlRoutes.Refresh();
+
+						RouteCheckService.CheckNodeBounds(MapFile);
+					}
+				}
+			}
+		}
 
 
 		private void OnEditOpening(object sender, EventArgs e)

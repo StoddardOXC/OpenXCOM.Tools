@@ -184,7 +184,11 @@ namespace XCom
 
 
 		#region Properties
-		private string FullPath
+		/// <summary>
+		/// The fullpath of the .RMP file.
+		/// Is static to maintain its value when importing a different .RMP file.
+		/// </summary>
+		private static string Fullpath
 		{ get; set; }
 
 		/// <summary>
@@ -213,57 +217,74 @@ namespace XCom
 
 		#region cTor
 		/// <summary>
-		/// cTor. Reads the .RMP file and adds its data as RouteNodes to a List.
+		/// cTor[1]. Reads the .RMP file and adds its data as RouteNodes to a List.
 		/// </summary>
-		/// <param name="routes"></param>
+		/// <param name="label"></param>
 		/// <param name="basepath"></param>
-		internal RouteNodeCollection(string routes, string basepath)
+		internal RouteNodeCollection(string label, string basepath)
 		{
 			_nodes = new List<RouteNode>();
 
-			FullPath = Path.Combine(basepath, GlobalsXC.RoutesDir);
-			FullPath = Path.Combine(FullPath, routes + GlobalsXC.RouteExt);
+			Fullpath = Path.Combine(basepath, GlobalsXC.RoutesDir);
+			Fullpath = Path.Combine(Fullpath, label + GlobalsXC.RouteExt);
 
-			if (File.Exists(FullPath))
+			if (File.Exists(Fullpath))
 			{
-				using (var bs = new BufferedStream(File.OpenRead(FullPath)))
+				Instantiate(Fullpath);
+			}
+		}
+
+		/// <summary>
+		/// cTor[2]. Imports an .RMP file and replaces the RouteNodes-list with
+		/// its data.
+		/// @note Do *not* replace 'Fullpath' on an import.
+		/// </summary>
+		/// <param name="pfe"></param>
+		public RouteNodeCollection(string pfe)
+		{
+			_nodes = new List<RouteNode>();
+			Instantiate(pfe);
+		}
+
+		private void Instantiate(string pfe)
+		{
+			using (var bs = new BufferedStream(File.OpenRead(pfe)))
+			{
+				for (byte id = 0; id < bs.Length / 24; ++id)
 				{
-					for (byte id = 0; id < bs.Length / 24; ++id)
-					{
-						var bindata = new byte[24];
-						bs.Read(bindata, 0, 24);
+					var bindata = new byte[24];
+					bs.Read(bindata, 0, 24);
 
-						_nodes.Add(new RouteNode(id, bindata));
-					}
+					_nodes.Add(new RouteNode(id, bindata));
 				}
+			}
 
-				var invalids = new List<byte>();	// check for invalid Ranks ->
-				foreach (RouteNode node in _nodes)	// See also RouteView.OnCheckNodeRanksClick()
-				{
-					if (node.OobRank != (byte)0)
-						invalids.Add(node.Index);
-				}
+			var invalids = new List<byte>();	// check for invalid Ranks ->
+			foreach (RouteNode node in _nodes)	// See also RouteView.OnCheckNodeRanksClick()
+			{
+				if (node.OobRank != (byte)0)
+					invalids.Add(node.Index);
+			}
 
-				if (invalids.Count != 0)
-				{
-					string info = String.Format(
-											System.Globalization.CultureInfo.CurrentCulture,
-											"The following route-{0} an invalid NodeRank.{1}",
-											(invalids.Count == 1) ? "node has"
-																  : "nodes have",
-											Environment.NewLine);
+			if (invalids.Count != 0)
+			{
+				string info = String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"The following route-{0} an invalid NodeRank.{1}",
+										(invalids.Count == 1) ? "node has"
+															  : "nodes have",
+										Environment.NewLine);
 
-					foreach (byte id in invalids)
-						info += Environment.NewLine + id;
+				foreach (byte id in invalids)
+					info += Environment.NewLine + id;
 
-					MessageBox.Show(
-								info,
-								"Warning",
-								MessageBoxButtons.OK,
-								MessageBoxIcon.Warning,
-								MessageBoxDefaultButton.Button1,
-								0);
-				}
+				MessageBox.Show(
+							info,
+							"Warning",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Warning,
+							MessageBoxDefaultButton.Button1,
+							0);
 			}
 		}
 		#endregion
@@ -296,7 +317,7 @@ namespace XCom
 		/// </summary>
 		internal void SaveRoutes()
 		{
-			SaveNodes(FullPath);
+			SaveNodes(Fullpath);
 		}
 
 		/// <summary>
@@ -307,6 +328,15 @@ namespace XCom
 		{
 			string pfe = pf + GlobalsXC.RouteExt;
 			Directory.CreateDirectory(Path.GetDirectoryName(pfe));
+			SaveNodes(pfe);
+		}
+
+		/// <summary>
+		/// Saves the .RMP file as a different file.
+		/// </summary>
+		/// <param name="pfe">the path+file to save as</param>
+		public void SaveRoutesExport(string pfe)
+		{
 			SaveNodes(pfe);
 		}
 

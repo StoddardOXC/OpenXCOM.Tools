@@ -23,7 +23,7 @@ namespace XCom
 		{ get; private set; }
 
 		public RouteNodeCollection Routes
-		{ get; private set; }
+		{ get; set; }
 		#endregion
 
 
@@ -180,15 +180,28 @@ namespace XCom
 
 		/// <summary>
 		/// Assigns route-nodes to tiles when this MapFile object is
-		/// instantiated.
+		/// instantiated or when importing a Routes file.
 		/// </summary>
-		private void SetupRouteNodes()
+		public void SetupRouteNodes()
 		{
 			MapTileBase tile;
 			foreach (RouteNode node in Routes)
 			{
 				if ((tile = this[node.Row, node.Col, node.Lev]) != null)
 					((XCMapTile)tile).Node = node;
+			}
+		}
+
+		/// <summary>
+		/// Clears all route-nodes before importing a Routes file.
+		/// </summary>
+		public void ClearRouteNodes()
+		{
+			for (int lev = 0; lev != MapSize.Levs; ++lev)
+			for (int row = 0; row != MapSize.Rows; ++row)
+			for (int col = 0; col != MapSize.Cols; ++col)
+			{
+				((XCMapTile)this[row, col, lev]).Node = null;
 			}
 		}
 
@@ -460,11 +473,7 @@ namespace XCom
 				if (RouteCheckService.CheckNodeBounds(this))
 					bit |= 0x2;
 
-				for (int lev = 0; lev != levs; ++lev)
-				for (int row = 0; row != rows; ++row)
-				for (int col = 0; col != cols; ++col)
-					((XCMapTile)this[row, col, lev]).Node = null;
-
+				ClearRouteNodes();
 				SetupRouteNodes();
 
 				Level = 0; // fires a LevelChangedEvent.
