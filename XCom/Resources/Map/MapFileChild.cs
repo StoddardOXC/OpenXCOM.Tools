@@ -193,7 +193,8 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Clears all route-nodes before importing a Routes file.
+		/// Clears all route-nodes before importing a Routes file or when doing
+		/// a MapResize.
 		/// </summary>
 		public void ClearRouteNodes()
 		{

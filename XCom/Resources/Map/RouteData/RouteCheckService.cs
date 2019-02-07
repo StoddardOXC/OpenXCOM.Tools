@@ -2,11 +2,22 @@
 using System.Collections.Generic;
 using System.Windows.Forms;
 
+using XCom.Resources.Map.RouteData;
+
 
 namespace XCom.Resources.Map.RouteData
 {
 	public static class RouteCheckService
 	{
+		#region Fields
+		private static MapFileChild _file;
+
+		private static readonly List<RouteNode> _invalids = new List<RouteNode>();
+		private static int _count;
+		#endregion
+
+
+		#region Fields (public)
 		/// <summary>
 		/// Checks for and if found gives user a choice to delete nodes that are
 		/// outside of a Map's x/y/z bounds.
@@ -15,51 +26,13 @@ namespace XCom.Resources.Map.RouteData
 		/// <returns>true if user opted to clear invalid nodes</returns>
 		public static bool CheckNodeBounds(MapFileChild file)
 		{
-			if (file != null)
+			if ((_file = file) != null)
 			{
-				var invalids = new List<RouteNode>();
+				_invalids.Clear();
 
-				foreach (RouteNode node in file.Routes)
+				if ((_count = GetInvalidNodes()) != 0)
 				{
-					if (RouteNodeCollection.IsNodeOutsideMapBounds(
-																node,
-																file.MapSize.Cols,
-																file.MapSize.Rows,
-																file.MapSize.Levs))
-					{
-						invalids.Add(node);
-					}
-				}
-
-				if (invalids.Count != 0)
-				{
-					string info = String.Format(
-											System.Globalization.CultureInfo.CurrentCulture,
-											"There {0} " + invalids.Count + " route-node{1} outside"
-												+ " the bounds of this Map.{3}Do you want {2} deleted ?{3}",
-											(invalids.Count == 1) ? "is" : "are",
-											(invalids.Count == 1) ? ""   : "s",
-											(invalids.Count == 1) ? "it" : "them",
-											Environment.NewLine);
-
-					foreach (var node in invalids)
-						info += Environment.NewLine
-							  + "id " + node.Index
-							  + " : " + node.GetLocationString(file.MapSize.Levs);
-
-					if (MessageBox.Show(
-									info,
-									"Invalid Nodes",
-									MessageBoxButtons.YesNo,
-									MessageBoxIcon.Question,
-									MessageBoxDefaultButton.Button1,
-									0) == DialogResult.Yes)
-					{
-						foreach (var node in invalids)
-							file.Routes.DeleteNode(node);
-
-						return true;
-					}
+					return ShowInvalids();
 				}
 			}
 			return false;
@@ -73,68 +46,87 @@ namespace XCom.Resources.Map.RouteData
 		/// <returns>true if node(s) are deleted</returns>
 		public static bool CheckNodeBoundsMenuitem(MapFileChild file)
 		{
-			if (file != null)
+			if ((_file = file) != null)
 			{
-				var invalids = new List<RouteNode>();
+				_invalids.Clear();
 
-				foreach (RouteNode node in file.Routes)
+				if ((_count = GetInvalidNodes()) != 0)
 				{
-					if (RouteNodeCollection.IsNodeOutsideMapBounds(
-																node,
-																file.MapSize.Cols,
-																file.MapSize.Rows,
-																file.MapSize.Levs))
-					{
-						invalids.Add(node);
-					}
+					return ShowInvalids();
 				}
 
-				string info, title;
-				MessageBoxIcon icon;
-				MessageBoxButtons btns;
+				MessageBox.Show(
+							"There are no Out of Bounds nodes detected.",
+							"Good stuff, Magister Ludi",
+							MessageBoxButtons.OK,
+							MessageBoxIcon.Information,
+							MessageBoxDefaultButton.Button1,
+							0);
+			}
+			return false;
+		}
+		#endregion Fields (public)
 
-				if (invalids.Count != 0)
+
+		#region Fields (private)
+		/// <summary>
+		/// Fills the list with any invalid nodes.
+		/// </summary>
+		/// <returns>count of invalid nodes</returns>
+		private static int GetInvalidNodes()
+		{
+			foreach (RouteNode node in _file.Routes)
+			{
+				if (RouteNodeCollection.IsNodeOutsideMapBounds(
+															node,
+															_file.MapSize.Cols,
+															_file.MapSize.Rows,
+															_file.MapSize.Levs))
 				{
-					icon  = MessageBoxIcon.Warning;
-					btns  = MessageBoxButtons.YesNo;
-					title = "Warning";
-					info  = String.Format(
+					_invalids.Add(node);
+				}
+			}
+			return _invalids.Count;
+		}
+
+		/// <summary>
+		/// Opens a dialog to delete the invalid nodes.
+		/// </summary>
+		/// <returns>true if user chooses to delete out-of-bounds nodes</returns>
+		private static bool ShowInvalids()
+		{
+			using (var f = new RouteCheckInfobox())
+			{
+				bool singular = (_count == 1);
+				string label = String.Format(
 										System.Globalization.CultureInfo.CurrentCulture,
-										"There {0} " + invalids.Count + " route-node{1} outside"
-											+ " the bounds of this Map.{3}Do you want {2} deleted ?{3}",
-										(invalids.Count == 1) ? "is" : "are",
-										(invalids.Count == 1) ? ""   : "s",
-										(invalids.Count == 1) ? "it" : "them",
+										"There {0} " + _count + " route-node{1} outside"
+											+ " the bounds of the Map.{3}{3}Do you want {2} deleted?",
+										singular ? "is" : "are",
+										singular ? ""   : "s",
+										singular ? "it" : "them",
 										Environment.NewLine);
 
-					foreach (var node in invalids)
-						info += Environment.NewLine
-							  + "id " + node.Index
-							  + " : " + node.GetLocationString(file.MapSize.Levs);
-				}
-				else
+				string text = String.Empty;
+				foreach (var node in _invalids)
 				{
-					icon  = MessageBoxIcon.Information;
-					btns  = MessageBoxButtons.OK;
-					title = "Good stuff, Magister Ludi";
-					info  = "There are no Out of Bounds nodes detected.";
+					text += "id " + node.Index + " : "
+						  + node.GetLocationString(_file.MapSize.Levs) // TODO: format that
+						  + Environment.NewLine;
 				}
 
-				if (MessageBox.Show(
-							info,
-							title,
-							btns,
-							icon,
-							MessageBoxDefaultButton.Button1,
-							0) == DialogResult.Yes)
+				f.SetText(label, text);
+
+				if (f.ShowDialog() == DialogResult.Yes)
 				{
-					foreach (var node in invalids)
-						file.Routes.DeleteNode(node);
+					foreach (var node in _invalids)
+						_file.Routes.DeleteNode(node);
 
 					return true;
 				}
 			}
 			return false;
 		}
+		#endregion Fields (private)
 	}
 }
