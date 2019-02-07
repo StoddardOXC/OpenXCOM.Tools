@@ -108,11 +108,43 @@ namespace XCom.Resources.Map.RouteData
 										Environment.NewLine);
 
 				string text = String.Empty;
+				int total = _file.Routes.Length;
+				byte loc;
 				foreach (var node in _invalids)
 				{
-					text += "id " + node.Index + " : "
-						  + node.GetLocationString(_file.MapSize.Levs) // TODO: format that
-						  + Environment.NewLine;
+					text += "id ";
+
+					if (total > 99)
+					{
+						if (node.Index < 10)
+							text += "  ";
+						else if (node.Index < 100)
+							text += " ";
+					}
+					else if (total > 9)
+					{
+						if (node.Index < 10)
+							text += " ";
+					}
+					text += node.Index + " :  c ";
+
+					loc = (byte)(node.Col + 1);
+					if (loc < 10)
+						text += " ";
+
+					text += loc + "  r ";
+
+					loc = (byte)(node.Row + 1);
+					if (loc < 10)
+						text += " ";
+
+					text += loc + "  L ";
+
+					loc = (byte)(_file.MapSize.Levs - node.Lev);
+					if (loc < 10)
+						text += " ";
+
+					text += loc + Environment.NewLine;
 				}
 
 				f.SetText(label, text);
@@ -128,5 +160,33 @@ namespace XCom.Resources.Map.RouteData
 			return false;
 		}
 		#endregion Fields (private)
+
+
+		/// <summary>
+		/// Opens a dialog to delete an invalid link-destination node.
+		/// </summary>
+		/// <param name="file"></param>
+		/// <param name="node">the node to delete</param>
+		/// <returns>true if user chooses to delete out-of-bounds node</returns>
+		public static bool ShowInvalid(MapFileChild file, RouteNode node)
+		{
+			using (var f = new RouteCheckInfobox())
+			{
+				string label = String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"Destination node is outside the Map's boundaries."
+											+ "{0}{0}Do you want it deleted?",
+										Environment.NewLine);
+				string text = "id " + node.Index + " : " + node.GetLocationString(file.MapSize.Levs);
+				f.SetText(label, text);
+
+				if (f.ShowDialog() == DialogResult.Yes)
+				{
+					file.Routes.DeleteNode(node);
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 }

@@ -176,7 +176,7 @@ namespace XCom
 		/// <returns></returns>
 		public string GetLocationString(int levels)
 		{
-			return ("c " + Col + "  r " + Row + "  L " + ((byte)(levels - Lev)));
+			return ("c " + (Col + 1) + "  r " + (Row + 1) + "  L " + ((byte)(levels - Lev)));
 		}
 		#endregion
 

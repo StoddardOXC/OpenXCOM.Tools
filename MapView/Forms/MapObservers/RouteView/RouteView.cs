@@ -81,7 +81,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		/// </summary>
 		public override MapFileBase MapBase
 		{
-			set
+			set // TODO: check RouteView/TopRouteView(Route)
 			{
 				base.MapBase = value;
 				MapFile      = value as MapFileChild;
@@ -1265,22 +1265,14 @@ namespace MapView.Forms.MapObservers.RouteViews
 
 				SpotGoDestination(slot); // highlight back to the startnode.
 			}
-			else
+			else if (RouteCheckService.ShowInvalid(MapFile, node))
 			{
-				string info = String.Format(
-										System.Globalization.CultureInfo.CurrentCulture,
-										"Destination node is outside the Map's boundaries.{0}{0}"
-											+ "id {1} : {2}",
-										Environment.NewLine,
-										dest,
-										node.GetLocationString(levels));
-				MessageBox.Show(
-							info,
-							"Error",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Error,
-							MessageBoxDefaultButton.Button1,
-							0);
+				RouteChanged = true;
+
+				ViewerFormsManager.RouteView   .Control     .UpdateNodeInformation();
+				ViewerFormsManager.TopRouteView.ControlRoute.UpdateNodeInformation();
+
+				// TODO: May need _pnlRoutes.Refresh()
 			}
 		}
 
@@ -1346,7 +1338,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			else //if (tag == "L5")
 				slot = 4;
 
-			SpotGoDestination(slot);
+			SpotGoDestination(slot); // TODO: RouteView/TopRouteView(Route)
 		}
 
 		/// <summary>
@@ -1376,8 +1368,10 @@ namespace MapView.Forms.MapObservers.RouteViews
 							break;
 					}
 	
-					RoutePanel.SpotPosition = new Point(c, r);
-					Refresh();
+					RoutePanel.SpotPosition = new Point(c, r); // TODO: static - RouteView/TopRouteView(Route)
+
+					ViewerFormsManager.RouteView   .Control     .Refresh();
+					ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 				}
 			}
 		}
@@ -1385,7 +1379,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 		private void OnLinkMouseLeave(object sender, EventArgs e)
 		{
 			RoutePanel.SpotPosition = new Point(-1, -1);
-			Refresh();
+
+			ViewerFormsManager.RouteView   .Control     .Refresh();
+			ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 		}
 
 		private void OnOgClick(object sender, EventArgs e)
@@ -1408,7 +1404,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 			{
 				var node = MapFile.Routes[OgnodeId];
 				RoutePanel.SpotPosition = new Point(node.Col, node.Row);
-				Refresh();
+
+				ViewerFormsManager.RouteView   .Control     .Refresh();
+				ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 			}
 		}
 
@@ -1509,7 +1507,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 
 				gbTileData.Enabled =
 				gbNodeData.Enabled =
-				gbLinkData.Enabled = false;
+				gbLinkData.Enabled = false; // TODO: RouteView/TopRouteView(Route)
 
 				// TODO: check if the Og-button should be disabled when a node gets deleted or cut.
 
@@ -1542,7 +1540,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			NodeSelected = null;
 			RoutePanel.SelectedPosition = new Point(-1, -1);
 
-			tsmiClearLinkData.Enabled = false;
+			tsmiClearLinkData.Enabled = false; // TODO: RouteView/TopRouteView(Route)
 		}
 
 		/// <summary>
@@ -1641,16 +1639,20 @@ namespace MapView.Forms.MapObservers.RouteViews
 					{
 						RouteChanged = true;
 
-						DeselectNode();
+						ViewerFormsManager.RouteView   .Control     .DeselectNode();
+						ViewerFormsManager.TopRouteView.ControlRoute.DeselectNode();
 
 						MapFile.ClearRouteNodes();
 						MapFile.Routes = new RouteNodeCollection(ofd.FileName);
 						MapFile.SetupRouteNodes();
 
-						UpdateNodeInformation(); // not sure is necessary ...
-						_pnlRoutes.Refresh();
-
 						RouteCheckService.CheckNodeBounds(MapFile);
+
+						ViewerFormsManager.RouteView   .Control     .UpdateNodeInformation(); // not sure is necessary ...
+						ViewerFormsManager.TopRouteView.ControlRoute.UpdateNodeInformation();
+
+						ViewerFormsManager.RouteView   .Control     ._pnlRoutes.Refresh();
+						ViewerFormsManager.TopRouteView.ControlRoute._pnlRoutes.Refresh();
 					}
 				}
 			}
