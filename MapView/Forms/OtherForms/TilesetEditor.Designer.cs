@@ -92,7 +92,7 @@
 			this.btnAccept.Name = "btnAccept";
 			this.btnAccept.Size = new System.Drawing.Size(80, 25);
 			this.btnAccept.TabIndex = 9;
-			this.btnAccept.Text = "Accept";
+			this.btnAccept.Text = "ACCEPT";
 			this.btnAccept.Click += new System.EventHandler(this.OnAcceptClick);
 			// 
 			// btnDecline
@@ -103,7 +103,7 @@
 			this.btnDecline.Name = "btnDecline";
 			this.btnDecline.Size = new System.Drawing.Size(80, 25);
 			this.btnDecline.TabIndex = 10;
-			this.btnDecline.Text = "Decline";
+			this.btnDecline.Text = "Cancel";
 			// 
 			// lblHeaderGroup
 			// 
@@ -487,7 +487,7 @@
 			this.btnCreateMap.Name = "btnCreateMap";
 			this.btnCreateMap.Size = new System.Drawing.Size(50, 25);
 			this.btnCreateMap.TabIndex = 5;
-			this.btnCreateMap.Text = "Create";
+			this.btnCreateMap.Text = "create";
 			this.toolTip1.SetToolTip(this.btnCreateMap, "a Map descriptor must be created before terrains can be added");
 			this.btnCreateMap.UseVisualStyleBackColor = true;
 			this.btnCreateMap.Click += new System.EventHandler(this.OnCreateDescriptorClick);
