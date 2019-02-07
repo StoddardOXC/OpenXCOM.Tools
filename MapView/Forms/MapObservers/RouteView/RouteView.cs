@@ -730,6 +730,12 @@ namespace MapView.Forms.MapObservers.RouteViews
 				tbLink3Dist.Text =
 				tbLink4Dist.Text =
 				tbLink5Dist.Text = String.Empty;
+
+				labelLink1.ForeColor =
+				labelLink2.ForeColor =
+				labelLink3.ForeColor =
+				labelLink4.ForeColor =
+				labelLink5.ForeColor = SystemColors.ControlText;
 			}
 			else // selected node is valid ->
 			{
@@ -776,6 +782,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				ComboBox cbTypL, cbDest;
 				TextBox tbDist;
 				Button btnGo;
+				Label lblText;
 
 				Link link;
 				byte dest;
@@ -785,38 +792,43 @@ namespace MapView.Forms.MapObservers.RouteViews
 					switch (slot)
 					{
 						case 0:
-							cbTypL = cbLink1UnitType;
-							cbDest = cbLink1Dest;
-							tbDist = tbLink1Dist;
-							btnGo  = btnGoLink1;
+							cbTypL  = cbLink1UnitType;
+							cbDest  = cbLink1Dest;
+							tbDist  = tbLink1Dist;
+							btnGo   = btnGoLink1;
+							lblText = labelLink1;
 							break;
 
 						case 1:
-							cbTypL = cbLink2UnitType;
-							cbDest = cbLink2Dest;
-							tbDist = tbLink2Dist;
-							btnGo  = btnGoLink2;
+							cbTypL  = cbLink2UnitType;
+							cbDest  = cbLink2Dest;
+							tbDist  = tbLink2Dist;
+							btnGo   = btnGoLink2;
+							lblText = labelLink2;
 							break;
 
 						case 2:
-							cbTypL = cbLink3UnitType;
-							cbDest = cbLink3Dest;
-							tbDist = tbLink3Dist;
-							btnGo  = btnGoLink3;
+							cbTypL  = cbLink3UnitType;
+							cbDest  = cbLink3Dest;
+							tbDist  = tbLink3Dist;
+							btnGo   = btnGoLink3;
+							lblText = labelLink3;
 							break;
 
 						case 3:
-							cbTypL = cbLink4UnitType;
-							cbDest = cbLink4Dest;
-							tbDist = tbLink4Dist;
-							btnGo  = btnGoLink4;
+							cbTypL  = cbLink4UnitType;
+							cbDest  = cbLink4Dest;
+							tbDist  = tbLink4Dist;
+							btnGo   = btnGoLink4;
+							lblText = labelLink4;
 							break;
 
 						default: // case 4:
-							cbTypL = cbLink5UnitType;
-							cbDest = cbLink5Dest;
-							tbDist = tbLink5Dist;
-							btnGo  = btnGoLink5;
+							cbTypL  = cbLink5UnitType;
+							cbDest  = cbLink5Dest;
+							tbDist  = tbLink5Dist;
+							btnGo   = btnGoLink5;
+							lblText = labelLink5;
 							break;
 					}
 
@@ -835,15 +847,32 @@ namespace MapView.Forms.MapObservers.RouteViews
 									+ GetDistanceArrow(slot);
 
 						if (link.StandardNode())
+						{
 							cbDest.SelectedItem = dest;
+
+							if (RouteNodeCollection.IsNodeOutsideMapBounds(
+																		MapFile.Routes[dest],
+																		MapFile.MapSize.Cols,
+																		MapFile.MapSize.Rows,
+																		MapFile.MapSize.Levs))
+							{
+								lblText.ForeColor = Color.MediumVioletRed;
+							}
+							else
+								lblText.ForeColor = SystemColors.ControlText;
+						}
 						else
+						{
 							cbDest.SelectedItem = (LinkType)dest;
+							lblText.ForeColor = SystemColors.ControlText;
+						}
 					}
 					else
 					{
 						btnGo .Text =
 						tbDist.Text = String.Empty;
 						cbDest.SelectedItem = (LinkType)dest;
+						lblText.ForeColor = SystemColors.ControlText;
 					}
 				}
 			}
