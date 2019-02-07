@@ -168,17 +168,17 @@ namespace XCom
 
 		public static readonly object[] SpawnWeight =
 		{
-			new Pterodactyl("0 : None", XCom.SpawnWeight.None),
-			new Pterodactyl("1 : Lo",   XCom.SpawnWeight.Spawn1),
-			new Pterodactyl("2 : Lo",   XCom.SpawnWeight.Spawn2),
-			new Pterodactyl("3 : Lo",   XCom.SpawnWeight.Spawn3),
-			new Pterodactyl("4 : Med",  XCom.SpawnWeight.Spawn4),
-			new Pterodactyl("5 : Med",  XCom.SpawnWeight.Spawn5),
-			new Pterodactyl("6 : Med",  XCom.SpawnWeight.Spawn6),
-			new Pterodactyl("7 : Med",  XCom.SpawnWeight.Spawn7),
-			new Pterodactyl("8 : Hi",   XCom.SpawnWeight.Spawn8),
-			new Pterodactyl("9 : Hi",   XCom.SpawnWeight.Spawn9),
-			new Pterodactyl("10 : Hi",  XCom.SpawnWeight.Spawn10)
+			new Pterodactyl( "0 : None", XCom.SpawnWeight.None),
+			new Pterodactyl( "1 : Lo",   XCom.SpawnWeight.Spawn1),
+			new Pterodactyl( "2 : Lo",   XCom.SpawnWeight.Spawn2),
+			new Pterodactyl( "3 : Lo",   XCom.SpawnWeight.Spawn3),
+			new Pterodactyl( "4 : Med",  XCom.SpawnWeight.Spawn4),
+			new Pterodactyl( "5 : Med",  XCom.SpawnWeight.Spawn5),
+			new Pterodactyl( "6 : Med",  XCom.SpawnWeight.Spawn6),
+			new Pterodactyl( "7 : Med",  XCom.SpawnWeight.Spawn7),
+			new Pterodactyl( "8 : Hi",   XCom.SpawnWeight.Spawn8),
+			new Pterodactyl( "9 : Hi",   XCom.SpawnWeight.Spawn9),
+			new Pterodactyl("10 : Hi",   XCom.SpawnWeight.Spawn10)
 		};
 		#endregion
 
