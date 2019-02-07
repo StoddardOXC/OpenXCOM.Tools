@@ -1370,8 +1370,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 	
 					RoutePanel.SpotPosition = new Point(c, r); // TODO: static - RouteView/TopRouteView(Route)
 
-					ViewerFormsManager.RouteView   .Control     .Refresh();
-					ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
+					_pnlRoutes.Refresh();
+//					ViewerFormsManager.RouteView   .Control     .Refresh();
+//					ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 				}
 			}
 		}
@@ -1380,8 +1381,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			RoutePanel.SpotPosition = new Point(-1, -1);
 
-			ViewerFormsManager.RouteView   .Control     .Refresh();
-			ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
+			_pnlRoutes.Refresh();
+//			ViewerFormsManager.RouteView   .Control     .Refresh();
+//			ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 		}
 
 		private void OnOgClick(object sender, EventArgs e)
@@ -1405,8 +1407,9 @@ namespace MapView.Forms.MapObservers.RouteViews
 				var node = MapFile.Routes[OgnodeId];
 				RoutePanel.SpotPosition = new Point(node.Col, node.Row);
 
-				ViewerFormsManager.RouteView   .Control     .Refresh();
-				ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
+				_pnlRoutes.Refresh();
+//				ViewerFormsManager.RouteView   .Control     .Refresh();
+//				ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 			}
 		}
 
