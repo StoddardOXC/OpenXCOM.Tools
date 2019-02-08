@@ -151,6 +151,8 @@ namespace XCom.Resources.Map.RouteData
 
 					loc = (byte)(_file.MapSize.Levs - node.Lev);
 					if (loc < 10)
+						text += "  ";
+					else if (loc < 100)
 						text += " ";
 
 					text += loc + Environment.NewLine;
