@@ -14,6 +14,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 	/// <summary>
 	/// The base class for RoutePanel. Generally handles mousey things and
 	/// calculating lozenges.
+	/// @note This is not a Panel. It is a UserControl inside of a Panel.
 	/// </summary>
 	internal class RoutePanelParent
 		:

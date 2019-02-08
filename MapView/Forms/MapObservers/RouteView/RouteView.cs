@@ -174,7 +174,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			RoutePanel.RoutePanelMouseUpEvent   += OnRoutePanelMouseUp;
 			RoutePanel.MouseMove                += OnRoutePanelMouseMove;
 			RoutePanel.MouseLeave               += OnRoutePanelMouseLeave;
-			RoutePanel.KeyDown                  += OnKeyDown;
+			RoutePanel.KeyDown                  += OnRoutePanelKeyDown;
 			_pnlRoutes.Controls.Add(RoutePanel);
 
 			// setup the connect-type dropdown entries
@@ -390,7 +390,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 					// Select the new location so the links draw and the selected node highlights
 					// properly but don't re-path the selected-lozenge. Let user see where the
 					// node-drag started until a click calls RoutePanelParent.PathSelectedLozenge().
-					RoutePanel.SelectedPosition = new Point(_nodeMoved.Col, _nodeMoved.Row);
+					RoutePanelParent.SelectedPosition = new Point(_nodeMoved.Col, _nodeMoved.Row);
 
 					ViewerFormsManager.RouteView   .Control     .UpdateLinkDistances();
 					ViewerFormsManager.TopRouteView.ControlRoute.UpdateLinkDistances();
@@ -1333,7 +1333,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			OnRoutePanelMouseDown(null, args);
 
 
-			RoutePanel.SelectedPosition = start;
+			RoutePanelParent.SelectedPosition = start;
 
 			ViewerFormsManager.RouteView   .Control     .Refresh();
 			ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
@@ -1399,7 +1399,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 	
 					RoutePanel.SpotPosition = new Point(c, r); // TODO: static - RouteView/TopRouteView(Route)
 
-					_pnlRoutes.Refresh();
+					RoutePanel.Refresh();
 //					ViewerFormsManager.RouteView   .Control     .Refresh();
 //					ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 				}
@@ -1410,7 +1410,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		{
 			RoutePanel.SpotPosition = new Point(-1, -1);
 
-			_pnlRoutes.Refresh();
+			RoutePanel.Refresh();
 //			ViewerFormsManager.RouteView   .Control     .Refresh();
 //			ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 		}
@@ -1436,7 +1436,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 				var node = MapFile.Routes[OgnodeId];
 				RoutePanel.SpotPosition = new Point(node.Col, node.Row);
 
-				_pnlRoutes.Refresh();
+				RoutePanel.Refresh();
 //				ViewerFormsManager.RouteView   .Control     .Refresh();
 //				ViewerFormsManager.TopRouteView.ControlRoute.Refresh();
 			}
@@ -1570,7 +1570,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		private void DeselectNode()
 		{
 			NodeSelected = null;
-			RoutePanel.SelectedPosition = new Point(-1, -1);
+			RoutePanelParent.SelectedPosition = new Point(-1, -1);
 
 			tsmiClearLinkData.Enabled = false; // TODO: RouteView/TopRouteView(Route)
 		}
@@ -1580,7 +1580,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		private void OnKeyDown(object sender, KeyEventArgs e)
+		private void OnRoutePanelKeyDown(object sender, KeyEventArgs e)
 		{
 			if (e.Control)
 			{
@@ -1631,7 +1631,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			else
 				ViewerFormsManager.RouteView.Control.tscbConnectType.SelectedIndex = tscbConnectType.SelectedIndex;
 
-			_pnlRoutes.Select();	// take focus off the stupid combobox. Tks. NOTE: It tends to
+			RoutePanel.Select();	// take focus off the stupid combobox. Tks. NOTE: It tends to
 		}							// stay "highlighted" but at least it's no longer "selected".
 
 
@@ -1683,8 +1683,8 @@ namespace MapView.Forms.MapObservers.RouteViews
 						ViewerFormsManager.RouteView   .Control     .UpdateNodeInformation(); // not sure is necessary ...
 						ViewerFormsManager.TopRouteView.ControlRoute.UpdateNodeInformation();
 
-						ViewerFormsManager.RouteView   .Control     ._pnlRoutes.Refresh();
-						ViewerFormsManager.TopRouteView.ControlRoute._pnlRoutes.Refresh();
+						ViewerFormsManager.RouteView   .Control     .RoutePanel.Refresh();
+						ViewerFormsManager.TopRouteView.ControlRoute.RoutePanel.Refresh();
 					}
 				}
 			}

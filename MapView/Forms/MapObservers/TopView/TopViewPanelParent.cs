@@ -13,6 +13,7 @@ namespace MapView.Forms.MapObservers.TopViews
 {
 	/// <summary>
 	/// The base class for TopViewPanel.
+	/// @note This is not a Panel. It is a UserControl inside of a Panel.
 	/// </summary>
 	internal class TopViewPanelParent
 		:
