@@ -18,7 +18,7 @@ namespace MapView.Forms.MapObservers.TileViews
 
 
 	/// <summary>
-	/// A separate panel is created for each tab-page in the Tile viewer.
+	/// A separate panel is created for each tab-page in the Tileparts viewer.
 	/// </summary>
 	internal sealed class TilePanel
 		:
@@ -417,7 +417,7 @@ namespace MapView.Forms.MapObservers.TileViews
 		#region Methods
 		internal void SetTiles(IList<TilepartBase> parts)
 		{
-			if (parts != null)// && _tiles.Length != 0)	// NOTE: This check for Length should be enough
+			if (parts != null) //&& _tiles.Length != 0)	// NOTE: This check for Length should be enough
 			{											// to cover all other checks for Length==0.
 				if (_quadType == PartType.All)			// Except that the eraser needs to be added anyway ....
 				{

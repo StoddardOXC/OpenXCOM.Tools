@@ -571,8 +571,10 @@ namespace MapView.Forms.MapObservers.TileViews
 		{
 			return String.Format(
 							System.Globalization.CultureInfo.CurrentCulture,
-							"TileView - MapID {0}  TerrainID {1}  Terrain {2}",
-							setId, terId, GetTerrainLabel() ?? "ERROR");
+							"TileView - {2}  terId {1}  setId {0}",
+							setId,
+							terId,
+							GetTerrainLabel());
 		}
 
 		/// <summary>
@@ -582,7 +584,7 @@ namespace MapView.Forms.MapObservers.TileViews
 		private string GetTerrainLabel()
 		{
 			return (SelectedTilepart != null) ? ((MapFileChild)MapBase).GetTerrainLabel(SelectedTilepart)
-											  : null;
+											  : "ERROR";
 		}
 
 		/// <summary>
