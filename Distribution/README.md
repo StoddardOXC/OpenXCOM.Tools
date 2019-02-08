@@ -8,6 +8,16 @@ Distribution builds for Windows 32/64 is hosted on Google Drive.
 
 Built against .NET 4.5.1
 
+2019 February 7<br>
+[MapView2_190207.7z](https://drive.google.com/file/d/1C8mEQAeIBz1EFhcEuEjkg93gd2vbaUsi/view?usp=sharing)
+
+- RouteView: export/import .RMP files (ie, use .RMP files as templates and/or replace route-nodes of a Map with nodes from a different Map, see RouteView's File menu)
+- coordinate the RoutesChanged flag between RouteView and TopRouteView(Route)
+- add a custom RouteCheck infobox (instead of the default .NET messagebox display)
+- minor tweak-ups to RouteView
+- when a node links to an out-of-bounds node, color the text of "Link" in red (clicking the Go button ought show the RouteCheck infobox with an option to delete the rogue destination node)
+- change a few displayed text-strings
+
 2019 February 5<br>
 [MapView2_190205.7z](https://drive.google.com/file/d/1JVu3qtqoXleqdj4flFlf_qS9raJtD55Y/view?usp=sharing)
 
