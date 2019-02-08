@@ -1947,7 +1947,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 		/// <param name="e"></param>
 		private void OnCheckOobNodesClick(object sender, EventArgs e)
 		{
-			if (RouteCheckService.CheckNodeBoundsMenuitem(MapFile))
+			if (RouteCheckService.CheckNodeBounds(MapFile, true))
 			{
 				RouteChanged = true;
 

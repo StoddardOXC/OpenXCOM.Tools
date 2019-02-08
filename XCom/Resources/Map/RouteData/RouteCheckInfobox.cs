@@ -26,25 +26,11 @@ namespace XCom.Resources.Map.RouteData
 		#endregion
 
 
-/*		#region Methods (override)
-		protected override void OnClosing(CancelEventArgs e)
-		{
-			Hide();
-
-			e.Cancel = true;
-//			base.OnClosing(e);
-		}
-		#endregion */
-
-
 		#region Methods (events)
 		private void btn_AcceptClick(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.Yes;
-//			OnClosing(new CancelEventArgs());
 		}
-
-
 		#endregion
 
 

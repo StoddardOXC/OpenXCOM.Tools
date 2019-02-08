@@ -23,8 +23,9 @@ namespace XCom.Resources.Map.RouteData
 		/// outside of a Map's x/y/z bounds.
 		/// </summary>
 		/// <param name="file"></param>
+		/// <param name="ludi">true if user-invoked</param>
 		/// <returns>true if user opted to clear invalid nodes</returns>
-		public static bool CheckNodeBounds(MapFileChild file)
+		public static bool CheckNodeBounds(MapFileChild file, bool ludi = false)
 		{
 			if ((_file = file) != null)
 			{
@@ -34,34 +35,42 @@ namespace XCom.Resources.Map.RouteData
 				{
 					return ShowInvalids();
 				}
+
+				if (ludi)
+					MessageBox.Show(
+								"There are no Out of Bounds nodes detected.",
+								"Good stuff, Magister Ludi",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Information,
+								MessageBoxDefaultButton.Button1,
+								0);
 			}
 			return false;
 		}
 
 		/// <summary>
-		/// Checks for and if found gives user a choice to delete nodes that are
-		/// outside of a Map's x/y/z bounds.
+		/// Opens a dialog to delete an invalid link-destination node.
 		/// </summary>
 		/// <param name="file"></param>
-		/// <returns>true if node(s) are deleted</returns>
-		public static bool CheckNodeBoundsMenuitem(MapFileChild file)
+		/// <param name="node">the node to delete</param>
+		/// <returns>true if user chooses to delete out-of-bounds node</returns>
+		public static bool ShowInvalid(MapFileChild file, RouteNode node)
 		{
-			if ((_file = file) != null)
+			using (var f = new RouteCheckInfobox())
 			{
-				_invalids.Clear();
+				string label = String.Format(
+										System.Globalization.CultureInfo.CurrentCulture,
+										"Destination node is outside the Map's bounds."
+											+ "{0}{0}Do you want it deleted?",
+										Environment.NewLine);
+				string text = "id " + node.Index + " : " + node.GetLocationString(file.MapSize.Levs);
+				f.SetText(label, text);
 
-				if ((_count = GetInvalidNodes()) != 0)
+				if (f.ShowDialog() == DialogResult.Yes)
 				{
-					return ShowInvalids();
+					file.Routes.DeleteNode(node);
+					return true;
 				}
-
-				MessageBox.Show(
-							"There are no Out of Bounds nodes detected.",
-							"Good stuff, Magister Ludi",
-							MessageBoxButtons.OK,
-							MessageBoxIcon.Information,
-							MessageBoxDefaultButton.Button1,
-							0);
 			}
 			return false;
 		}
@@ -160,33 +169,5 @@ namespace XCom.Resources.Map.RouteData
 			return false;
 		}
 		#endregion Fields (private)
-
-
-		/// <summary>
-		/// Opens a dialog to delete an invalid link-destination node.
-		/// </summary>
-		/// <param name="file"></param>
-		/// <param name="node">the node to delete</param>
-		/// <returns>true if user chooses to delete out-of-bounds node</returns>
-		public static bool ShowInvalid(MapFileChild file, RouteNode node)
-		{
-			using (var f = new RouteCheckInfobox())
-			{
-				string label = String.Format(
-										System.Globalization.CultureInfo.CurrentCulture,
-										"Destination node is outside the Map's boundaries."
-											+ "{0}{0}Do you want it deleted?",
-										Environment.NewLine);
-				string text = "id " + node.Index + " : " + node.GetLocationString(file.MapSize.Levs);
-				f.SetText(label, text);
-
-				if (f.ShowDialog() == DialogResult.Yes)
-				{
-					file.Routes.DeleteNode(node);
-					return true;
-				}
-			}
-			return false;
-		}
 	}
 }
