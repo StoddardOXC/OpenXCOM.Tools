@@ -529,6 +529,7 @@ namespace MapView.Forms.MapObservers.RouteViews
 			// 
 			// tsddbFile
 			// 
+			this.tsddbFile.AutoToolTip = false;
 			this.tsddbFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
 			this.tsddbFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
 			this.tsmiExport,

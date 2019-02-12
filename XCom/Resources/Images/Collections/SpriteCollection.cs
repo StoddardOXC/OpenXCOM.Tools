@@ -92,8 +92,8 @@ namespace XCom
 			{
 				tabSprites = (int)fsTab.Length / tabOffsetLength;
 				//LogFile.WriteLine(". fsTab.Length= " + fsTab.Length);
-				//LogFile.WriteLine(". offsetLength= " + offsetLength);
-				//LogFile.WriteLine(". sprites= " + tabSprites);
+				//LogFile.WriteLine(". tabOffsetLength= " + tabOffsetLength);
+				//LogFile.WriteLine(". tabSprites= " + tabSprites);
 
 				fsTab.Position = 0;
 

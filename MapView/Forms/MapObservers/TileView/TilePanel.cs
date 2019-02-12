@@ -315,7 +315,7 @@ namespace MapView.Forms.MapObservers.TileViews
 					TextWidth = (int)graphics.MeasureString(Door, Font).Width;	// =24
 				}
 
-				foreach (var tile in _parts)
+				foreach (var part in _parts)
 				{
 					left = SpriteWidth  * x + TableOffset;
 					top  = SpriteHeight * y + TableOffset + _startY;
@@ -324,20 +324,20 @@ namespace MapView.Forms.MapObservers.TileViews
 										left, top,
 										SpriteWidth, SpriteHeight);
 
-					if (tile != null) // draw tile-sprite ->
+					if (part != null) // draw tile-sprite ->
 					{
-						string specialType = tile.Record.TargetType.ToString();	// first fill Special Property color
+						string specialType = part.Record.TargetType.ToString();	// first fill Special Property color
 						if (_specialTypeBrushes.ContainsKey(specialType))
 							graphics.FillRectangle((SolidBrush)_specialTypeBrushes[specialType], rect);
 
 						graphics.DrawImage(										// then draw the sprite itself
-										tile[MainViewUnderlay.AniStep].Sprite,
+										part[MainViewUnderlay.AniStep].Sprite,
 										left + SpriteMargin,
-										top  + SpriteMargin - tile.Record.TileOffset);
+										top  + SpriteMargin - part.Record.TileOffset);
 
 						// NOTE: keep the door-string and its placement consistent with
 						// QuadrantPanelDrawService.Draw().
-						if (tile.Record.HumanDoor || tile.Record.UfoDoor)		// finally print "door" if it's a door
+						if (part.Record.HumanDoor || part.Record.UfoDoor)		// finally print "door" if it's a door
 							graphics.DrawString(
 											Door,
 											Font,
