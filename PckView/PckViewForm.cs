@@ -1503,6 +1503,18 @@ namespace PckView
 					}
 				}
 
+				if (spriteset.Borked)
+				{
+					MessageBox.Show(
+								"The quantity of sprites in the PCK file does not match the"
+									+ " quantity of sprites expected by the TAB file.",
+								"Error",
+								MessageBoxButtons.OK,
+								MessageBoxIcon.Error,
+								MessageBoxDefaultButton.Button1,
+								0);
+				}
+
 				if (spriteset.BorkedBigobs)
 				{
 					spriteset = null;
