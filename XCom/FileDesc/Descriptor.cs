@@ -109,7 +109,7 @@ namespace XCom
 			return new McdRecordCollection(tiles);														// getting the MCD-records. here just because it can be
 		}																								// concealed inside a function called GetTerrainRecords()
 																										// that returns an McdRecordCollection that's why.
-		/// <summary>																					// Pretty clever huh - Dr.No look out!!science!!
+		/// <summary>
 		/// Gets the count of MCD-records in an MCD-file.
 		/// </summary>
 		/// <param name="id">the position of the terrain in this tileset's terrains-list</param>

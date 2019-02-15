@@ -315,6 +315,8 @@ namespace MapView.Forms.MapObservers.TileViews
 					TextWidth = (int)graphics.MeasureString(Door, Font).Width;	// =24
 				}
 
+				XCImage sprite;
+
 				foreach (var part in _parts)
 				{
 					left = SpriteWidth  * x + TableOffset;
@@ -330,10 +332,13 @@ namespace MapView.Forms.MapObservers.TileViews
 						if (_specialTypeBrushes.ContainsKey(specialType))
 							graphics.FillRectangle((SolidBrush)_specialTypeBrushes[specialType], rect);
 
-						graphics.DrawImage(										// then draw the sprite itself
-										part[MainViewUnderlay.AniStep].Sprite,
-										left + SpriteMargin,
-										top  + SpriteMargin - part.Record.TileOffset);
+						if ((sprite = part[MainViewUnderlay.AniStep]) != null)
+						{
+							graphics.DrawImage(									// then draw the sprite itself
+											sprite.Sprite,
+											left + SpriteMargin,
+											top  + SpriteMargin - part.Record.TileOffset);
+						}
 
 						// NOTE: keep the door-string and its placement consistent with
 						// QuadrantPanelDrawService.Draw().

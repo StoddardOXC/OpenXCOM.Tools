@@ -42,6 +42,7 @@ namespace XCom
 		/// 'ExtraSprites'.
 		/// @note Both UFO and TFTD use 2-byte Tab-offsetLengths for 32x40 terrain pcks
 		/// (TFTD unitsprites use 4-byte Tab-offsetLengths although Bigobs 32x48 uses 2-byte)
+		/// (the UFO cursor uses 2-byte but the TFTD cursor uses 4-byte)
 		/// </summary>
 		/// <param name="terrain">the terrain file w/out extension</param>
 		/// <param name="dirTerrain">path to the directory of the terrain file</param>
@@ -90,13 +91,30 @@ namespace XCom
 						using (var fsPck = File.OpenRead(pfePck))
 						using (var fsTab = File.OpenRead(pfeTab))
 						{
-							spritesets.Add(pfSpriteset, new SpriteCollection(
-																		fsPck,
-																		fsTab,
-																		offsetLength,
-																		pal));
+							var spriteset = new SpriteCollection(
+																fsPck,
+																fsTab,
+																offsetLength,
+																pal);
+							if (spriteset.Borked)
+							{
+								MessageBox.Show(
+											"The quantity of sprites in the PCK file does not match the"
+												+ " quantity of sprites expected by the TAB file."
+												+ Environment.NewLine + Environment.NewLine
+												+ pfePck + Environment.NewLine
+												+ pfeTab,
+											"Error",
+											MessageBoxButtons.OK,
+											MessageBoxIcon.Error,
+											MessageBoxDefaultButton.Button1,
+											0);
+							}
+							spritesets.Add(pfSpriteset, spriteset); // NOTE: Add the spriteset even if it is Borked.
 						}
 					}
+					// else WARN: Spriteset already found in the collection.
+
 					return _palSpritesets[pal][pfSpriteset];
 				}
 
