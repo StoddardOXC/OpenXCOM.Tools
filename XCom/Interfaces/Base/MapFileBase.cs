@@ -216,9 +216,11 @@ namespace XCom.Interfaces.Base
 		/// <param name="fullpath"></param>
 		public void SaveGifFile(string fullpath)
 		{
-			var pal = GetFirstGroundPalette();
-			if (pal == null)
-				throw new ArgumentNullException("fullpath", "MapFileBase: At least 1 ground tile is required.");
+			var pal = Descriptor.Pal;
+
+//			var pal = GetFirstGroundPalette();
+//			if (pal == null)
+//				throw new ArgumentNullException("fullpath", "MapFileBase: At least 1 ground tile is required.");
 			// TODO: I don't want to see 'ArgumentNullException'. Just say
 			// what's wrong and save the technical details for the debugger.
 
@@ -275,11 +277,11 @@ namespace XCom.Interfaces.Base
 			{
 				var rect = BitmapService.GetNontransparentRectangle(b, Palette.TransparentId);
 				b = BitmapService.Crop(b, rect);
-				b.Save(fullpath, ImageFormat.Gif);
+				b.Save(fullpath, ImageFormat.Png);
 			}
 			catch // TODO: Deal with exceptions appropriately.
 			{
-				b.Save(fullpath, ImageFormat.Gif);
+				b.Save(fullpath, ImageFormat.Png);
 				throw;
 			}
 
@@ -287,7 +289,7 @@ namespace XCom.Interfaces.Base
 				b.Dispose();
 		}
 
-		private Palette GetFirstGroundPalette()
+/*		private Palette GetFirstGroundPalette()
 		{
 			for (int lev = 0; lev != MapSize.Levs; ++lev)
 			for (int row = 0; row != MapSize.Rows; ++row)
@@ -298,7 +300,7 @@ namespace XCom.Interfaces.Base
 					return tile.Ground[0].Pal;
 			}
 			return null;
-		}
+		}*/
 		#endregion
 	}
 }

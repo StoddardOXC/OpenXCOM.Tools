@@ -241,7 +241,7 @@ namespace XCom
 
 
 		/// <summary>
-		/// Used by MapFileBase.SaveGif()
+		/// Used by MapFileBase.SaveGifFile()
 		/// </summary>
 		/// <param name="width">width of final Bitmap</param>
 		/// <param name="height">height of final Bitmap</param>
@@ -302,7 +302,7 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Used by MapFileBase.SaveGif()
+		/// Used by MapFileBase.SaveGifFile()
 		/// NOTE: not a Draw function.
 		/// </summary>
 		/// <param name="src"></param>
@@ -347,7 +347,7 @@ namespace XCom
 				uint dstStride = (uint)Math.Abs(dstLocked.Stride); // wtf.
 
 				for (uint row = 0; row != src.Height; ++row)
-				for (uint col = 0; col != src.Width; ++col)
+				for (uint col = 0; col != src.Width;  ++col)
 				{
 //					byte* srcPixel = srcBits + ((row / PckImage.Scale) * srcStride + (col / PckImage.Scale));
 					byte* srcPixel = srcPos +  row      * srcStride +  col;
@@ -362,7 +362,7 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Used by MapFileBase.SaveGif()
+		/// Used by MapFileBase.SaveGifFile()
 		/// </summary>
 		/// <param name="b"></param>
 		/// <param name="transparent"></param>
@@ -431,7 +431,7 @@ namespace XCom
 		}
 
 		/// <summary>
-		/// Used by MapFileBase.SaveGif()
+		/// Used by MapFileBase.SaveGifFile()
 		/// </summary>
 		/// <param name="src"></param>
 		/// <param name="rect"></param>
