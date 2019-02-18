@@ -508,9 +508,8 @@ namespace PckView
 		/// </summary>
 		internal void PrintStatusSpriteSelected()
 		{
-			int selectedId = SelectedId + 1;
-			string selected = (selectedId != 0) ? selectedId.ToString(System.Globalization.CultureInfo.InvariantCulture)
-												: None;
+			string selected = (SelectedId != -1) ? SelectedId.ToString(System.Globalization.CultureInfo.InvariantCulture)
+												 : None;
 			_sbpTileSelected.Text = String.Format(
 												System.Globalization.CultureInfo.InvariantCulture,
 												"Selected {0}", selected);
@@ -522,9 +521,8 @@ namespace PckView
 		/// </summary>
 		private void PrintStatusSpriteOver()
 		{
-			int overId = OverId + 1;
-			string over = (overId != 0) ? overId.ToString(System.Globalization.CultureInfo.InvariantCulture)
-										: None;
+			string over = (OverId != -1) ? OverId.ToString(System.Globalization.CultureInfo.InvariantCulture)
+										 : None;
 			_sbpTileOver.Text = String.Format(
 										System.Globalization.CultureInfo.InvariantCulture,
 										"Over {0}", over);
