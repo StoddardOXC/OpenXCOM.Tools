@@ -12,9 +12,9 @@
 
 		<p>The Category can be labelled whatever, but must be unique in its Group.</p>
 
-		<p>The Tileset is what gets displayed in the viewer panel. It appears very much like what is seen during gameplay. Using the mousewheel when the panel is focused raises and lowers the editing level. The label of a Tileset must be unique across the entire Map Tree.</p>
+		<p>The Tileset is what gets displayed in the viewer panel. It appears very much like what is seen during gameplay. Using the mousewheel when the panel is focused raises and lowers the editing level. The label of a Tileset must be unique within its Category.</p>
 
-		<p>Left-click selects a branch, and a right-click opens a context menu that allows the selected branch to be edited. Groups and Categories can be created, re-labeled, or deleted. Tilesets can be created or modified with the Tileset Editor. They can also be deleted.</p>
+		<p>Left-click selects a branch, and a right-click opens a context menu that allows the selected branch to be edited. Groups and Categories can be created, re-labeled, or deleted. Tilesets can be created or modified with the Tileset Editor. They can also be deleted. Deleting a Tileset in the Map Tree does not affect files on your hardrive.</p>
 
 		<p>Above the viewer panel are buttons for<br><br>
 &nbsp;&nbsp;- zoomin<br>
@@ -37,30 +37,33 @@
 &nbsp;&nbsp;- the current scale factor of the tileset graphics<br>
 &nbsp;&nbsp;- the label of the currently loaded tileset<br>
 &nbsp;&nbsp;- the dimensions (x,y,z or column,row,level) of the currently loaded tileset<br>
-&nbsp;&nbsp;- the currently selected tile position</p>
+&nbsp;&nbsp;- the currently selected tile position<br>
+&nbsp;&nbsp;- the dimensions of a currently selected area</p>
 
 		<p>The basepath of the displayed tileset is shown in the window's titlebar.</p>
 
 		<p>In the viewer panel, a left-click selects a tile, and a left-click drag motion will select multiple tiles over a rectangular area. Drag-selecting tiles will get laggy on larger maps - use TopView to drag-select an area if any sluggishness becomes too annoying.</p>
 
-		<p>Autozoom toggles off when zoomin or zoomout are used.</p>
+		<p>Autozoom toggles off when either zoomin or zoomout are clicked.</p>
 
-		<p>Be aware that the top of the map - north - is the upper right corner.</p>
+		<p>Be aware that north is the upper right corner of the panel.</p>
+
+		<p>Note that [Ctrl+S] can be used to save the Map when the center panel has focus. An asterisk will appear after the Map's label on the statusbar if the Mapfile is changed but has not been saved. Also note that an asterisk will appear after the Map's basepath on the titlebar if the Maptree has changed but has not been saved.</p>
 
 		<br>
 		<h3>File menu</h3>
 
 		<p>Save All [Ctrl+A] - forces a save of the current Map, Route, and Maptree files.</p>
 
-		<p>Save Map [Ctrl+M] - forces a save of the current Map file. Note that [Ctrl+S] can also be used to save the Map when the center panel has focus.</p>
+		<p>Save Map [Ctrl+M] - forces a save of the current Map file.</p>
 
-		<p>Save Routes [Ctrl+R] - forces a save of the current Routes file.</p>
+		<p>Save Routes [Ctrl+R] - forces a save of the current Route file.</p>
 
-		<p>Save As ... - saves the current Map and Route files as a user-specified path and label. The path cannot be the root directory of a drive. The reason for this is that when you save the Map, the routine finds the parent folder of the chosen folder, then ensures that the Map gets saved in a subfolder called \MAPS and the Routes gets saved in a subfolder called \ROUTES. This allows the saved Map to be added to MainView's Maptree while maintaining consistency of the code-design.</p>
+		<p>Save As ... - saves/exports the current Map and Route files to a user-specified path and label. The path cannot be the root directory of a drive. The reason for this is that when you save the Map, the routine finds the parent folder of the chosen folder, then ensures that the Map gets saved in a subfolder called \MAPS and the Routes gets saved in a subfolder called \ROUTES. This allows the saved Map to be added to MainView's Maptree while maintaining consistency of code-design.</p>
 
 		<p>Save Maptree [Ctrl+T] - forces a save of the Maptree.</p>
 
-		<p>Save Image [Ctrl+I] - saves a .gif of the tileset that's currently displayed in the viewer panel to a specified path.</p>
+		<p>Save Image [Ctrl+I] - saves a PNG of the tileset that's currently displayed in the viewer panel to a specified path.</p>
 
 		<p>Resize Map [Ctrl+Z] - opens a dialog box for modifying the dimensions of the currently loaded Map.</p>
 

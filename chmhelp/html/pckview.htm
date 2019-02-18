@@ -9,7 +9,7 @@
 
 		<p>PckView is a spriteset editor for XCOM.</p>
 
-		<p>PckView II can open, create, or modify standard PCK+TAB files that contain terrain sprites that are 32x40 8-bpp only. It does <b>not</b> work with any other PCK files.</p>
+		<p>PckView II can open, create, or modify PCK+TAB files that contain terrain sprites or unit sprites that are 32x40 8-bpp and bigobs sprites that are 32x48 8-bpp only. Note that PCK files must have corresponding TAB files.</p>
 
 		<p>The center panel displays sprites that are currently in the loaded spriteset.</p>
 
@@ -24,26 +24,33 @@
 &nbsp;&nbsp;Move left - swaps the selected sprite with the sprite directly before it.<br>
 &nbsp;&nbsp;Move right - swaps the selected sprite with the sprite directly after it.<br>
 &nbsp;&nbsp;Delete - removes the selected sprite from the spriteset.<br>
-&nbsp;&nbsp;Export sprite ... - exports the selected sprite to a file in Windows BMP format.</p>
+&nbsp;&nbsp;Export sprite ... - exports the selected sprite to a file in PNG format.</p>
 
-		<p>Adding and inserting sprites requires that their files are 32x40 8-bpp images in Windows BMP format.</p>
+		<p>Adding and inserting sprites requires that their files are of the proper dimensions for the spriteset, 8-bpp images in PNG, GIF, or Windows BMP format.</p>
 
 		<p>The statusbar along the bottom shows the total quantity of sprites in the set, the id of the sprite that is under the mouse-cursor, and the id of the currently selected sprite. The label of the spriteset is also displayed.</p>
 
 		<br>
 		<h3>File menu</h3>
 
-		<p>Open Pck file ... - opens a PCK spriteset that contains XCOM terrain sprites.</p>
-		<p>Create Pck file ... - creates a new PCK spriteset that can contain XCOM terrain sprites only.</p>
+		<p>Open Pck (terrain/unit) file ... - opens a PCK spriteset that contains UFO/TFTD terrain or unit sprites (32x40).</p>
+		<p>Open Pck (bigobs) file ... - opens a PCK spriteset that contains UFO/TFTD bigobs sprites (32x48).</p>
+		<p>Create Pck file<br>
+&nbsp;&nbsp;Create terrain ... - creates a new PCK spriteset that can contain UFO/TFTD terrain sprites only (32x40).<br>
+&nbsp;&nbsp;Create bigobs ... - creates a new PCK spriteset that can contain UFO/TFTD bigobs sprites only (32x48).<br>
+&nbsp;&nbsp;Create ufo unit ... - creates a new PCK spriteset that can contain UFO unit sprites only (32x40).<br>
+&nbsp;&nbsp;Create tftd unit ... - creates a new PCK spriteset that can contain TFTD unit sprites only (32x40).</p>
 		<p>Save - saves the current PCK spriteset.</p>
 		<p>Save As ... - saves the current PCK spriteset to another file.</p>
-		<p>Export sprites ... - exports all the sprites in the current spriteset to a directory. The images will be in Windows BMP format.</p>
+		<p>Export sprites ... - exports all the sprites in the current spriteset to a directory. The images will be in PNG format.</p>
+		<p>Export spritesheet ... - exports all the sprites in the current spriteset to a spritesheet in PNG format.</p>
+		<p>Import spritesheet ... - replaces the spriteset with an imported spritesheet. Spritesheets can be imported in PNG, GIF, or Windows BMP format.</p>
 		<p>Quit - exits the application. <b>THERE IS NO PROMPT TO SAVE ANY CHANGES.</b> This is a bare-bones app that requires prior understanding of how XCOM terrain sprites work and why they work as they do, so please stay on the ball.</p>
 
 		<br>
 		<h3>Palette menu</h3>
 
-		<p>Shows a list of available palettes. Note that sprites do <b>not</b> contain color information - only <b>256 palette indices</b> are loaded and saved. Hence the currently selected palette makes no difference when saving a spriteset. However, the sprites are displayed in PckView with hard-coded color information, which typically make them appear differently than they would while actually playing XCOM.</p>
+		<p>Shows a list of available palettes. Note that sprites do <b>not</b> contain color information - only <b>256 palette indices</b> are loaded and saved. Hence the currently selected palette makes no difference when saving a spriteset. However, the sprites are displayed in PckView with hard-coded color information, which may or may not make them appear slightly differently than they would while actually playing XCOM.</p>
 
 		<br>
 		<h3>Transparency menu</h3>
@@ -53,7 +60,7 @@
 		<br>
 		<h3>Bytes menu</h3>
 
-		<p>Show/hide byte table - opens or closes a window that shows the color-indices of all 1280 pixels for the currently selected sprite. The table is arranged in 32 columns with 40 rows, representing the dimensions of the sprite itself. It is not editable.</p>
+		<p>Show/hide byte table - opens or closes a window that shows the color-indices of all pixels for the currently selected sprite. It is not editable.</p>
 
 		<br>
 		<h3>Help menu</h3>

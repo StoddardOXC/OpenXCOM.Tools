@@ -27,20 +27,20 @@
 
 		<br>
 		<h3>Tile data</h3>
-		<p>This section displays the currently selected node's position and id. It also shows the id of a node that the mouse-cursor hovers over.</p>
+		<p>This section displays the currently selected node's position and ID. It also shows the ID of a node that the mouse-cursor hovers over.</p>
 
 		<br>
 		<h3>Patrol data</h3>
 		<p>
 &nbsp;&nbsp;Unit Type - aLien units must have this characteristic to patrol the node.<br>
-&nbsp;&nbsp;Priority - the priority that aLien units will give this node when patrolling nearby.<br>
+&nbsp;&nbsp;Priority - the priority that aLien units will give this node when patrolling nearby (note that even "0" is valid for patrolling).<br>
 &nbsp;&nbsp;Attack Base - this acts as a lure for aLien units. If and when they reach a node with a non-zero value, they will start shooting up XCOM Base facilities. This is relevant only for XCOM Base defense missions.</p>
 
 		<br>
 		<h3>Spawn data</h3>
 		<p>
 &nbsp;&nbsp;Rank - the faction or, if aLien, the rank of units that may spawn at the node.<br>
-&nbsp;&nbsp;Weight - the weight given to spawn at the node.</p>
+&nbsp;&nbsp;Weight - the weight given to spawn at the node (note that "0" will disallow spawns).</p>
 
 		<br>
 		<h3>Link data</h3>
@@ -50,6 +50,9 @@
 		<p>
 &nbsp;&nbsp;Along the right side of the Link data is a column of Go buttons. A button is enabled if it has a regular node as the link's destination. When the mouse is hovered over an enabled button, the link's destination is highlighted along with its link-line. Clicking an enabled Go button selects that link's destination node. To the right of that column is the Og button, which is a Go button in reverse. It can be used as a back-button but with an interesting difference, in that if a Go button has been clicked then the source node can be returned to even if other nodes have been selected inbetween clicking a Go button and the Og button.</p>
 
+		<p>
+&nbsp;&nbsp;If a node is detected as linked to an Out of Bounds node the "Link" text will appear in red. Clicking the Go button of such a link will open a dialog that allows the Out of Bounds destination node to be deleted.</p>
+
 		<br>
 		<h3>Node editor</h3>
 		<p>
@@ -58,7 +61,14 @@
 &nbsp;&nbsp;Paste [Ctrl+V] - pastes Patrol and Spawn data from the Windows clipboard to the currently selected node.<br>
 &nbsp;&nbsp;Delete [Delete] - deletes the currently selected node.</p>
 
-		<p>Note that [Ctrl+S] can be used to save the Routes when the center panel has focus.</p>
+		<p>Note that [Ctrl+S] can be used to save the Routes when the center panel has focus. A hint "routes changed" will appear in the lower right corner of the data area if the Routefile is changed but has not been saved.</p>
+
+		<br>
+		<h3>File menu</h3>
+
+		<p>export routes to .RMP file - saves a copy of the current routes to a file that can then be imported as the routes for a different Map</p>
+
+		<p>import routes from .RMP file - implements the nodes of any .RMP file as the nodes for the currently displayed Map. Note that this will delete all current nodes on the Map and replace them with those in the imported Routefile.</p>
 
 		<br>
 		<h3>Edit menu</h3>
@@ -67,7 +77,20 @@
 
 		<p>All Nodes Rank 0 - sets every node's spawn rank to 0. A confirmation dialog is shown.</p>
 
-		<p>Clear Link data - resets all five link-slots to NotUsed. A confirmation dialog is shown.</p>
+		<p>Clear Link data - resets all five link-slots of a selected node to NotUsed. A confirmation dialog is shown.</p>
+
+		<p>Update all Link distances - a utility that ensures that all displayed link distances are correct. A confirmation dialog is <b>not</b> shown.</p>
+
+		<p>node up 1 level - moves a selected node up 1 level if possible</p>
+
+		<p>node down 1 level - moves a selected node down 1 level if possible</p>
+
+		<br>
+		<h3>debug menu</h3>
+
+		<p>Check Node ranks - tests for invalid node ranks.</p>
+
+		<p>Check Out of Bounds nodes - tests for nodes that are outside the current Map's boundaries.</p>
 		<br>
 	</body>
 </html>
