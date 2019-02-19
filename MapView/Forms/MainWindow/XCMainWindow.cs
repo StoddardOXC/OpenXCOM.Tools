@@ -1344,7 +1344,7 @@ namespace MapView
 				sfdSaveDialog.FileName = _mainViewUnderlay.MapBase.Descriptor.Label;
 				if (sfdSaveDialog.ShowDialog() == DialogResult.OK)
 				{
-					_mainViewUnderlay.MapBase.SaveGifFile(sfdSaveDialog.FileName);
+					_mainViewUnderlay.MapBase.Screenshot(sfdSaveDialog.FileName);
 				}
 			}
 		}

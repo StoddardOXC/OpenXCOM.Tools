@@ -214,7 +214,7 @@ namespace XCom.Interfaces.Base
 		/// MapFileChild.
 		/// </summary>
 		/// <param name="fullpath"></param>
-		public void SaveGifFile(string fullpath)
+		public void Screenshot(string fullpath)
 		{
 			var pal = Descriptor.Pal;
 
