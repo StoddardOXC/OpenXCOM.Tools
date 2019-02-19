@@ -2520,6 +2520,8 @@ namespace MapView
 						ViewerFormsManager.RouteView   .Control     .RoutesChanged =
 						ViewerFormsManager.TopRouteView.ControlRoute.RoutesChanged = true;
 					}
+
+					Globals.Scale = Globals.Scale; // enable/disable the scale-in/scale-out buttons
 				}
 			}
 		}

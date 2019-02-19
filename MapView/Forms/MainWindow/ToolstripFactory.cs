@@ -271,6 +271,16 @@ namespace MapView.Forms.MainWindow
 				tsb.Enabled = enabled;
 		}
 
+		internal void ToggleZoomOutButton(bool enabled)
+		{
+			_tsbZoomOut.Enabled = enabled;
+		}
+
+		internal void ToggleZoomInButton(bool enabled)
+		{
+			_tsbZoomIn.Enabled = enabled;
+		}
+
 
 		/// <summary>
 		/// Enables or disables toolstrip objects. This disables all of MainView's

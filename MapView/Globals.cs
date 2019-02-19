@@ -1,6 +1,8 @@
 using System;
 using System.Reflection;
 
+using MapView.Forms.MainWindow;
+
 using XCom;
 
 
@@ -34,7 +36,13 @@ namespace MapView
 		internal static double Scale
 		{
 			get { return _scale; }
-			set { _scale = value; }
+			set
+			{
+				_scale = value;
+
+				ViewerFormsManager.ToolFactory.ToggleZoomOutButton(Math.Abs(_scale - ScaleMinimum) > 0.001);
+				ViewerFormsManager.ToolFactory.ToggleZoomInButton( Math.Abs(_scale - ScaleMaximum) > 0.001);
+			}
 		}
 
 		private static bool _autoScale = true;
@@ -44,7 +52,7 @@ namespace MapView
 			set { _autoScale = value; }
 		}
 
-		internal static XCom.SpriteCollection ExtraSprites
+		internal static SpriteCollection ExtraSprites
 		{ get; private set; }
 		#endregion
 
