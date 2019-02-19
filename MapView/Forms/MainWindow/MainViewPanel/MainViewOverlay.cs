@@ -388,7 +388,7 @@ namespace MapView
 		{
 			if (MapBase != null && FirstClick)
 			{
-				ToolstripFactory.Instance.EnablePasteButton();
+				ToolstripFactory.Instance.EnablePasteButtons();
 
 				var start = GetAbsoluteDragStart();
 				var end   = GetAbsoluteDragEnd();
@@ -498,6 +498,9 @@ namespace MapView
 			base.OnMouseWheel(e);
 			if      (e.Delta < 0) MapBase.LevelUp();
 			else if (e.Delta > 0) MapBase.LevelDown();
+
+			ViewerFormsManager.ToolFactory.ToggleDownButtons(MapBase.Level != MapBase.MapSize.Levs - 1);
+			ViewerFormsManager.ToolFactory.ToggleUpButtons(  MapBase.Level != 0);
 		}
 
 

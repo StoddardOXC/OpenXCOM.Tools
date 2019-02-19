@@ -17,7 +17,10 @@ namespace MapView.Forms.MainWindow
 
 		#region Fields
 		private readonly MainViewUnderlay _mainViewUnderlay;
+
 		private readonly List<ToolStripButton> _pasters = new List<ToolStripButton>();
+		private readonly List<ToolStripButton> _downers = new List<ToolStripButton>();
+		private readonly List<ToolStripButton> _uppers  = new List<ToolStripButton>();
 
 
 		private readonly ToolStripTextBox _tstbSearch = new ToolStripTextBox();	// NOTE: These instantiations of toolstrip-objects that
@@ -175,12 +178,16 @@ namespace MapView.Forms.MainWindow
 			tsbDown.ToolTipText   = "level down";
 			tsbDown.Click        += OnDownClick;
 
+			_downers.Add(tsbDown);
+
 			// LevelUp btn
 			tsbUp.Name            = "tsbUp";
 			tsbUp.DisplayStyle    = ToolStripItemDisplayStyle.Image;
 			tsbUp.Image           = Resources.up;
 			tsbUp.ToolTipText     = "level up";
 			tsbUp.Click          += OnUpClick;
+
+			_uppers.Add(tsbUp);
 
 			// Cut btn
 			tsbCut.Name           = "tsbCut";
@@ -246,11 +253,24 @@ namespace MapView.Forms.MainWindow
 		/// Enables the paste-button in any viewer after cut or copy is
 		/// clicked or Ctrl+X / Ctrl+C is pressed on the keyboard.
 		/// </summary>
-		internal void EnablePasteButton()
+		internal void EnablePasteButtons()
 		{
 			foreach (var tsb in _pasters)
 				tsb.Enabled = true;
 		}
+
+		internal void ToggleDownButtons(bool enabled)
+		{
+			foreach (var tsb in _downers)
+				tsb.Enabled = enabled;
+		}
+
+		internal void ToggleUpButtons(bool enabled)
+		{
+			foreach (var tsb in _uppers)
+				tsb.Enabled = enabled;
+		}
+
 
 		/// <summary>
 		/// Enables or disables toolstrip objects. This disables all of MainView's
@@ -278,14 +298,26 @@ namespace MapView.Forms.MainWindow
 		#region Eventcalls (editstrip)
 		private void OnDownClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MapBase != null)
-				_mainViewUnderlay.MapBase.LevelDown();
+			var @base = _mainViewUnderlay.MapBase;
+			if (@base != null)
+			{
+				@base.LevelDown();
+
+				ToggleDownButtons(@base.Level != @base.MapSize.Levs - 1);
+				ToggleUpButtons(  @base.Level != 0);
+			}
 		}
 
 		private void OnUpClick(object sender, EventArgs e)
 		{
-			if (_mainViewUnderlay.MapBase != null)
-				_mainViewUnderlay.MapBase.LevelUp();
+			var @base = _mainViewUnderlay.MapBase;
+			if (@base != null)
+			{
+				@base.LevelUp();
+
+				ToggleDownButtons(@base.Level != @base.MapSize.Levs - 1);
+				ToggleUpButtons(  @base.Level != 0);
+			}
 		}
 		#endregion
 

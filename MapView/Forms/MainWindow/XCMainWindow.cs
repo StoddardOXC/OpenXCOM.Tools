@@ -2487,6 +2487,8 @@ namespace MapView
 					_mainViewUnderlay.MapBase = @base;
 
 					ViewerFormsManager.ToolFactory.EnableToolStrip(true);
+					ViewerFormsManager.ToolFactory.ToggleDownButtons(@base.Level != @base.MapSize.Levs - 1);
+					ViewerFormsManager.ToolFactory.ToggleUpButtons(  @base.Level != 0);
 
 					Text = "Map Editor - " + descriptor.Basepath;
 					if (MaptreeChanged) MaptreeChanged = MaptreeChanged; // maniacal laugh YOU figure it out.
