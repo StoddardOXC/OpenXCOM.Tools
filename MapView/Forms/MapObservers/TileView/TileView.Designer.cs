@@ -57,7 +57,7 @@
 			this.tpAll.Name = "tpAll";
 			this.tpAll.Size = new System.Drawing.Size(632, 430);
 			this.tpAll.TabIndex = 0;
-			this.tpAll.Text = "All";
+			this.tpAll.Text = "ALL";
 			// 
 			// tpFloors
 			// 
@@ -65,7 +65,7 @@
 			this.tpFloors.Name = "tpFloors";
 			this.tpFloors.Size = new System.Drawing.Size(632, 430);
 			this.tpFloors.TabIndex = 1;
-			this.tpFloors.Text = "Floors";
+			this.tpFloors.Text = "fLoOr";
 			// 
 			// tpWestwalls
 			// 
@@ -73,7 +73,7 @@
 			this.tpWestwalls.Name = "tpWestwalls";
 			this.tpWestwalls.Size = new System.Drawing.Size(632, 430);
 			this.tpWestwalls.TabIndex = 2;
-			this.tpWestwalls.Text = "West Walls";
+			this.tpWestwalls.Text = "WEst";
 			// 
 			// tpNorthwalls
 			// 
@@ -81,7 +81,7 @@
 			this.tpNorthwalls.Name = "tpNorthwalls";
 			this.tpNorthwalls.Size = new System.Drawing.Size(632, 430);
 			this.tpNorthwalls.TabIndex = 3;
-			this.tpNorthwalls.Text = "North Walls";
+			this.tpNorthwalls.Text = "noRtH";
 			// 
 			// tpObjects
 			// 
@@ -89,7 +89,7 @@
 			this.tpObjects.Name = "tpObjects";
 			this.tpObjects.Size = new System.Drawing.Size(632, 430);
 			this.tpObjects.TabIndex = 4;
-			this.tpObjects.Text = "Content";
+			this.tpObjects.Text = "ConTeNt";
 			// 
 			// tsMain
 			// 
